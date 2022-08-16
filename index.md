@@ -9,7 +9,10 @@ In this workshop we are going to take a look at Julia by starting with the basic
 
 ## Acknowledgment
 
-We want to give a huge shout-out to [Stephan Antholzer](https://www.uibk.ac.at/mathematik/personal/antholzer/) for advice and numerous suggestions that have helped us to improve the quality of the content in many places.
+Parts of the following lecture material were taken from an on-site Julia workshop with the title [Introduction to Scientific Coding with Julia](https://noxthot.github.io/ss22_julia_workshop/) which was written by [Gregor Ehrensperger](https://ehrensperger.dev/), [Peter Kandolf](https://lfuonline.uibk.ac.at/public/people.vcard?id=59131), and [Jonas Kusch](https://lfuonline.uibk.ac.at/public/people.vcard?id=415344) and held in Obergurgl in July '22:
+- The foundation of the sections [start](.), [Introduction](pages/introduction) is taken from [Introduction - Introduction to Scientific Coding with Julia](https://noxthot.github.io/ss22_julia_workshop/pages/introduction/).
+- Parts of [Data Science](pages/datascience) are taken from [Data Science - Introduction to Scientific Coding with Julia](https://noxthot.github.io/ss22_julia_workshop/pages/datascience/).
+- Parts of [Parallel Computing](pages/hpc) are taken from [Parallel Computing - Introduction to Scientific Coding with Julia](https://noxthot.github.io/ss22_julia_workshop/pages/hpc/)
 
 ## Some general words on the organisation of this workshop
 
