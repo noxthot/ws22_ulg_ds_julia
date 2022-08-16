@@ -5,7 +5,7 @@ Add here global page variables to use throughout your website.
 author = "Stephan Antholzer, Gregor Ehrensperger, Johannes Sappl"
 mintoclevel = 2
 
-prepath = "ws22_ulg_julia_1st_semester"
+prepath = "ws22_ulg_ds_julia"
 
 hasplotly = true
 
