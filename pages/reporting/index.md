@@ -1,9 +1,11 @@
-@def title = "Pluto"
+@def title = "Reporting"
 @def hascode = true
 
-@def tags = ["introduction", "pluto"]
+@def tags = ["reporting"]
 
-# Pluto Notebook
+# Reporting
+
+## Pluto Notebook
 
 With [`Pluto.jl`](https://github.com/fonsp/Pluto.jl) Julia provides notebooks that are simple, lightweight and reactive. The notebooks can be shared easily since they also keep track of the used packages and their versions. By using [`PlutoUI.jl`](https://github.com/JuliaPluto/PlutoUI.jl) one can add UI elements like sliders, text fields and so on. It also has markdown support and it is possible to create a nice looking HTML export.
 

@@ -89,7 +89,7 @@ using StatsPlots
 @df df_survey boxplot(:ConvertedCompYearly)
 ```
 
-\figalt{Boxplot}{/assets/pages/datascience/exploratory_da_boxplot.png}
+\figalt{Boxplot}{/assets/pages/data_management/exploratory_da_boxplot.png}
 
 Apparently a couple of outliers totally screw our visualization. Fortunately, there is an [undocumented function argument](https://github.com/JuliaPlots/StatsPlots.jl/blob/db1a9e2f58ff9fb4beb3a0f7d133fcc8fd72b812/src/boxplot.jl#L14) that allows us to get rid of the outliers within the visualization:
 ```julia-repl
@@ -98,7 +98,7 @@ Apparently a couple of outliers totally screw our visualization. Fortunately, th
 
 So apparently around 50% of the developers earn $27000$ to $100000$ euros per year, the median being at about $56000$.
 
-\figalt{Boxplot}{/assets/pages/datascience/exploratory_da_boxplot_no_outliers.png}
+\figalt{Boxplot}{/assets/pages/data_management/exploratory_da_boxplot_no_outliers.png}
 
 Let us also have a look at the [cumulative distribution function (CDF)](https://en.wikipedia.org/wiki/Cumulative_distribution_function) of our data column. Therefore, we simply sort the values of the column and plot them on the $y$-axis while we scale the $x$-axis from $0$ to $1$.
 
@@ -106,7 +106,7 @@ Let us also have a look at the [cumulative distribution function (CDF)](https://
 julia> plot(sort(df_survey.ConvertedCompYearly), (1:nrow(df_survey)) ./ nrow(df_survey))
 ```
 
-\figalt{Cumulative distribution function plot}{/assets/pages/datascience/exploratory_da_cdf.png}
+\figalt{Cumulative distribution function plot}{/assets/pages/data_management/exploratory_da_cdf.png}
 
 The plot tells us (just like the quartiles already indicated) that most of the survey participates earn a lot less than 10Mio. Dollars. 
 
@@ -289,7 +289,7 @@ Dict{String, Int64} with 3 entries:
 julia> @df df_survey bar(countmap(:Country), legend=false)
 ```
 
-\figalt{Barplot showing participants per country}{/assets/pages/datascience/plot_explorative_da_country.json}
+\figalt{Barplot showing participants per country}{/assets/pages/data_management/plot_explorative_da_country.json}
 
 ### Boxplot: Salary in comparison to employment status
 
@@ -300,7 +300,7 @@ In the following plot we compare the salary of different employment states:
 @df df_survey boxplot(:Employment, :EuroCompYearly, xrotation=30, size=(500, 900), legend=false)
 ```
 
-\figalt{Boxplot visualizing salaries between different employment states}{/assets/pages/datascience/plot_explorative_da_salary_1.json}
+\figalt{Boxplot visualizing salaries between different employment states}{/assets/pages/data_management/plot_explorative_da_salary_1.json}
 
 We also used some optional arguments:
 - `xrotation=30` such that $x$-axis labels do not overlap,
@@ -318,7 +318,7 @@ Since visualizations usually condense information up to some extend, it is alway
 @df df_survey dotplot!(:Employment, :EuroCompYearly, legend=false)
 ```
 
-\figalt{Boxplot plus Dotsplot}{/assets/pages/datascience/plot_explorative_da_salary_2.json}
+\figalt{Boxplot plus Dotsplot}{/assets/pages/data_management/plot_explorative_da_salary_2.json}
 
 Combining the information of the two plots we obviously have too little data to judge about the empty and *I prefer not to say* category. Also it appears that the average salaries of freelancers are a lot higher than the salaries of employees. Also the 25% quantile of freelancers is comparable to the median salary of full-time employees.
 
@@ -331,7 +331,7 @@ v = Voyager(df_survey)
 ```
 
 Here is a screenshot that shows this tool in action:
-\figalt{Data Voyager}{/assets/pages/datascience/datavoyager.png}
+\figalt{Data Voyager}{/assets/pages/data_management/datavoyager.png}
 
 \exercise{Explore our dataframe with `DataVoyager.jl`.}
 

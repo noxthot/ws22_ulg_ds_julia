@@ -16,7 +16,7 @@ In unsupervised learning, we basically try to find patterns within unlabeled dat
 To demonstrate some applications of unsupervised and supervised machine learning algorithms we will have a look at the famous MNIST data set. This data set consists of 70.000 images of handwritten digits and additionally a label that tells the digit which is displayed in the individual images.
 
 The data set looks like this:
-\figenvsource{MNIST data set.}{/assets/pages/datascience/MnistExamples.png}{}{https://en.wikipedia.org/wiki/MNIST_database#/media/File:MnistExamples.png}
+\figenvsource{MNIST data set.}{/assets/pages/data_management/MnistExamples.png}{}{https://en.wikipedia.org/wiki/MNIST_database#/media/File:MnistExamples.png}
 
 But let us dive into this data set by ourselves. Luckily, there is a package [`MLDatasets.jl`](https://github.com/JuliaML/MLDatasets.jl) that makes it easy to load this data set (and also many others) into Julia. When you are loading the data set for the first time, you might need to confirm the download within the prompt.
 ```julia-repl
