@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="/ws22_ulg_ds_julia/libs/katex/katex.min.css">
+     
+   <link rel="stylesheet" href="/ws22_ulg_ds_julia/libs/highlight/github.min.css">
+   
+    <script src="/ws22_ulg_ds_julia/libs/clipboard.min.js"></script>
+  
+  
+  <script src="/ws22_ulg_ds_julia/libs/plotly-1_58_5.min.js"></script> 
+  <script>
+    // This function is used when calling `\fig{...}` See # Using \fig{...} below
+    const PlotlyJS_json = async (div, url) => {
+      response = await fetch(url); // get file
+      fig = await response.json(); // convert it to json
+      // Make the plot fit the screen responsively. See the documentation of plotly.js. https://plotly.com/javascript/responsive-fluid-layout/
+      if (typeof fig.config === 'undefined') { fig["config"]={} }
+      delete fig.layout.width
+      delete fig.layout.height
+      fig["layout"]["autosize"] = true
+      fig["config"]["autosizable"] = true
+      fig["config"]["responsive"] = true
+
+      // make it easier to scroll throught the website rather than being blocked by a figure.
+      fig.config["scrollZoom"] = false
+
+      // PlotlyJS.savefig by default add the some more attribute to make a static plot.
+      // Disable them to make the website fancier.
+      delete fig.config.staticPlot
+      delete fig.config.displayModeBar
+      delete fig.config.doubleClick
+      delete fig.config.showTips
+
+      Plotly.newPlot(div, fig);
+    };
+  </script>
+  
+  <link rel="stylesheet" href="/ws22_ulg_ds_julia/css/jtd.css">
+<link rel="stylesheet" href="/ws22_ulg_ds_julia/css/extras.css">
+<link rel="icon" href="/ws22_ulg_ds_julia/assets/favicon.ico">
+
+<style>
+  /* #148 wrap long header */
+  .franklin-content a.header-anchor,
+  .franklin-toc li a
+   {
+    word-wrap: break-word;
+    white-space: normal;
+  }
+</style>
+
+   <title>Data sets</title>  
+</head>
+<body>                      <!-- closed in foot.html -->
+<div class="page-wrap">   <!-- closed in foot.html -->
+  <!-- SIDE BAR -->
+  <div class="side-bar">
+    <div class="header">
+      <a href="/ws22_ulg_ds_julia/" class="title">
+        Julia
+      </a>
+    </div>
+    <label for="show-menu" class="show-menu">MENU</label>
+    <input type="checkbox" id="show-menu" role="button">
+    <div class="menu" id="side-menu">
+      <ul class="menu-list">
+        <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/" class="menu-list-link ">Start</a>
+        <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/" class="menu-list-link ">Introduction</a>
+          <ul class="menu-list-child-list ">
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/basis_datatypes_and_operations/" class="menu-list-link ">Basic Data Types and Operations</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/package_manager/" class="menu-list-link ">Package Manager</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/matrix_vectors/" class="menu-list-link ">Matrix and Vector Operations</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/conditional_evaluations/" class="menu-list-link ">Conditional evaluations</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/loops/" class="menu-list-link ">Loops</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/functions/" class="menu-list-link ">Functions</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/macros/" class="menu-list-link ">Macros</a>
+          </ul>
+        <li class="menu-list-item active"><a href="/ws22_ulg_ds_julia/pages/data_management/" class="menu-list-link active">Data Management</a>
+          <ul class="menu-list-child-list ">
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/data_management/loading_data/" class="menu-list-link ">Loading data</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/data_management/saving_data/" class="menu-list-link ">Saving data</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/data_management/exploratory_da/" class="menu-list-link ">Exploratory Data Analysis</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/data_management/datasets/" class="menu-list-link active">Data Sets</a>
+          </ul>
+          <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/neural_networks/" class="menu-list-link ">Neural Networks</a>
+          <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/reporting/" class="menu-list-link ">Reporting</a>
+      </ul>
+    </div>
+    <div class="footer">
+      This is <em>Just the docs</em>, adapted from the <a href="https://github.com/pmarsceill/just-the-docs" target="_blank">Jekyll theme</a>.
+    </div>
+  </div>
+  <!-- CONTENT -->
+  <div class="main-content-wrap"> <!-- closed in foot.html -->
+    <div class="main-content">    <!-- closed in foot.html -->
+      <div class="main-header">
+        SS22 Julia Workshop Obergurgl
+      </div>
+
+
+
+<!-- Content appended here (in class franklin-content) -->
+<div class="franklin-content"><h1 id="data_sets"><a href="#data_sets" class="header-anchor">Data sets</a></h1>
+<p>Let us assume that we took several pictures with our camera. Typically, these photos are simply stored as image files without any further description about the content of the images. We can understand this collection of photos as a data set and since we have no further description of the individual images, we speak about an <em>unlabeled data set</em>. By augmenting the unlabeled data set with interesting information, we obtain a <em>labeled data set</em>. &quot;Interesting&quot; in this context depends on the goal we want to achieve within our use case. For example, it could be interesting to know the content of the images, then we might label the images with descriptions like <em>beach</em>, <em>person</em>, <em>landscape</em>, <em>animal</em>, and so on. Or we would like to know whether the image was taken at day or night, so we label each image with this information, or possibly we are just interested in the number of persons in an image.</p>
+<p>Simply speaking, a <em>data set</em> is a collection of data &#40;and of course not restricted to images&#41;, <em>labeled data</em> is a data set that augments each data point with some meaningful tag&#40;s&#41; and in <em>unlabeled data</em> this tag is missing.</p>
+<h2 id="supervised_and_unsupervised_learning"><a href="#supervised_and_unsupervised_learning" class="header-anchor">Supervised and unsupervised learning</a></h2>
+<p>In unsupervised learning, we basically try to find patterns within unlabeled data. In supervised learning, we try to map an input &#40;features&#41; to an output &#40;labels&#41; and thus require labeled data. Supervised learning boils down to prediction tasks like classification or regression.</p>
+<h2 id="mnist_data_set"><a href="#mnist_data_set" class="header-anchor">MNIST data set</a></h2>
+<p>To demonstrate some applications of unsupervised and supervised machine learning algorithms we will have a look at the famous MNIST data set. This data set consists of 70.000 images of handwritten digits and additionally a label that tells the digit which is displayed in the individual images.</p>
+<p>The data set looks like this: 
+<figure style="text-align:center;">
+<img src="/ws22_ulg_ds_julia/assets/pages/data_management/MnistExamples.png" style="padding:0; " alt=" MNIST data set."/>
+<figcaption> MNIST data set. Original source: <p style="font-size:11px"><a href=" https://en.wikipedia.org/wiki/MNIST_database#/media/File:MnistExamples.png"> https://en.wikipedia.org/wiki/MNIST_database#/media/File:MnistExamples.png</a></p></figcaption>
+</figure>
+</p>
+<p>But let us dive into this data set by ourselves. Luckily, there is a package <a href="https://github.com/JuliaML/MLDatasets.jl"><code>MLDatasets.jl</code></a> that makes it easy to load this data set &#40;and also many others&#41; into Julia. When you are loading the data set for the first time, you might need to confirm the download within the prompt.</p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-keyword">using</span> MLDatasets
+</span>
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> mnist_data = MNIST()
+</span>dataset MNIST:
+  metadata    =&gt;    Dict{String, Any} with 3 entries
+  split       =&gt;    :train
+  features    =&gt;    28×28×60000 Array{Float32, 3}
+  targets     =&gt;    60000-element Vector{Int64}</code></pre>
+<p>Apparently, <code>mnist_data</code> comes with some meta information and when having a look at the help for <code>MNIST&#40;&#41;</code> we get the &#40;incomplete&#41; description:</p>
+<pre><code class="julia hljs">•  metadata: A dictionary containing additional information on the dataset.
+
+    •  features: An array storing the data features.
+
+    •  targets: An array storing the targets <span class="hljs-keyword">for</span> supervised learning.
+
+    •  split.</code></pre>
+<p>We are mainly interested in <code>features</code> where we find the <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>28</mn><mo>×</mo><mn>28</mn></mrow><annotation encoding="application/x-tex">28 \times 28</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">28</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">28</span></span></span></span> images of handwritten digits and at <code>targets</code> where we find the according labels. The <code>split</code> tells at which part of the data set we are looking. Especially for supervised learning we need a way to test our model with previously unseen data. So usually - in the context of supervised learning - data sets are split into two parts: a <em>training data set</em> which is used for training or fitting a model and a <em>test data set</em> which is used to evaluate the quality of the model. For some algorithms, we often introduce a third data split: a <em>validation data set</em> which is used to evaluate a model while tuning hyper parameters or to stop training before running into overfitting. But for this workshop we will stick to training and test data set. The manual also states that <code>MNIST&#40;&#41;</code> is setting <code>split</code> to <code>:train</code> by default.</p>
+<button type="button" class="collapsible" style="background-color:#b5ddff"> Exercise </button><div class="collapsiblecontent">  Also load the test data set from MNIST into Julia. How many trainings images and how many test images do we have in our data set?</p>
+<p><div class="solution"> Solution </div><div class="solutioncollapsible">  </p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> df_train = MNIST(:train)
+</span>
+dataset MNIST:
+  metadata    =&gt;    Dict{String, Any} with 3 entries
+  split       =&gt;    :train
+  features    =&gt;    28×28×60000 Array{Float32, 3}
+  targets     =&gt;    60000-element Vector{Int64}
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> df_test = MNIST(:test)
+</span>dataset MNIST:
+  metadata    =&gt;    Dict{String, Any} with 3 entries
+  split       =&gt;    :test
+  features    =&gt;    28×28×10000 Array{Float32, 3}
+  targets     =&gt;    10000-element Vector{Int64}</code></pre>
+<p></div> </div>
+<button type="button" class="collapsible" style="background-color:#b5ddff"> Exercise </button><div class="collapsiblecontent"> <code>MLDatasets.jl</code> also comes with a function <code>convert2image&#40;&#41;</code> which can be used to visualize specific images of the data set. Read the man page of <code>convert2image</code> and use it to look at the first couple of images from the training and test data set. What are the corresponding labels?</p>
+<p><div class="solution"> Solution </div><div class="solutioncollapsible">  </p>
+<pre><code class="julia hljs">julia&gt; <span class="hljs-keyword">using</span> ImageInTerminal, ImageShow
+
+julia&gt; nrImgs = <span class="hljs-number">5</span>
+<span class="hljs-number">5</span>
+
+julia&gt; convert2image(df_train, <span class="hljs-number">1</span>:nrImgs)
+
+julia&gt; convert2image(df_test, <span class="hljs-number">1</span>:nrImgs)</code></pre>
+<p></div> </div>
+<p>Most learning algorithms require the data to be in tabular form, but the <code>features</code> are currently given as a three-dimensional array. So our next goal is to reshape the training and test data from an <code>28×28×NR_IMAGES</code> array to a <code>784×NR_IMAGES</code> array.</p>
+<button type="button" class="collapsible" style="background-color:#b5ddff"> Exercise </button><div class="collapsiblecontent">  Use <code>reshape&#40;&#41;</code> to flatten the images within <code>df_train.features</code> and <code>df_test.features</code>. After that, transpose the resulting flattened table such that observations are stored in rows &#40;instead of columns&#41;. In the end, store the reshaped array in the variables <code>X_train</code> and <code>X_test</code>.</p>
+<p><div class="solution"> Solution </div><div class="solutioncollapsible">  </p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> X_train = reshape(df_train.features, (<span class="hljs-number">28</span> * <span class="hljs-number">28</span>, :))&#x27;
+</span>60000×784 adjoint(::Matrix{Float32}) with eltype Float32:
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  …  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0     0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0     0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0     0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0     0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  …  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ ⋮                        ⋮                        ⋮                        ⋮                        ⋮    ⋱       ⋮                        ⋮                        ⋮                        ⋮              
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  …  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0     0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0     0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0     0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0     0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> X_test = reshape(df_test.features, (<span class="hljs-number">28</span> * <span class="hljs-number">28</span>, :))&#x27;
+</span>10000×784 adjoint(::Matrix{Float32}) with eltype Float32:
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  …  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0     0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0     0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0     0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0     0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  …  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ ⋮                        ⋮                        ⋮                        ⋮                        ⋮    ⋱       ⋮                        ⋮                        ⋮                        ⋮              
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  …  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0     0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0     0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0     0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0
+ 0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0     0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0</code></pre>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext> </mtext></mrow><annotation encoding="application/x-tex">~</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0em;"></span><span class="mspace nobreak"> </span></span></span></span> </div> </div>
+<p>When using different algorithms, we always have to keep in mind in which format and shape our data is stored. Different algorithms have different requirements. Sometimes observations have to be stored row wise &#40;each observation in a separate row&#41;, sometimes they have to be stored column wise. Some algorithms require a <code>Matrix</code> and others a <code>DataFrame</code>.</p>
+<h2 id="pluto_notebook"><a href="#pluto_notebook" class="header-anchor">Pluto Notebook</a></h2>
+<button type="button" class="collapsible" style="background-color:#fffca5"> Solution </button><div class="collapsiblecontent">  <a href="/ws22_ulg_ds_julia/notebooks/html/ds_dataset.jl/">Click here</a> to download the complementary Pluto notebook. </div>
+<div class="page-foot">
+    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: August 16, 2022.
+    Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+</div>
+</div><!-- CONTENT ENDS HERE -->
+    </div> <!-- end of class main-content -->
+    </div> <!-- end of class main-content-wrap -->
+    </div> <!-- end of class page-wrap-->
+    
+      
+
+
+
+    
+    
+      
+
+
+      <script>
+    (function(){
+    
+      // Get the elements.
+      // - the 'pre' element.
+      // - the 'div' with the 'paste-content' id.
+    
+      var pre = document.getElementsByTagName('pre');
+    
+      // Add a copy button in the 'pre' element.
+      // which only has the className of 'language-'.
+    
+      for (var i = 0; i < pre.length; i++) {
+        var isLanguage = pre[i].children[0].tagName == 'CODE';
+    
+        if ( isLanguage ) {
+          var button           = document.createElement('button');
+              button.className = 'copy-button';
+              button.textContent = 'Copy';
+    
+              pre[i].appendChild(button);
+        }
+      };
+    
+      // Run Clipboard
+    
+      var copyCode = new Clipboard('.copy-button', {
+        target: function(trigger) {
+          return trigger.previousElementSibling;
+        }
+      });
+    
+      // On success:
+      // - Change the "Copy" text to "Copied".
+      // - Swap it to "Copy" in 2s.
+      // - Lead user to the "contenteditable" area with Velocity scroll.
+    
+      copyCode.on('success', function(event) {
+        event.clearSelection();
+        event.trigger.textContent = 'Copied';
+        window.setTimeout(function() {
+          event.trigger.textContent = 'Copy';
+        }, 2000);
+    
+      });
+    
+      // On error (Safari):
+      // - Change the  "Press Ctrl+C to copy"
+      // - Swap it to "Copy" in 2s.
+    
+      copyCode.on('error', function(event) {
+        event.trigger.textContent = 'Press "Ctrl + C" to copy';
+        window.setTimeout(function() {
+          event.trigger.textContent = 'Copy';
+        }, 5000);
+      });
+    
+    })();
+</script>
+    
+  </body>
+</html>
+
+<script>
+  var coll = document.getElementsByClassName("collapsible");
+  var i;
+
+  for (i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function() {
+      this.classList.toggle("active");
+      var content = this.nextElementSibling;
+      if (content.style.display === "block") {
+        content.style.display = "none";
+      } else {
+        content.style.display = "block";
+      }
+    });
+  }
+</script>
+
+<script>
+  var coll = document.getElementsByClassName("solutioncollapsible");
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const myVar = urlParams.get('solution')
+  if ( myVar == 'true') {
+    for (i = 0; i < coll.length; i++) {
+      coll[i].style.display = "block";
+    }
+  }
+</script>

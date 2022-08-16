@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="/ws22_ulg_ds_julia/libs/katex/katex.min.css">
+     
+   <link rel="stylesheet" href="/ws22_ulg_ds_julia/libs/highlight/github.min.css">
+   
+    <script src="/ws22_ulg_ds_julia/libs/clipboard.min.js"></script>
+  
+  
+  <script src="/ws22_ulg_ds_julia/libs/plotly-1_58_5.min.js"></script> 
+  <script>
+    // This function is used when calling `\fig{...}` See # Using \fig{...} below
+    const PlotlyJS_json = async (div, url) => {
+      response = await fetch(url); // get file
+      fig = await response.json(); // convert it to json
+      // Make the plot fit the screen responsively. See the documentation of plotly.js. https://plotly.com/javascript/responsive-fluid-layout/
+      if (typeof fig.config === 'undefined') { fig["config"]={} }
+      delete fig.layout.width
+      delete fig.layout.height
+      fig["layout"]["autosize"] = true
+      fig["config"]["autosizable"] = true
+      fig["config"]["responsive"] = true
+
+      // make it easier to scroll throught the website rather than being blocked by a figure.
+      fig.config["scrollZoom"] = false
+
+      // PlotlyJS.savefig by default add the some more attribute to make a static plot.
+      // Disable them to make the website fancier.
+      delete fig.config.staticPlot
+      delete fig.config.displayModeBar
+      delete fig.config.doubleClick
+      delete fig.config.showTips
+
+      Plotly.newPlot(div, fig);
+    };
+  </script>
+  
+  <link rel="stylesheet" href="/ws22_ulg_ds_julia/css/jtd.css">
+<link rel="stylesheet" href="/ws22_ulg_ds_julia/css/extras.css">
+<link rel="icon" href="/ws22_ulg_ds_julia/assets/favicon.ico">
+
+<style>
+  /* #148 wrap long header */
+  .franklin-content a.header-anchor,
+  .franklin-toc li a
+   {
+    word-wrap: break-word;
+    white-space: normal;
+  }
+</style>
+
+   <title>Basic Data Types and Basic Operations</title>  
+</head>
+<body>                      <!-- closed in foot.html -->
+<div class="page-wrap">   <!-- closed in foot.html -->
+  <!-- SIDE BAR -->
+  <div class="side-bar">
+    <div class="header">
+      <a href="/ws22_ulg_ds_julia/" class="title">
+        Julia
+      </a>
+    </div>
+    <label for="show-menu" class="show-menu">MENU</label>
+    <input type="checkbox" id="show-menu" role="button">
+    <div class="menu" id="side-menu">
+      <ul class="menu-list">
+        <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/" class="menu-list-link ">Start</a>
+        <li class="menu-list-item active"><a href="/ws22_ulg_ds_julia/pages/introduction/" class="menu-list-link active">Introduction</a>
+          <ul class="menu-list-child-list ">
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/basis_datatypes_and_operations/" class="menu-list-link active">Basic Data Types and Operations</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/package_manager/" class="menu-list-link ">Package Manager</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/matrix_vectors/" class="menu-list-link ">Matrix and Vector Operations</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/conditional_evaluations/" class="menu-list-link ">Conditional evaluations</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/loops/" class="menu-list-link ">Loops</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/functions/" class="menu-list-link ">Functions</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/macros/" class="menu-list-link ">Macros</a>
+          </ul>
+        <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/data_management/" class="menu-list-link ">Data Management</a>
+          <ul class="menu-list-child-list ">
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/data_management/loading_data/" class="menu-list-link ">Loading data</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/data_management/saving_data/" class="menu-list-link ">Saving data</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/data_management/exploratory_da/" class="menu-list-link ">Exploratory Data Analysis</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/data_management/datasets/" class="menu-list-link ">Data Sets</a>
+          </ul>
+          <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/neural_networks/" class="menu-list-link ">Neural Networks</a>
+          <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/reporting/" class="menu-list-link ">Reporting</a>
+      </ul>
+    </div>
+    <div class="footer">
+      This is <em>Just the docs</em>, adapted from the <a href="https://github.com/pmarsceill/just-the-docs" target="_blank">Jekyll theme</a>.
+    </div>
+  </div>
+  <!-- CONTENT -->
+  <div class="main-content-wrap"> <!-- closed in foot.html -->
+    <div class="main-content">    <!-- closed in foot.html -->
+      <div class="main-header">
+        SS22 Julia Workshop Obergurgl
+      </div>
+
+
+
+<!-- Content appended here (in class franklin-content) -->
+<div class="franklin-content"><h1 id="basic_data_types_and_basic_operations"><a href="#basic_data_types_and_basic_operations" class="header-anchor">Basic Data Types and Basic Operations</a></h1>
+<h2 id="variables"><a href="#variables" class="header-anchor">Variables</a></h2>
+<p>A variable is a name that is bound to a value and is used to store a value for later use. See the following examples:</p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> x = <span class="hljs-number">5</span>
+</span>5
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> y = -<span class="hljs-number">3</span>
+</span>-3
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> z = <span class="hljs-number">2.5</span>
+</span>2.5
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> s = <span class="hljs-string">&quot;O Romeo, Romeo&quot;</span>
+</span>&quot;O Romeo, Romeo&quot;
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> greekText = <span class="hljs-string">&quot;Στυπιδ Ρ&quot;</span>
+</span>&quot;Στυπιδ Ρ&quot;</code></pre>
+<h2 id="data_types"><a href="#data_types" class="header-anchor">Data types</a></h2>
+<p>Julia supports basic data types like Integers, Floating-Point Numbers, Strings and <a href="https://docs.julialang.org/en/v1/manual/types/">many more</a>. The most generic type is called <code>Any</code> and thus every type is a subtype of <code>Any</code>. Types are built in a hierarchical manner and can be visualized as a type graph &#40;examples for partial type graphs are given in <a href="https://en.wikibooks.org/wiki/Introducing_Julia/Types">Wikibooks - Introducing Julia</a>&#41;.</p>
+<p>Although Julia&#39;s type system is dynamic, it also allows to explicitly set a specific type for certain values and thus also gains advantages of static type systems.</p>
+<p>In the following we will briefly look into some basic data types and the operations defined on them. </p>
+<h3 id="numeric_types"><a href="#numeric_types" class="header-anchor">Numeric types</a></h3>
+<p>Integers and Floating-Point Numbers are the building blocks for arithmetic and computational operations. They are both subtypes of the more general type <code>Real</code> and come in different primitive numeric types:</p>
+<ul>
+<li><p>Integer types:</p>
+</li>
+</ul>
+<table><tr><th align="right">Type</th><th align="right">Signed</th><th align="right">Number of bits</th></tr><tr><td align="right">Int8</td><td align="right">Yes</td><td align="right">8</td></tr><tr><td align="right">UInt8</td><td align="right">No</td><td align="right">8</td></tr><tr><td align="right">Int16</td><td align="right">Yes</td><td align="right">16</td></tr><tr><td align="right">UInt16</td><td align="right">No</td><td align="right">16</td></tr><tr><td align="right">Int32</td><td align="right">Yes</td><td align="right">32</td></tr><tr><td align="right">UInt32</td><td align="right">No</td><td align="right">32</td></tr><tr><td align="right">Int64</td><td align="right">Yes</td><td align="right">64</td></tr><tr><td align="right">UInt64</td><td align="right">No</td><td align="right">64</td></tr><tr><td align="right">Int128</td><td align="right">Yes</td><td align="right">128</td></tr><tr><td align="right">UInt128</td><td align="right">No</td><td align="right">128</td></tr><tr><td align="right">Bool</td><td align="right">N/A</td><td align="right">8</td></tr></table>
+<ul>
+<li><p>Floating-point types:</p>
+</li>
+</ul>
+<table><tr><th align="right">Type</th><th align="right">Precision</th><th align="right">Number of bits</th></tr><tr><td align="right">Float16</td><td align="right">half</td><td align="right">16</td></tr><tr><td align="right">Float32</td><td align="right">single</td><td align="right">32</td></tr><tr><td align="right">Float64</td><td align="right">double</td><td align="right">64</td></tr></table>
+<p>Additionally, Julia also offers support for Complex and Rational Numbers. The according types are given by e.g. <code>Complex&#123;Int64&#125;</code> and <code>Rational&#123;Int64&#125;</code>. On a side note, there is also support for <a href="https://docs.julialang.org/en/v1/manual/integers-and-floating-point-numbers/#Arbitrary-Precision-Arithmetic">arbitrary precision arithmetic</a> and of course you are also able to define your <a href="https://docs.julialang.org/en/v1/manual/types/#Primitive-Types">own types</a>.</p>
+<p>The type hierarchy can be investigated with the commands <code>subtypes&#40;&#41;</code> and <code>supertype&#40;&#41;</code>:</p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> supertype(<span class="hljs-built_in">Complex</span>{<span class="hljs-built_in">Int64</span>})
+</span>Number
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> subtypes(<span class="hljs-built_in">Number</span>)
+</span>2-element Vector{Any}:
+ Complex
+ Real
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> subtypes(<span class="hljs-built_in">Real</span>)
+</span>4-element Vector{Any}:
+ AbstractFloat
+ AbstractIrrational
+ Integer
+ Rational</code></pre>
+<p>There is also a command for checking the type of a value or variable:</p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> typeof(<span class="hljs-number">10</span>)
+</span>Int64
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> typeof(<span class="hljs-number">2.5</span>)
+</span>Float64
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> typeof(<span class="hljs-number">2</span><span class="hljs-literal">im</span>)
+</span>Complex{Int64}
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> typeof(<span class="hljs-number">3</span>//<span class="hljs-number">5</span>)
+</span>Rational{Int64}</code></pre>
+<p>You may ask yourself: Why is this important when Julia is dynamically typed and thus not requires types to be explicitly set? Among others, there are three primary purposes for using types: </p>
+<ul>
+<li><p>improve human readability</p>
+</li>
+<li><p>catch programmer errors</p>
+</li>
+<li><p>for making use of a concept called <a href="../functions/#multiple_dispatch">multiple dispatch</a> &#40;which we will talk about later in this workshop&#41;. </p>
+</li>
+</ul>
+<p>It may also get important when high precision, memory constraints or fast computation is required.</p>
+<p>So far, we did not speak about basic mathematical operations, which are of course defined for all primitive numeric types. </p>
+<ul>
+<li><p><code>&#43;</code> corresponds to addition, </p>
+</li>
+<li><p><code>-</code> to subtraction, </p>
+</li>
+<li><p><code>*</code> to multiplication, </p>
+</li>
+<li><p><code>/</code> to division, </p>
+</li>
+<li><p><code>÷</code> for integer division, and</p>
+</li>
+<li><p><code>x^y</code> raises <code>x</code> to the <code>y</code>th power</p>
+</li>
+</ul>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> x = <span class="hljs-number">3</span> + <span class="hljs-number">2</span><span class="hljs-literal">im</span>
+</span>3 + 2im
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> y = <span class="hljs-number">5.2</span>
+</span>5.2
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> x + y
+</span>8.2 + 2.0im
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> x - y
+</span>-2.2 + 2.0im
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> x * y
+</span>15.600000000000001 + 10.4im
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> x / y
+</span>0.5769230769230769 + 0.3846153846153846im
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> y ÷ <span class="hljs-number">3</span>    <span class="hljs-comment"># to type ÷, simply enter \div followed by tab</span>
+</span>1.0
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> x^y
+</span>-784.728604218539 + 66.05617374305294im</code></pre>
+<p>Julia also deals with brackets and chained operations by usual mathematical rules:</p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-number">1</span> + <span class="hljs-number">5</span> * (<span class="hljs-number">3</span> - <span class="hljs-number">2.1</span>) + (<span class="hljs-number">2</span>^<span class="hljs-number">5</span>)
+</span>37.5</code></pre>
+<p><code>Bool</code> types are designed to build logical expressions and only carry two possible values <code>true</code> &#40;<code>1</code>&#41; and <code>false</code> &#40;<code>0</code>&#41;. They offer the following Boolean operators: </p>
+<ul>
+<li><p><code>&#33;x</code> &#40;negation&#41;, </p>
+</li>
+<li><p><code>x &amp;&amp; y</code> &#40;logical AND&#41;, </p>
+</li>
+<li><p><code>x || y</code> &#40;logical OR&#41;. </p>
+</li>
+</ul>
+<p>Note that <code>Bool</code> is still an integer type and and thus all the numerical operations are also defined for this type:</p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-literal">true</span> &amp;&amp; <span class="hljs-literal">false</span>
+</span>false
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-literal">false</span> * <span class="hljs-number">532</span>
+</span>0
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-literal">true</span> * <span class="hljs-number">532</span>
+</span>532
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-literal">true</span> || <span class="hljs-literal">false</span>
+</span>true
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> (<span class="hljs-literal">true</span> &amp;&amp; <span class="hljs-literal">false</span>) || !<span class="hljs-literal">true</span>
+</span>false</code></pre>
+<p>Integer types additionally offer <a href="https://docs.julialang.org/en/v1/manual/mathematical-operations/#Bitwise-Operators">bitwise operators</a> which will not be discussed in this workshop.</p>
+<h3 id="characters_and_strings"><a href="#characters_and_strings" class="header-anchor">Characters and Strings</a></h3>
+<p>Strings are finite sequences of characters. But what is a character? Julia&#39;s built-in concrete type used for strings is <code>String</code> and this type supports the whole range of <a href="https://www.unicode.org/versions/latest/">Unicode</a> characters via UTF-8 encoding. Possible characters include latin and greek letters, aswell as emoji and many many <a href="https://www.unicode.org/charts/">more</a>.</p>
+<p>A single character can be stored as a <code>Char</code> type using single quotation marks <code>&#39;&#39;</code> while a <code>String</code> type uses double quotation marks <code>&quot;&quot;</code>:</p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> x = <span class="hljs-string">&#x27;α&#x27;</span>
+</span>&#x27;α&#x27;: Unicode U+03B1 (category Ll: Letter, lowercase)
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> y = <span class="hljs-string">&quot;α&quot;</span>
+</span>&quot;α&quot;
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> z = <span class="hljs-string">&quot;αγ&quot;</span>
+</span>&quot;αγ&quot;
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> cantdo = &#x27;αγ&#x27;
+</span>ERROR: syntax: character literal contains multiple characters
+Stacktrace:
+ [1] top-level scope
+   @ none:1</code></pre>
+<p>And Julia even supports the use of Unicode as variable names which for example allows to use the same notation as the one used for scientific work. To add some Unicode math symbol, type the backslashed <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>LaTeX</mtext></mrow><annotation encoding="application/x-tex">\LaTeX</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8988em;vertical-align:-0.2155em;"></span><span class="mord text"><span class="mord textrm">L</span><span class="mspace" style="margin-right:-0.36em;"></span><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6833em;"><span style="top:-2.905em;"><span class="pstrut" style="height:2.7em;"></span><span class="mord"><span class="mord textrm mtight sizing reset-size6 size3">A</span></span></span></span></span></span><span class="mspace" style="margin-right:-0.15em;"></span><span class="mord text"><span class="mord textrm">T</span><span class="mspace" style="margin-right:-0.1667em;"></span><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.4678em;"><span style="top:-2.7845em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord textrm">E</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2155em;"><span></span></span></span></span><span class="mspace" style="margin-right:-0.125em;"></span><span class="mord textrm">X</span></span></span></span></span></span> symbol name followed by a tab. E.g. <code>\alpha</code> turns into <code>α</code>:</p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> α = <span class="hljs-number">10</span>
+</span>10
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> β = <span class="hljs-number">20</span>
+</span>20
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> γ = α + β
+</span>30</code></pre>
+<p>We bet you are now curious about adding some emojis to spice up your code. In a similar manner we use <code>\:smile_cat:</code> followed by a tab to get 😸. To view the list of all the available emojis simply type <code>\:</code> followed by a tab in your REPL. Here is an emoji example which demonstrates why you can not compare apples and pears &#40;spoiler: they are of different types&#41;:</p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> 🍎 = <span class="hljs-string">&quot;nobody likes me&quot;</span>
+</span>&quot;nobody likes me&quot;
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> 🍐 = <span class="hljs-string">&#x27;Ω&#x27;</span>
+</span>&#x27;Ω&#x27;: Unicode U+03A9 (category Lu: Letter, uppercase)
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> 🍎 &gt; 🍐
+</span>ERROR: MethodError: no method matching isless(::Char, ::String)</code></pre>
+<p>Since strings are sequences, they also allow indexing &#40;note that indexing in Julia starts with <code>1</code>&#41;:</p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> mytext = <span class="hljs-string">&quot;I am a String&quot;</span>
+</span>&quot;I am a String&quot;
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> mytext[<span class="hljs-number">1</span>]
+</span>&#x27;I&#x27;: ASCII/Unicode U+0049 (category Lu: Letter, uppercase)
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> mytext[<span class="hljs-number">8</span>]
+</span>&#x27;S&#x27;: ASCII/Unicode U+0053 (category Lu: Letter, uppercase)</code></pre>
+<p>Common operations on strings are:</p>
+<ul>
+<li><p><code>a * b</code> for concatenating two strings <code>a</code> and <code>b</code>,</p>
+</li>
+<li><p><code>length&#40;a&#41;</code> to get the number of characters of a string <code>a</code>,</p>
+</li>
+<li><p><code>occursin&#40;a, b&#41;</code> to find out whether <code>a</code> is a substring of <code>b</code> and </p>
+</li>
+<li><p><a href="https://docs.julialang.org/en/v1/manual/strings/#Common-Operations">more</a>.</p>
+</li>
+</ul>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> mystring = <span class="hljs-string">&quot;Mathematik&quot;</span>
+</span>&quot;Mathematik&quot;
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> mystring = <span class="hljs-string">&quot;julialang&quot;</span>
+</span>&quot;julialang&quot;
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> mystring * <span class="hljs-string">&quot; is my favourite language&quot;</span>
+</span>&quot;julialang is my favourite language&quot;
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> length(mystring)
+</span>9
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> occursin(<span class="hljs-string">&quot;alan&quot;</span>, mystring)
+</span>true</code></pre>
+<h3 id="structs_and_dictionaries"><a href="#structs_and_dictionaries" class="header-anchor">Structs and Dictionaries</a></h3>
+<p>Moreover, Julia allows you to define your own data types via <code>struct</code>. As an example, let us define a point</p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-keyword">struct</span> PointObject
+          x::<span class="hljs-built_in">Float64</span>
+          y::<span class="hljs-built_in">Float64</span>
+       <span class="hljs-keyword">end</span>
+</span>
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> p = PointObject(<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>)
+</span>PointObject(1.0, 2.0)
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> p.x
+</span>1.0
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> p.y
+</span>2.0</code></pre>
+<p>Now we have created our own data type <code>PointObject</code>, which stores an <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span> and a <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi></mrow><annotation encoding="application/x-tex">y</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span></span></span></span> coordinate. Note that creating a point by <code>p &#61; PointObject&#40;1.0, 2.0&#41;</code> directly fixes the coordinates. If you wish to change these after construction, you will observe that Julia forbids you to do so. To allow modifying values, we can use the <code>mutable</code> command when defining the struct, which gives</p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-keyword">mutable struct</span> PointMutable
+          x::<span class="hljs-built_in">Float64</span>
+          y::<span class="hljs-built_in">Float64</span>
+       <span class="hljs-keyword">end</span>
+</span>
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> p = PointMutable(<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>)
+</span>PointMutable(1.0, 2.0)
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> p.x = <span class="hljs-number">3.0</span>
+</span>3.0
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> p.y
+</span>2.0</code></pre>
+<p>Note, that a point does not necessarily need to have coordinates of type <code>Float64</code>. To extend usability of structs, Julia provides us with the concept of <em>type parameters</em>:</p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-keyword">struct</span> Point{T}
+          x::T
+          y::T
+       <span class="hljs-keyword">end</span>
+</span>
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> pFloat = Point{<span class="hljs-built_in">Float64</span>}(<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>)
+</span>Point{Float64}(1.0, 2.0)
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> pInt = Point{<span class="hljs-built_in">Int64</span>}(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)
+</span>Point{Int64}(1, 2)</code></pre>
+<p>Note that using <code>&#123;T&#125;</code> behind the struct name lets us use <code>T</code> as a new type that can be defined when creating an object of type <code>Point</code>. You can also have two different types in one object. To account for such situations, we can define</p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-keyword">struct</span> Point1{T, R}
+          x::T
+          y::R
+       <span class="hljs-keyword">end</span>
+</span>
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> pFloat = Point1{<span class="hljs-built_in">Float64</span>, <span class="hljs-built_in">Float32</span>}(<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>)
+</span>Point1{Float64, Float32}(1.0, 2.0f0)
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> pInt = Point1{<span class="hljs-built_in">Int</span>, <span class="hljs-built_in">Float64</span>}(<span class="hljs-number">1</span>, <span class="hljs-number">2.0</span>)
+</span>Point1{Int64, Float64}(1, 2.0)</code></pre>
+<p>Moreover, we can restrict our <code>R</code> to a certain set of types. If <code>R</code> is supposed to be a subtype of <code>Real</code>, we can write</p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-keyword">struct</span> Point2{T, R&lt;:<span class="hljs-built_in">Real</span>}
+          x::T
+          y::R
+       <span class="hljs-keyword">end</span>
+</span>
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> pFloat = Point2{<span class="hljs-built_in">Float64</span>, <span class="hljs-built_in">Float32</span>}(<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>)
+</span>Point2{Float64, Float32}(1.0, 2.0f0)
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> pInt = Point2{<span class="hljs-built_in">Int</span>, <span class="hljs-built_in">Float64</span>}(<span class="hljs-number">1</span>, <span class="hljs-number">2.0</span>)
+</span>Point2{Int64, Float64}(1, 2.0)
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> pComplex = Point2{<span class="hljs-built_in">Int</span>, <span class="hljs-built_in">Complex</span>}(<span class="hljs-number">1</span>, <span class="hljs-number">2</span><span class="hljs-literal">im</span>)
+</span>ERROR: TypeError: in Point2, in R, expected R&lt;:Real, got Type{Complex}
+Stacktrace:
+ [1] top-level scope
+   @ REPL[4]:1</code></pre>
+<p>Sometimes, we do not want to specify all parameters of a struct during construction. We will revisit this problem once we have introduced functions.</p>
+<p>An alternative for storing multiple objects under one primary name are <em>dictionaries</em>. If we want to store multiple parameters, we can use</p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> params = <span class="hljs-built_in">Dict</span>(<span class="hljs-string">&quot;α&quot;</span>=&gt;<span class="hljs-number">1</span>, <span class="hljs-string">&quot;β&quot;</span>=&gt;<span class="hljs-number">2.4</span>)
+</span>Dict{String, Real} with 2 entries:
+  &quot;α&quot; =&gt; 1
+  &quot;β&quot; =&gt; 2.4
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> params[<span class="hljs-string">&quot;α&quot;</span>]
+</span>1
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> params[<span class="hljs-string">&quot;β&quot;</span>]
+</span>2.4</code></pre>
+<div class="page-foot">
+    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: August 16, 2022.
+    Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+</div>
+</div><!-- CONTENT ENDS HERE -->
+    </div> <!-- end of class main-content -->
+    </div> <!-- end of class main-content-wrap -->
+    </div> <!-- end of class page-wrap-->
+    
+      
+
+
+
+    
+    
+      
+
+
+      <script>
+    (function(){
+    
+      // Get the elements.
+      // - the 'pre' element.
+      // - the 'div' with the 'paste-content' id.
+    
+      var pre = document.getElementsByTagName('pre');
+    
+      // Add a copy button in the 'pre' element.
+      // which only has the className of 'language-'.
+    
+      for (var i = 0; i < pre.length; i++) {
+        var isLanguage = pre[i].children[0].tagName == 'CODE';
+    
+        if ( isLanguage ) {
+          var button           = document.createElement('button');
+              button.className = 'copy-button';
+              button.textContent = 'Copy';
+    
+              pre[i].appendChild(button);
+        }
+      };
+    
+      // Run Clipboard
+    
+      var copyCode = new Clipboard('.copy-button', {
+        target: function(trigger) {
+          return trigger.previousElementSibling;
+        }
+      });
+    
+      // On success:
+      // - Change the "Copy" text to "Copied".
+      // - Swap it to "Copy" in 2s.
+      // - Lead user to the "contenteditable" area with Velocity scroll.
+    
+      copyCode.on('success', function(event) {
+        event.clearSelection();
+        event.trigger.textContent = 'Copied';
+        window.setTimeout(function() {
+          event.trigger.textContent = 'Copy';
+        }, 2000);
+    
+      });
+    
+      // On error (Safari):
+      // - Change the  "Press Ctrl+C to copy"
+      // - Swap it to "Copy" in 2s.
+    
+      copyCode.on('error', function(event) {
+        event.trigger.textContent = 'Press "Ctrl + C" to copy';
+        window.setTimeout(function() {
+          event.trigger.textContent = 'Copy';
+        }, 5000);
+      });
+    
+    })();
+</script>
+    
+  </body>
+</html>
+
+<script>
+  var coll = document.getElementsByClassName("collapsible");
+  var i;
+
+  for (i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function() {
+      this.classList.toggle("active");
+      var content = this.nextElementSibling;
+      if (content.style.display === "block") {
+        content.style.display = "none";
+      } else {
+        content.style.display = "block";
+      }
+    });
+  }
+</script>
+
+<script>
+  var coll = document.getElementsByClassName("solutioncollapsible");
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const myVar = urlParams.get('solution')
+  if ( myVar == 'true') {
+    for (i = 0; i < coll.length; i++) {
+      coll[i].style.display = "block";
+    }
+  }
+</script>

@@ -1,0 +1,4 @@
+Sitemap: https://noxthot.github.io/ws22_ulg_ds_julia/sitemap.xml
+
+User-agent: *
+Disallow:

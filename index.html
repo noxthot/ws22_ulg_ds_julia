@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+   <link rel="stylesheet" href="/ws22_ulg_ds_julia/libs/highlight/github.min.css">
+   
+    <script src="/ws22_ulg_ds_julia/libs/clipboard.min.js"></script>
+  
+  
+  <script src="/ws22_ulg_ds_julia/libs/plotly-1_58_5.min.js"></script> 
+  <script>
+    // This function is used when calling `\fig{...}` See # Using \fig{...} below
+    const PlotlyJS_json = async (div, url) => {
+      response = await fetch(url); // get file
+      fig = await response.json(); // convert it to json
+      // Make the plot fit the screen responsively. See the documentation of plotly.js. https://plotly.com/javascript/responsive-fluid-layout/
+      if (typeof fig.config === 'undefined') { fig["config"]={} }
+      delete fig.layout.width
+      delete fig.layout.height
+      fig["layout"]["autosize"] = true
+      fig["config"]["autosizable"] = true
+      fig["config"]["responsive"] = true
+
+      // make it easier to scroll throught the website rather than being blocked by a figure.
+      fig.config["scrollZoom"] = false
+
+      // PlotlyJS.savefig by default add the some more attribute to make a static plot.
+      // Disable them to make the website fancier.
+      delete fig.config.staticPlot
+      delete fig.config.displayModeBar
+      delete fig.config.doubleClick
+      delete fig.config.showTips
+
+      Plotly.newPlot(div, fig);
+    };
+  </script>
+  
+  <link rel="stylesheet" href="/ws22_ulg_ds_julia/css/jtd.css">
+<link rel="stylesheet" href="/ws22_ulg_ds_julia/css/extras.css">
+<link rel="icon" href="/ws22_ulg_ds_julia/assets/favicon.ico">
+
+<style>
+  /* #148 wrap long header */
+  .franklin-content a.header-anchor,
+  .franklin-toc li a
+   {
+    word-wrap: break-word;
+    white-space: normal;
+  }
+</style>
+
+   <title>SS22 Julia Workshop</title>  
+</head>
+<body>                      <!-- closed in foot.html -->
+<div class="page-wrap">   <!-- closed in foot.html -->
+  <!-- SIDE BAR -->
+  <div class="side-bar">
+    <div class="header">
+      <a href="/ws22_ulg_ds_julia/" class="title">
+        Julia
+      </a>
+    </div>
+    <label for="show-menu" class="show-menu">MENU</label>
+    <input type="checkbox" id="show-menu" role="button">
+    <div class="menu" id="side-menu">
+      <ul class="menu-list">
+        <li class="menu-list-item active"><a href="/ws22_ulg_ds_julia/" class="menu-list-link active">Start</a>
+        <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/" class="menu-list-link ">Introduction</a>
+          <ul class="menu-list-child-list ">
+            <li class="menu-list-item active"><a href="/ws22_ulg_ds_julia/pages/introduction/basis_datatypes_and_operations/" class="menu-list-link ">Basic Data Types and Operations</a>
+            <li class="menu-list-item active"><a href="/ws22_ulg_ds_julia/pages/introduction/package_manager/" class="menu-list-link ">Package Manager</a>
+            <li class="menu-list-item active"><a href="/ws22_ulg_ds_julia/pages/introduction/matrix_vectors/" class="menu-list-link ">Matrix and Vector Operations</a>
+            <li class="menu-list-item active"><a href="/ws22_ulg_ds_julia/pages/introduction/conditional_evaluations/" class="menu-list-link ">Conditional evaluations</a>
+            <li class="menu-list-item active"><a href="/ws22_ulg_ds_julia/pages/introduction/loops/" class="menu-list-link ">Loops</a>
+            <li class="menu-list-item active"><a href="/ws22_ulg_ds_julia/pages/introduction/functions/" class="menu-list-link ">Functions</a>
+            <li class="menu-list-item active"><a href="/ws22_ulg_ds_julia/pages/introduction/macros/" class="menu-list-link ">Macros</a>
+          </ul>
+        <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/data_management/" class="menu-list-link ">Data Management</a>
+          <ul class="menu-list-child-list ">
+            <li class="menu-list-item active"><a href="/ws22_ulg_ds_julia/pages/data_management/loading_data/" class="menu-list-link ">Loading data</a>
+            <li class="menu-list-item active"><a href="/ws22_ulg_ds_julia/pages/data_management/saving_data/" class="menu-list-link ">Saving data</a>
+            <li class="menu-list-item active"><a href="/ws22_ulg_ds_julia/pages/data_management/exploratory_da/" class="menu-list-link ">Exploratory Data Analysis</a>
+            <li class="menu-list-item active"><a href="/ws22_ulg_ds_julia/pages/data_management/datasets/" class="menu-list-link ">Data Sets</a>
+          </ul>
+          <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/neural_networks/" class="menu-list-link ">Neural Networks</a>
+          <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/reporting/" class="menu-list-link ">Reporting</a>
+      </ul>
+    </div>
+    <div class="footer">
+      This is <em>Just the docs</em>, adapted from the <a href="https://github.com/pmarsceill/just-the-docs" target="_blank">Jekyll theme</a>.
+    </div>
+  </div>
+  <!-- CONTENT -->
+  <div class="main-content-wrap"> <!-- closed in foot.html -->
+    <div class="main-content">    <!-- closed in foot.html -->
+      <div class="main-header">
+        SS22 Julia Workshop Obergurgl
+      </div>
+
+
+
+<!-- Content appended here (in class franklin-content) -->
+<div class="franklin-content"><h1 id="getting_started_with_julia"><a href="#getting_started_with_julia" class="header-anchor">Getting started with Julia</a></h1>
+<p>Julia is a free and open source scientific programming language with a vast ecosystem of libraries that aim towards scientific computing. Visit <a href="https://julialang.org">julialang.org</a> for the download, documentation, learning materials and much more. Julia manages to allow the best of two worlds, high-level interpreter and low-level compiler language. It offers the high performance of compiled languages like C or Fortran by still bringing in the simplicity of dynamic languages like Python or R. Julia recently entered its teens and for this occasion a blog post was published with the title <a href="https://julialang.org/blog/2022/02/10years/">Why We Use Julia, 10 Years Later</a> as a follow up to the <a href="https://julialang.org/blog/2012/02/why-we-created-julia/">Why We Created Julia</a>. Both entries are a good read and give you an insight into the language and its creators.</p>
+<p>In this workshop we are going to take a look at Julia by starting with the basics and working our way up to advanced topics like data science and multi processor programming.</p>
+<h2 id="acknowledgment"><a href="#acknowledgment" class="header-anchor">Acknowledgment</a></h2>
+<p>Parts of the following lecture material were taken from an on-site Julia workshop with the title <a href="https://noxthot.github.io/ss22_julia_workshop/">Introduction to Scientific Coding with Julia</a> which was written by <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://lfuonline.uibk.ac.at/public/people.vcard?id&#61;59131">Peter Kandolf</a>, and <a href="https://lfuonline.uibk.ac.at/public/people.vcard?id&#61;415344">Jonas Kusch</a> and held in Obergurgl in July &#39;22:</p>
+<ul>
+<li><p>Section <a href=".">Start</a> is mostly taken from <a href="https://noxthot.github.io/ss22_julia_workshop/">Start - Introduction to Scientific Coding with Julia</a>.</p>
+</li>
+<li><p>The foundation of the section <a href="pages/introduction">Introduction</a> is taken from <a href="https://noxthot.github.io/ss22_julia_workshop/pages/introduction/">Introduction - Introduction to Scientific Coding with Julia</a> and <a href="https://noxthot.github.io/ss22_julia_workshop/pages/hpc/performance/">Measuring Performance - Introduction to Scientific Coding with Julia</a>.</p>
+</li>
+<li><p>Parts of <a href="pages/data_management">Data Management</a> are taken from <a href="https://noxthot.github.io/ss22_julia_workshop/pages/datascience/">Data Science - Introduction to Scientific Coding with Julia</a>.</p>
+</li>
+<li><p>Parts of <a href="pages/reporting">Reporting</a> are taken from <a href="https://noxthot.github.io/ss22_julia_workshop/pages/introduction/pluto/">Pluto Notebook - Introduction to Scientific Coding with Julia</a>.</p>
+</li>
+</ul>
+<h2 id="some_general_words_on_the_organisation_of_this_workshop"><a href="#some_general_words_on_the_organisation_of_this_workshop" class="header-anchor">Some general words on the organisation of this workshop</a></h2>
+<p>For this workshop you do not need to be an Julia expert, not even a programming expert. We will introduce programming and Julia concepts along with examples. For this purpose you will find code blocks that you can copy if necessary &#40;top right corner <code>copy</code>&#41;. Furthermore, if we think something is very important we will highlight it with a box:</p>
+<div class="important">Pay extra attention to the content here.</div>
+<p>We also have various environments with different color coding that usually are collapsed to not hinder the reading process:</p>
+<ul>
+<li><p>Examples are green</p>
+</li>
+</ul>
+<button type="button" class="collapsible" style="background-color:#caffa5"> Example </button><div class="collapsiblecontent">  Examples are also quite nice because they make sure you have an idea what is happening. </div>
+<ul>
+<li><p>Exercises are blue</p>
+</li>
+</ul>
+<button type="button" class="collapsible" style="background-color:#b5ddff"> Exercise </button><div class="collapsiblecontent">  Exercises are here for you to work on, no worries not at home or in your off hours but with us in the workshop. </div>
+<p>That is about all we wanted to let you know, so let us get into it.</p>
+<h2 id="setup"><a href="#setup" class="header-anchor">Setup</a></h2>
+<div class="important">We ask you to install Julia, VSCode and the Julia extension for VSCode <strong>before</strong> the workshop so we can get right into the lecture. If you have difficulties please let us know and we update the content on this page.</div>
+<div class="important">This workshop was prepared with Julia v1.7.3.</div>
+<p>Follow the setup in this section to install everything that is required to get started.</p>
+<h3 id="julia"><a href="#julia" class="header-anchor">Julia </a></h3>
+<p>To install Julia on your system please download the latest stable binary from <a href="https://julialang.org/downloads/">Setup Download</a> and follow the instructions on <a href="https://julialang.org/downloads/platform/">Setup Julia</a> for the installation.</p>
+<p>On the above link you will also find instructions on how to uninstall Julia, even though we are quite sure you will not want to do it ;&#41;.</p>
+<h4 id="addition_for_linux"><a href="#addition_for_linux" class="header-anchor">Addition for Linux:</a></h4>
+<p>Some distributions allow the installation via the package manager or the software center, note that this is often a very old version, so this method is not recommend for beginners. </p>
+<p>A convenient location for the Julia folder is <code>/opt/</code> and by creating a link to the binary in <code>/usr/local/bin/</code> we can make sure it is found in the path. </p>
+<p>In your terminal use <code>wget</code> to download the latest version</p>
+<pre><code class="bash hljs">wget https://julialang-s3.julialang.org/bin/linux/x64/1.7/julia-1.7.3-linux-x86_64.tar.gz</code></pre>
+<p>extract the tar ball with</p>
+<pre><code class="bash hljs">tar -xvzf julia-1.7.3-linux-x86_64.tar.gz</code></pre>
+<p>copy the folder to <code>/opt/</code></p>
+<pre><code class="bash hljs">sudo <span class="hljs-built_in">cp</span> -r julia-1.7.3 /opt/</code></pre>
+<p>and link the binary</p>
+<pre><code class="bash hljs">sudo <span class="hljs-built_in">ln</span> -s /opt/julia-1.7.3/bin/julia /usr/local/bin/julia</code></pre>
+<h3 id="visual_studio_code"><a href="#visual_studio_code" class="header-anchor">Visual Studio Code</a></h3>
+<p>Follow the instructions on <a href="https://code.visualstudio.com/">https://code.visualstudio.com/</a> to install Visual Studio Code. </p>
+<p>Visual Studio Code or for short VSCode is a fully fledged Interactive Development Environment &#40;IDE&#41;, complete with code highlighting, auto complete, Debugger, git integration and so much more. In order to make VSCode fully compatible with Julia we need to install the Julia extension. </p>
+<h3 id="installing_the_julia_extension_for_visual_studio_code"><a href="#installing_the_julia_extension_for_visual_studio_code" class="header-anchor">Installing the Julia extension for Visual Studio Code</a></h3>
+<p>Follow the instructions on <a href="https://www.julia-vscode.org/docs/dev/gettingstarted/#Installing-the-Julia-extension">VSCode Julia extension</a> to install and configure the extension. You find the basic instructions from above here as well.</p>
+<button type="button" class="collapsible" style="background-color:#b5ddff"> Exercise </button><div class="collapsiblecontent">  Please try the small test example from <a href="https://www.julia-vscode.org/docs/dev/gettingstarted/#Creating-Your-First-Julia-Hello-World-program">here</a> to see if everything works. </div>
+<p>If you run into difficulties with VSCode in connection with Julia, the <a href="https://www.julia-vscode.org/docs/dev/">documentation</a> of the Julia extension is an excellent source for help. </p>
+<h2 id="julia_and_vscode"><a href="#julia_and_vscode" class="header-anchor">Julia and VSCode</a></h2>
+<p>There is no better resource than <a href="https://www.julia-vscode.org">https://www.julia-vscode.org</a> to explain how to program Julia with VSCode, you also get an interactive view that explains some of the following items. Nevertheless, we recall the most basic setup. </p>
+<ul>
+<li><p>On the left you have the navigational panel where you can switch between context of the viewer. Specifically you will need the <strong>Explorer</strong> and <strong>Julia</strong>. </p>
+</li>
+<li><p>Right next to it you get additional information with regards to the current context. For example you will see files, when you are in <strong>Explorer</strong> or you see your <em>Workspace</em>, <em>Documentation</em>, and <em>Plot Navigation</em> in the <strong>Julia</strong> context.</p>
+</li>
+<li><p>When opening a Julia file &#40;ending in <code>.jl</code>&#41; &#40;double click in the <strong>Explorer</strong> - single click only gives you a quick view and the file will not stay open if you click another file&#41; you have syntax highlighting and auto complete right away. </p>
+</li>
+<li><p>To run a Julia program, click the small arrow on the top left or <code>Ctrl&#43;F5</code> if you prefer keyboard shortcuts. Both will run the code in the Julia REPL and you see the output on the bottom.</p>
+</li>
+</ul>
+<p>With these short basics and <a href="https://www.julia-vscode.org">https://www.julia-vscode.org</a> you are good to go for the workshop. You can also find a list of <a href="https://www.julia-vscode.org/docs/dev/userguide/keybindings/">keybindings</a>, once you are more familiar with the IDE and you never want to get your hands off the keyboard. </p>
+<p>In VSCode you can always type <code>CTRL &#43; SHIFT &#43; P</code> to get access to the prompt and execute commands within VSCode.</p>
+<div class="page-foot">
+    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: August 16, 2022.
+    Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+</div>
+</div><!-- CONTENT ENDS HERE -->
+    </div> <!-- end of class main-content -->
+    </div> <!-- end of class main-content-wrap -->
+    </div> <!-- end of class page-wrap-->
+    
+    
+      
+
+
+      <script>
+    (function(){
+    
+      // Get the elements.
+      // - the 'pre' element.
+      // - the 'div' with the 'paste-content' id.
+    
+      var pre = document.getElementsByTagName('pre');
+    
+      // Add a copy button in the 'pre' element.
+      // which only has the className of 'language-'.
+    
+      for (var i = 0; i < pre.length; i++) {
+        var isLanguage = pre[i].children[0].tagName == 'CODE';
+    
+        if ( isLanguage ) {
+          var button           = document.createElement('button');
+              button.className = 'copy-button';
+              button.textContent = 'Copy';
+    
+              pre[i].appendChild(button);
+        }
+      };
+    
+      // Run Clipboard
+    
+      var copyCode = new Clipboard('.copy-button', {
+        target: function(trigger) {
+          return trigger.previousElementSibling;
+        }
+      });
+    
+      // On success:
+      // - Change the "Copy" text to "Copied".
+      // - Swap it to "Copy" in 2s.
+      // - Lead user to the "contenteditable" area with Velocity scroll.
+    
+      copyCode.on('success', function(event) {
+        event.clearSelection();
+        event.trigger.textContent = 'Copied';
+        window.setTimeout(function() {
+          event.trigger.textContent = 'Copy';
+        }, 2000);
+    
+      });
+    
+      // On error (Safari):
+      // - Change the  "Press Ctrl+C to copy"
+      // - Swap it to "Copy" in 2s.
+    
+      copyCode.on('error', function(event) {
+        event.trigger.textContent = 'Press "Ctrl + C" to copy';
+        window.setTimeout(function() {
+          event.trigger.textContent = 'Copy';
+        }, 5000);
+      });
+    
+    })();
+</script>
+    
+  </body>
+</html>
+
+<script>
+  var coll = document.getElementsByClassName("collapsible");
+  var i;
+
+  for (i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function() {
+      this.classList.toggle("active");
+      var content = this.nextElementSibling;
+      if (content.style.display === "block") {
+        content.style.display = "none";
+      } else {
+        content.style.display = "block";
+      }
+    });
+  }
+</script>
+
+<script>
+  var coll = document.getElementsByClassName("solutioncollapsible");
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const myVar = urlParams.get('solution')
+  if ( myVar == 'true') {
+    for (i = 0; i < coll.length; i++) {
+      coll[i].style.display = "block";
+    }
+  }
+</script>
