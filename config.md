@@ -2,10 +2,10 @@
 Add here global page variables to use throughout your website.
 -->
 +++
-author = "Gregor Ehrensperger, Peter Kandolf, Jonas Kusch"
+author = "Stephan Antholzer, Gregor Ehrensperger, Johannes Sappl"
 mintoclevel = 2
 
-prepath = "ss22_julia_workshop"
+prepath = "ws22_ulg_julia_1st_semester"
 
 hasplotly = true
 
@@ -17,9 +17,9 @@ ignore = ["node_modules/"]
 
 # RSS (the website_{title, descr, url} must be defined to get RSS)
 generate_rss = true
-website_title = "SS22 Julia Workshop"
-website_descr = "Lecture Material | Introduction to Julia"
-website_url   = "https://noxthot.github.io/ss22_julia_workshop/"
+website_title = "WS22 ULG Data Science - Julia in first semester"
+website_descr = "Lecture Material | Julia first semester"
+website_url   = "https://noxthot.github.io/ws22_ulg_ds_julia/"
 +++
 
 <!--
