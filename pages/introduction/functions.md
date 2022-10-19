@@ -39,6 +39,7 @@ function sincos(x, y)
 end
 ```
 We can call a function with multiple outputs via `out = foo(input)` and access the output at index $i$ through `out[i]`. We can also write (assuming two outputs) `out1, out2 = foo(input)` and `out1, _ = foo(input)` if we only need one of the outputs.
+The above functions actually returns a tuple `(result1, result2)`.
 ```julia-repl
 julia> x = 1; y = 1.5;
 julia> res1, res2 = sincos(x, y)
@@ -54,6 +55,8 @@ julia> res = sincos(x, y);
 julia> res[1]
 0.5143952585235492
 ```
+Note that in julia function names are not constant i.e. it is possible to redefine a function mutliple times and when calling it the most recent version is used.
+This also holds true for function included in julia itself e.g. `sincos` already exists and by doing the above one can no longer directly call it.
 
 Let us practice this syntax by revisiting loops:
 
@@ -162,7 +165,7 @@ function sincos2!(x)
 end
 ```
 1. Evaluate both functions with the input `x = ones(2)`. How does $x$ change after calling the function? Explain this behavior. Correct the function names accordingly.
-2. Build in the function `pointer_from_objref(x)` to see how the memory changes and to validate your previous answer.
+2. Use the build in function `pointer(x)` to see how the memory changes and to validate your previous answer.
 3. Write a method which evaluates $\sin(\cos(x))$, where $x\in\mathbb{R}$ is a scalar and stores the result on $x$ such that $x$ is modified for the caller.
 \solution{
 1. The function `sincos1!(x)` will modify the input:
@@ -191,9 +194,9 @@ The reason for this behavior is that `sincos1` changes the input as Julia functi
 2. We have
 ```julia
 function sincos1!(x)
-    println("Address input: ", pointer_from_objref(x))
+    println("Address input: ", pointer(x))
     x .= sin.(cos.(x))
-    println("Address output: ", pointer_from_objref(x))
+    println("Address output: ", pointer(x))
 
     return x
 end
@@ -201,9 +204,9 @@ end
 and
 ```julia
 function sincos2(x)
-    println("Address input: ", pointer_from_objref(x))
+    println("Address input: ", pointer(x))
     x = sin.(cos.(x))
-    println("Address output: ", pointer_from_objref(x))
+    println("Address output: ", pointer(x))
 
     return x
 end
@@ -213,23 +216,43 @@ Then,
 julia> x = ones(2);
 
 julia> y = sincos1!(x);
-Address input: Ptr{Nothing} @0x00007f3325795b90
-Address output: Ptr{Nothing} @0x00007f3325795b90
+Address input: Ptr{Float64} @0x00007f321c376ac0
+Address output: Ptr{Float64} @0x00007f321c376ac0
 
 julia> x = ones(2);
 
-julia> println("Address caller: ", pointer_from_objref(x));
-Address caller: Ptr{Nothing} @0x00007f332671cab0
+julia> println("Address caller: ", pointer(x));
+Address caller: Ptr{Float64} @0x00007f32c1e45850
 
 julia> y = sincos1!(x);
-Address input: Ptr{Nothing} @0x00007f332671cab0
-Address output: Ptr{Nothing} @0x00007f332671cab0
+Address input: Ptr{Float64} @0x00007f32c1e45850
+Address output: Ptr{Float64} @0x00007f32c1e45850
 
 julia> y = sincos2(x);
-Address input: Ptr{Nothing} @0x00007f332671cab0
-Address output: Ptr{Nothing} @0x00007f33266e2310
+Address input: Ptr{Float64} @0x00007f32c1e45850
+Address output: Ptr{Float64} @0x00007f32c1e81620
 ```
-3. This is not possible, since assigning a new value to a scalar $x$ will always alter the memory location.
+3. This is not directly possible, since assigning a new value to a scalar $x$ will always alter the memory location.
+However using `Ref` it can be done
+```julia
+function sincos!(x::Ref{<:Real})
+    x[] = sin(cos(x[]))
+end
+```
+and
+```julia-repl
+julia> x = Ref(1.2)
+Base.RefValue{Float64}(1.2)
+
+julia> sincos!(x)
+0.35447986700952583
+
+julia> x
+Base.RefValue{Float64}(0.35447986700952583)
+
+julia> x[]
+0.35447986700952583
+```
 }
 }
 
@@ -279,10 +302,30 @@ My input is a vector.
  0.5143952585235492
 ```
 
+Julia will always use the most specific method for the function arguments during the call.
+In order to see all available methods for a specific function we can use `methods(sincos)` or any other function (e.g. `+`).
+
+It is also possible to write new method definitions for already existing functions, which is a powerful concept for package development.
+On the other hand it can also be dangerous as the following example shows
+
+```julia-repl
+julia> Base.sin(x::Float64) = "Breaking code"
+
+julia> sincos([1.2, 2.])
+My input is a vector.
+2-element Vector{String}:
+ "Breaking code"
+ "Breaking code"
+```
+Here we explicetly define a new method for the base function `Base.sin` since doing `sin(...` would just define a function with
+the name `sin`.
+However this discouraged since both `sin` and `Float64` come from base julia and thus we are performing [type piracy](https://docs.julialang.org/en/v1/manual/style-guide/#Avoid-type-piracy).
+
+
 ## Element-wise operations and input specifications
-As always, we can use the dot operation `.` to evaluate an array of inputs element-wise. Define the scalar function
+As seen already, we can use the dot operation `.` to evaluate an array of inputs element-wise. Define the scalar function
 ```julia
-function sincos(x::Float64)
+function sincos(x::Real)
     return sin(cos(x))    
 end
 ```
@@ -295,51 +338,59 @@ julia> sincos.(x)
  0.514395  0.514395  0.514395
  0.514395  0.514395  0.514395
 ```
+Fore more information see the [broadcasting section](https://docs.julialang.org/en/v1/manual/arrays/#Broadcasting) in the manual.
 
 Moreover, we can assign values to inputs in the function definition. If the caller does not specify the input, these values will be used instead.
 ```julia
-function sincos(x::Float64=(0.5 * pi))
-    return sin.(cos.(x))
+function myfun(x::Float64=(0.5 * pi))
+    return sin(cos(x))
 end
 ```
 We can now call this function via
 ```julia-repl
-julia> sincos()
+julia> myfun()
 6.123233995736766e-17
 
-julia> sincos(0.0)
+julia> myfun(0.0)
 0.8414709848078965
+```
+Assigning default values for function arguments defines mutliple methods and is actually short hand for the following
+```julia
+myfun() = sin(cos(0.5 * pi))
+myfun(x::Float64) = sin(cos(x))
 ```
 
 ## Parametric types for functions
 
-Notice that it is very restrictive to tell our method to only accept inputs of type `Float64`. It makes perfect sense to evaluate our function at $x = 1$, where $x$ can be an integer. In fact, it is considered to be good practice if we make function inputs as general as possible. Just as for *structs*, we can use parametric types to make the input more general. If we want the input to be a real number (i.e., a subtype of `Real`), we can write this as 
+Notice that it is very restrictive to tell our method to only accept inputs of type `Float64`. It makes perfect sense to evaluate our function at $x = 1$, where $x$ can be an integer. In fact, it is considered to be good practice if we make function inputs as general as possible.
+In fact not setting a type (equivalent to `::Any`) is also possible.
+Just as for *structs*, we can use parametric types to make the input more general. If we want the input to be a real number (i.e., a subtype of `Real`), we can write this as 
 ```julia
-function sincos(x::T) where T<:Real
-    return sin(cos(x))
+function myadd(x::T, y::T) where {T<:Real}
+    println("Got numbers of type $(T) as input")
+    return x + y
 end
 ```
 Now, `T` can be any subtype of `Real`, that is, we can write
 ```julia-repl
-julia> sincos(1)
-0.5143952585235492
+julia> myadd(1, 2)
+Got numbers of type Int64 as input
+3
 
-julia> sincos(1.0)
-0.5143952585235492
-
-julia> sincos(1//2)
-0.7691963548410085
+julia> myadd(1.0, 2.0)
+Got numbers of type Float64 as input
+3.0
 ```
 
 \exercise{
     Write a function `sincos` which can take any real number as well as the point struct we defined earlier
 ```julia
-struct Point{T}
+struct Point{T<:Real}
     x::T
     y::T
 end
 ```
-    where `T` must be a real number as input. When the input is an object of type `Point`, the function returns $\sin(\cos(\Vert x \Vert))$, where $\Vert x \Vert = \sqrt{x^2 + y^2}$ is the Euclidean norm.
+    as input. When the input is an object of type `Point`, the function returns $\sin(\cos(\Vert x \Vert))$, where $\Vert x \Vert = \sqrt{x^2 + y^2}$ is the Euclidean norm.
 \solution{
 ```julia
 struct Point{T<:Real}
@@ -347,36 +398,24 @@ struct Point{T<:Real}
     y::T
 end
 
-function sincos(x::T) where T<:Real
-    return sin(cos(x))
-end
+sincos(x::Real) = sin(cos(x))
 
-function sincos(x::Point{T}) where T<:Real
-    norm = sqrt(x.x^2 + x.y^2)
-    
-    return sin(cos(norm))
-end
+sincos(point::Point{<:Real}) = sincos(sqrt(point.x^2 + point.y^2))
 ```
 Then, we get
 ```julia-repl
-julia> p = Point{Float64}(1.0, 2.0)
-Point{Float64}(1.0, 2.0)
+julia> sin(cos(0)) == sincos(Point(0, 0))
+true
 
-julia> sincos(p)
--0.578813455551511
-
-julia> pim = Point{Complex}(1im, 2.0)
-Point{Complex}(0 + 1im, 2.0 + 0.0im)
-
-julia> sincos(pim)
-ERROR: MethodError: no method matching sincos(::Point{Complex})
+julia> sincos(1.0 + im)
+ERROR: MethodError: no method matching sincos(::ComplexF64)
 You may have intended to import Base.sincos
 Closest candidates are:
-  sincos(::T) where T<:Real at REPL[3]:1
-  sincos(::Point{T}) where T<:Real at REPL[4]:1
+  sincos(::Real) at REPL[2]:1
+  sincos(::Point) at REPL[3]:1
 Stacktrace:
  [1] top-level scope
-   @ REPL[9]:1
+   @ REPL[8]:1
 ```
 }
 }
@@ -392,7 +431,7 @@ end
 ```
 and creating objects of type `PointFull` via
 ```julia-repl
-julia> p = PointFull{Float64}(1.0, 2.0, sqrt(1.0^2 + 2.0^2))
+julia> p = PointFull(1.0, 2.0, sqrt(1.0^2 + 2.0^2))
 PointFull{Float64}(1.0, 2.0, 2.23606797749979)
 
 julia> p = PointFull{Float32}(1.0, 2.0, sqrt(1.0^2 + 2.0^2))
@@ -406,10 +445,11 @@ Note that this is quite tedious since we need to copy paste the same formula for
 struct PointFull1{T<:Real}
     x::T
     y::T
-    norm
+    norm::T
 
-    function PointFull1(x::T, y::T) where {T<:Real}
-        norm = sqrt(x^2 + y^2)
+    function PointFull1(x::T1, y::T2) where {T1<:Real,T2<:Real}
+        T = promote_type(T1, T2)
+        norm = T(sqrt(x^2 + y^2))
         new{T}(x, y, norm)
     end
 end
@@ -419,12 +459,17 @@ Now, we can call
 julia> PointFull1(1.0, 2.0)
 PointFull1{Float64}(1.0, 2.0, 2.23606797749979)
 
-julia> PointFull1(1, 2)
-PointFull1{Int64}(1, 2, 2.23606797749979)
+julia> PointFull1(1.0, 2)
+PointFull1{Float64}(1.0, 2.0, 2.23606797749979)
 
-julia> PointFull1(1im, 2im)
-ERROR: MethodError: no method matching PointFull1(::Complex{Int64}, ::Complex{Int64})
+julia> PointFull1(1, 3//4)
+PointFull1{Rational{Int64}}(1//1, 3//4, 5//4)
+
+julia> PointFull1(1, 1.0im)
+ERROR: MethodError: no method matching PointFull1(::Int64, ::ComplexF64)
+Closest candidates are:
+  PointFull1(::T1, ::T2) where {T1<:Real, T2<:Real} at REPL[10]:6
 Stacktrace:
  [1] top-level scope
-   @ REPL[20]:1
+   @ REPL[16]:1
 ```
