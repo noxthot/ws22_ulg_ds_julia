@@ -122,7 +122,7 @@
 </span>&quot;Στυπιδ Ρ&quot;</code></pre>
 <h2 id="data_types"><a href="#data_types" class="header-anchor">Data types</a></h2>
 <p>Julia supports basic data types like Integers, Floating-Point Numbers, Strings and <a href="https://docs.julialang.org/en/v1/manual/types/">many more</a>. The most generic type is called <code>Any</code> and thus every type is a subtype of <code>Any</code>. Types are built in a hierarchical manner and can be visualized as a type graph &#40;examples for partial type graphs are given in <a href="https://en.wikibooks.org/wiki/Introducing_Julia/Types">Wikibooks - Introducing Julia</a>&#41;.</p>
-<p>Although Julia&#39;s type system is dynamic, it also allows to explicitly set a specific type for certain values and thus also gains advantages of static type systems.</p>
+<p>Although Julia&#39;s type system is dynamic, it also allows to explicitly set a specific type for certain values and thus also gains advantages of static type systems. To be more precise during compilation the used types get inferred and optimal version for these specific types get compiled.</p>
 <p>In the following we will briefly look into some basic data types and the operations defined on them. </p>
 <h3 id="numeric_types"><a href="#numeric_types" class="header-anchor">Numeric types</a></h3>
 <p>Integers and Floating-Point Numbers are the building blocks for arithmetic and computational operations. They are both subtypes of the more general type <code>Real</code> and come in different primitive numeric types:</p>
@@ -224,7 +224,7 @@
 <li><p><code>x || y</code> &#40;logical OR&#41;. </p>
 </li>
 </ul>
-<p>Note that <code>Bool</code> is still an integer type and and thus all the numerical operations are also defined for this type:</p>
+<p>Note that <code>Bool</code> is still an integer type and thus all the numerical operations are also defined for this type:</p>
 <pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-literal">true</span> &amp;&amp; <span class="hljs-literal">false</span>
 </span>false
 
@@ -344,12 +344,12 @@ Stacktrace:
           y::T
        <span class="hljs-keyword">end</span>
 </span>
-<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> pFloat = Point{<span class="hljs-built_in">Float64</span>}(<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>)
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> pFloat = Point(<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>)
 </span>Point{Float64}(1.0, 2.0)
 
-<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> pInt = Point{<span class="hljs-built_in">Int64</span>}(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> pInt = Point{<span class="hljs-built_in">Int</span>}(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)
 </span>Point{Int64}(1, 2)</code></pre>
-<p>Note that using <code>&#123;T&#125;</code> behind the struct name lets us use <code>T</code> as a new type that can be defined when creating an object of type <code>Point</code>. You can also have two different types in one object. To account for such situations, we can define</p>
+<p>Note that using <code>&#123;T&#125;</code> behind the struct name lets us use <code>T</code> as a new variable that can be defined when creating an object of type <code>Point</code>. Then it will try to convert <code>x</code> and <code>y</code> to this type. Otherwise <code>T</code> will be automatically inferred by the other variables. You can also have two different types in one object. To account for such situations, we can define</p>
 <pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-keyword">struct</span> Point1{T, R}
           x::T
           y::R
@@ -377,20 +377,39 @@ Stacktrace:
 Stacktrace:
  [1] top-level scope
    @ REPL[4]:1</code></pre>
-<p>Sometimes, we do not want to specify all parameters of a struct during construction. We will revisit this problem once we have introduced functions.</p>
-<p>An alternative for storing multiple objects under one primary name are <em>dictionaries</em>. If we want to store multiple parameters, we can use</p>
-<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> params = <span class="hljs-built_in">Dict</span>(<span class="hljs-string">&quot;α&quot;</span>=&gt;<span class="hljs-number">1</span>, <span class="hljs-string">&quot;β&quot;</span>=&gt;<span class="hljs-number">2.4</span>)
-</span>Dict{String, Real} with 2 entries:
-  &quot;α&quot; =&gt; 1
-  &quot;β&quot; =&gt; 2.4
+<p>Sometimes, we do not want to specify all parameters of a struct during construction or set certain default values. We will revisit this problems once we have introduced functions.</p>
+<p>An alternative for storing multiple objects under one primary name are <a href="https://docs.julialang.org/en/v1/manual/functions/#Tuples"><em>tuples</em></a>, <a href="https://docs.julialang.org/en/v1/manual/functions/#Named-Tuples"><em>named tuples</em></a> or <a href="https://docs.julialang.org/en/v1/base/collections/#Dictionaries"><em>dictionaries</em></a>. If we want to store multiple parameters, we can use</p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> params = (<span class="hljs-number">1</span>, <span class="hljs-number">2.4</span>)
+</span>(1, 2.4)
 
-<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> params[<span class="hljs-string">&quot;α&quot;</span>]
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> params[<span class="hljs-number">1</span>]
 </span>1
 
-<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> params[<span class="hljs-string">&quot;β&quot;</span>]
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> params[<span class="hljs-number">2</span>]
+</span>2.4
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> params = (a = <span class="hljs-number">1</span>, b = <span class="hljs-number">2.4</span>)
+</span>(a = 1, b = 2.4)
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> params.a
+</span>1
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> params.b
+</span>2.4
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> params = <span class="hljs-built_in">Dict</span>(<span class="hljs-string">&quot;a&quot;</span> =&gt; <span class="hljs-number">1</span>, <span class="hljs-string">&quot;b&quot;</span> =&gt; <span class="hljs-number">2.4</span>)
+</span>Dict{String, Real} with 2 entries:
+  &quot;b&quot; =&gt; 2.4
+  &quot;a&quot; =&gt; 1
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> params[<span class="hljs-string">&quot;a&quot;</span>]
+</span>1
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> params[<span class="hljs-string">&quot;b&quot;</span>]
 </span>2.4</code></pre>
+<p>Tuples and named tuples are immutable while dictionaries can be changed.</p>
 <div class="page-foot">
-    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: August 16, 2022.
+    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: October 19, 2022.
     Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
 </div>
 </div><!-- CONTENT ENDS HERE -->

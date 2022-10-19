@@ -129,7 +129,7 @@
     
     <span class="hljs-keyword">return</span> result1, result2
 <span class="hljs-keyword">end</span></code></pre>
-<p>We can call a function with multiple outputs via <code>out &#61; foo&#40;input&#41;</code> and access the output at index <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span> through <code>out&#91;i&#93;</code>. We can also write &#40;assuming two outputs&#41; <code>out1, out2 &#61; foo&#40;input&#41;</code> and <code>out1, _ &#61; foo&#40;input&#41;</code> if we only need one of the outputs.</p>
+<p>We can call a function with multiple outputs via <code>out &#61; foo&#40;input&#41;</code> and access the output at index <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi></mrow><annotation encoding="application/x-tex">i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span></span></span></span> through <code>out&#91;i&#93;</code>. We can also write &#40;assuming two outputs&#41; <code>out1, out2 &#61; foo&#40;input&#41;</code> and <code>out1, _ &#61; foo&#40;input&#41;</code> if we only need one of the outputs. The above functions actually returns a tuple <code>&#40;result1, result2&#41;</code>.</p>
 <pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> x = <span class="hljs-number">1</span>; y = <span class="hljs-number">1.5</span>;
 </span><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> res1, res2 = sincos(x, y)
 </span>sin(cos(1)) = 0.5143952585235492
@@ -143,6 +143,7 @@ sin(cos(1.5)) = 0.07067822452613834
 </span>
 <span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> res[<span class="hljs-number">1</span>]
 </span>0.5143952585235492</code></pre>
+<p>Note that in julia function names are not constant i.e. it is possible to redefine a function mutliple times and when calling it the most recent version is used. This also holds true for function included in julia itself e.g. <code>sincos</code> already exists and by doing the above one can no longer directly call it.</p>
 <p>Let us practice this syntax by revisiting loops:</p>
 <button type="button" class="collapsible" style="background-color:#b5ddff"> Exercise </button><div class="collapsiblecontent">  For a vector <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>V</mi><mo>∈</mo><msup><mi mathvariant="normal">R</mi><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">V\in\mathrm{R}^n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7224em;vertical-align:-0.0391em;"></span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord"><span class="mord mathrm">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span></span></span></span> with elements <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>v</mi><mn>1</mn></msub><mo separator="true">,</mo><mo>…</mo><mo separator="true">,</mo><msub><mi>v</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">v_1, \ldots, v_n</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner">…</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">v</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> compute the sum of all the elements in the following fashion</p>
 <ol>
@@ -232,12 +233,12 @@ isapprox(mysum1(V),  mysum2(V); atol=<span class="hljs-number">1e-10</span>, rto
 <ol>
 <li><p>Evaluate both functions with the input <code>x &#61; ones&#40;2&#41;</code>. How does <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span> change after calling the function? Explain this behavior. Correct the function names accordingly.</p>
 </li>
-<li><p>Build in the function <code>pointer_from_objref&#40;x&#41;</code> to see how the memory changes and to validate your previous answer.</p>
+<li><p>Use the build in function <code>pointer&#40;x&#41;</code> to see how the memory changes and to validate your previous answer.</p>
 </li>
 <li><p>Write a method which evaluates <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>sin</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>cos</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\sin(\cos(x))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">sin</span><span class="mopen">(</span><span class="mop">cos</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">))</span></span></span></span>, where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>∈</mo><mi mathvariant="double-struck">R</mi></mrow><annotation encoding="application/x-tex">x\in\mathbb{R}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6889em;"></span><span class="mord mathbb">R</span></span></span></span> is a scalar and stores the result on <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span> such that <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span> is modified for the caller.</p>
 </li>
 </ol>
-<p><p><div class="solution"> Solution </div><div class="solutioncollapsible">  1. The function <code>sincos1&#33;&#40;x&#41;</code> will modify the input:</p>
+<p><div class="solution"> Solution </div><div class="solutioncollapsible">  1. The function <code>sincos1&#33;&#40;x&#41;</code> will modify the input:</p>
 <pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> x = ones(<span class="hljs-number">2</span>);
 </span>
 <span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> sincos1!(x);
@@ -261,17 +262,17 @@ isapprox(mysum1(V),  mysum2(V); atol=<span class="hljs-number">1e-10</span>, rto
 </li>
 </ol>
 <pre><code class="julia hljs"><span class="hljs-keyword">function</span> sincos1!(x)
-    println(<span class="hljs-string">&quot;Address input: &quot;</span>, pointer_from_objref(x))
+    println(<span class="hljs-string">&quot;Address input: &quot;</span>, pointer(x))
     x .= sin.(cos.(x))
-    println(<span class="hljs-string">&quot;Address output: &quot;</span>, pointer_from_objref(x))
+    println(<span class="hljs-string">&quot;Address output: &quot;</span>, pointer(x))
 
     <span class="hljs-keyword">return</span> x
 <span class="hljs-keyword">end</span></code></pre>
 <p>and</p>
 <pre><code class="julia hljs"><span class="hljs-keyword">function</span> sincos2(x)
-    println(<span class="hljs-string">&quot;Address input: &quot;</span>, pointer_from_objref(x))
+    println(<span class="hljs-string">&quot;Address input: &quot;</span>, pointer(x))
     x = sin.(cos.(x))
-    println(<span class="hljs-string">&quot;Address output: &quot;</span>, pointer_from_objref(x))
+    println(<span class="hljs-string">&quot;Address output: &quot;</span>, pointer(x))
 
     <span class="hljs-keyword">return</span> x
 <span class="hljs-keyword">end</span></code></pre>
@@ -279,26 +280,42 @@ isapprox(mysum1(V),  mysum2(V); atol=<span class="hljs-number">1e-10</span>, rto
 <pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> x = ones(<span class="hljs-number">2</span>);
 </span>
 <span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> y = sincos1!(x);
-</span>Address input: Ptr{Nothing} @0x00007f3325795b90
-Address output: Ptr{Nothing} @0x00007f3325795b90
+</span>Address input: Ptr{Float64} @0x00007f321c376ac0
+Address output: Ptr{Float64} @0x00007f321c376ac0
 
 <span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> x = ones(<span class="hljs-number">2</span>);
 </span>
-<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> println(<span class="hljs-string">&quot;Address caller: &quot;</span>, pointer_from_objref(x));
-</span>Address caller: Ptr{Nothing} @0x00007f332671cab0
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> println(<span class="hljs-string">&quot;Address caller: &quot;</span>, pointer(x));
+</span>Address caller: Ptr{Float64} @0x00007f32c1e45850
 
 <span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> y = sincos1!(x);
-</span>Address input: Ptr{Nothing} @0x00007f332671cab0
-Address output: Ptr{Nothing} @0x00007f332671cab0
+</span>Address input: Ptr{Float64} @0x00007f32c1e45850
+Address output: Ptr{Float64} @0x00007f32c1e45850
 
 <span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> y = sincos2(x);
-</span>Address input: Ptr{Nothing} @0x00007f332671cab0
-Address output: Ptr{Nothing} @0x00007f33266e2310</code></pre>
+</span>Address input: Ptr{Float64} @0x00007f32c1e45850
+Address output: Ptr{Float64} @0x00007f32c1e81620</code></pre>
 <ol start="3">
-<li><p>This is not possible, since assigning a new value to a scalar <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span> will always alter the memory location. </div></p>
+<li><p>This is not directly possible, since assigning a new value to a scalar <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span> will always alter the memory location.</p>
 </li>
 </ol>
- </div>
+<p>However using <code>Ref</code> it can be done</p>
+<pre><code class="julia hljs"><span class="hljs-keyword">function</span> sincos!(x::<span class="hljs-built_in">Ref</span>{&lt;:<span class="hljs-built_in">Real</span>})
+    x[] = sin(cos(x[]))
+<span class="hljs-keyword">end</span></code></pre>
+<p>and</p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> x = <span class="hljs-built_in">Ref</span>(<span class="hljs-number">1.2</span>)
+</span>Base.RefValue{Float64}(1.2)
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> sincos!(x)
+</span>0.35447986700952583
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> x
+</span>Base.RefValue{Float64}(0.35447986700952583)
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> x[]
+</span>0.35447986700952583</code></pre>
+<p></div> </div>
 <h2 id="multiple_dispatch"><a href="#multiple_dispatch" class="header-anchor">Multiple dispatch</a></h2>
 <p>One might have observed that since we did not specify any data types, we were able to call functions using vectors and scalars. However, if we call <code>sincos1&#33;&#40;1.0&#41;</code> we see that this might not always be the best idea. Some functions should only be called with a certain data type. We can specify the data type of input and output in the following way:</p>
 <pre><code class="julia hljs"><span class="hljs-keyword">function</span> sincos1!(x::<span class="hljs-built_in">Array</span>{<span class="hljs-built_in">Float64</span>, <span class="hljs-number">1</span>})
@@ -338,9 +355,19 @@ Address output: Ptr{Nothing} @0x00007f33266e2310</code></pre>
  0.5143952585235492
  0.5143952585235492
  0.5143952585235492</code></pre>
+<p>Julia will always use the most specific method for the function arguments during the call. In order to see all available methods for a specific function we can use <code>methods&#40;sincos&#41;</code> or any other function &#40;e.g. <code>&#43;</code>&#41;.</p>
+<p>It is also possible to write new method definitions for already existing functions, which is a powerful concept for package development. On the other hand it can also be dangerous as the following example shows</p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> Base.sin(x::<span class="hljs-built_in">Float64</span>) = <span class="hljs-string">&quot;Breaking code&quot;</span>
+</span>
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> sincos([<span class="hljs-number">1.2</span>, <span class="hljs-number">2.</span>])
+</span>My input is a vector.
+2-element Vector{String}:
+ &quot;Breaking code&quot;
+ &quot;Breaking code&quot;</code></pre>
+<p>Here we explicetly define a new method for the base function <code>Base.sin</code> since doing <code>sin&#40;...</code> would just define a function with the name <code>sin</code>. However this discouraged since both <code>sin</code> and <code>Float64</code> come from base julia and thus we are performing <a href="https://docs.julialang.org/en/v1/manual/style-guide/#Avoid-type-piracy">type piracy</a>.</p>
 <h2 id="element-wise_operations_and_input_specifications"><a href="#element-wise_operations_and_input_specifications" class="header-anchor">Element-wise operations and input specifications</a></h2>
-<p>As always, we can use the dot operation <code>.</code> to evaluate an array of inputs element-wise. Define the scalar function</p>
-<pre><code class="julia hljs"><span class="hljs-keyword">function</span> sincos(x::<span class="hljs-built_in">Float64</span>)
+<p>As seen already, we can use the dot operation <code>.</code> to evaluate an array of inputs element-wise. Define the scalar function</p>
+<pre><code class="julia hljs"><span class="hljs-keyword">function</span> sincos(x::<span class="hljs-built_in">Real</span>)
     <span class="hljs-keyword">return</span> sin(cos(x))    
 <span class="hljs-keyword">end</span></code></pre>
 <p>and run</p>
@@ -350,36 +377,40 @@ Address output: Ptr{Nothing} @0x00007f33266e2310</code></pre>
 </span>2×3 Matrix{Float64}:
  0.514395  0.514395  0.514395
  0.514395  0.514395  0.514395</code></pre>
+<p>Fore more information see the <a href="https://docs.julialang.org/en/v1/manual/arrays/#Broadcasting">broadcasting section</a> in the manual.</p>
 <p>Moreover, we can assign values to inputs in the function definition. If the caller does not specify the input, these values will be used instead.</p>
-<pre><code class="julia hljs"><span class="hljs-keyword">function</span> sincos(x::<span class="hljs-built_in">Float64</span>=(<span class="hljs-number">0.5</span> * <span class="hljs-literal">pi</span>))
-    <span class="hljs-keyword">return</span> sin.(cos.(x))
-<span class="hljs-keyword">end</span></code></pre>
-<p>We can now call this function via</p>
-<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> sincos()
-</span>6.123233995736766e-17
-
-<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> sincos(<span class="hljs-number">0.0</span>)
-</span>0.8414709848078965</code></pre>
-<h2 id="parametric_types_for_functions"><a href="#parametric_types_for_functions" class="header-anchor">Parametric types for functions</a></h2>
-<p>Notice that it is very restrictive to tell our method to only accept inputs of type <code>Float64</code>. It makes perfect sense to evaluate our function at <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">x = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>, where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span> can be an integer. In fact, it is considered to be good practice if we make function inputs as general as possible. Just as for <em>structs</em>, we can use parametric types to make the input more general. If we want the input to be a real number &#40;i.e., a subtype of <code>Real</code>&#41;, we can write this as </p>
-<pre><code class="julia hljs"><span class="hljs-keyword">function</span> sincos(x::T) <span class="hljs-keyword">where</span> T&lt;:<span class="hljs-built_in">Real</span>
+<pre><code class="julia hljs"><span class="hljs-keyword">function</span> myfun(x::<span class="hljs-built_in">Float64</span>=(<span class="hljs-number">0.5</span> * <span class="hljs-literal">pi</span>))
     <span class="hljs-keyword">return</span> sin(cos(x))
 <span class="hljs-keyword">end</span></code></pre>
+<p>We can now call this function via</p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> myfun()
+</span>6.123233995736766e-17
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> myfun(<span class="hljs-number">0.0</span>)
+</span>0.8414709848078965</code></pre>
+<p>Assigning default values for function arguments defines mutliple methods and is actually short hand for the following</p>
+<pre><code class="julia hljs">myfun() = sin(cos(<span class="hljs-number">0.5</span> * <span class="hljs-literal">pi</span>))
+myfun(x::<span class="hljs-built_in">Float64</span>) = sin(cos(x))</code></pre>
+<h2 id="parametric_types_for_functions"><a href="#parametric_types_for_functions" class="header-anchor">Parametric types for functions</a></h2>
+<p>Notice that it is very restrictive to tell our method to only accept inputs of type <code>Float64</code>. It makes perfect sense to evaluate our function at <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">x = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>, where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi></mrow><annotation encoding="application/x-tex">x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">x</span></span></span></span> can be an integer. In fact, it is considered to be good practice if we make function inputs as general as possible. In fact not setting a type &#40;equivalent to <code>::Any</code>&#41; is also possible. Just as for <em>structs</em>, we can use parametric types to make the input more general. If we want the input to be a real number &#40;i.e., a subtype of <code>Real</code>&#41;, we can write this as </p>
+<pre><code class="julia hljs"><span class="hljs-keyword">function</span> myadd(x::T, y::T) <span class="hljs-keyword">where</span> {T&lt;:<span class="hljs-built_in">Real</span>}
+    println(<span class="hljs-string">&quot;Got numbers of type <span class="hljs-subst">$(T)</span> as input&quot;</span>)
+    <span class="hljs-keyword">return</span> x + y
+<span class="hljs-keyword">end</span></code></pre>
 <p>Now, <code>T</code> can be any subtype of <code>Real</code>, that is, we can write</p>
-<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> sincos(<span class="hljs-number">1</span>)
-</span>0.5143952585235492
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> myadd(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)
+</span>Got numbers of type Int64 as input
+3
 
-<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> sincos(<span class="hljs-number">1.0</span>)
-</span>0.5143952585235492
-
-<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> sincos(<span class="hljs-number">1</span>//<span class="hljs-number">2</span>)
-</span>0.7691963548410085</code></pre>
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> myadd(<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>)
+</span>Got numbers of type Float64 as input
+3.0</code></pre>
 <button type="button" class="collapsible" style="background-color:#b5ddff"> Exercise </button><div class="collapsiblecontent">  Write a function <code>sincos</code> which can take any real number as well as the point struct we defined earlier</p>
-<pre><code class="julia hljs"><span class="hljs-keyword">struct</span> Point{T}
+<pre><code class="julia hljs"><span class="hljs-keyword">struct</span> Point{T&lt;:<span class="hljs-built_in">Real</span>}
     x::T
     y::T
 <span class="hljs-keyword">end</span></code></pre>
-<p>where <code>T</code> must be a real number as input. When the input is an object of type <code>Point</code>, the function returns <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>sin</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>cos</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi mathvariant="normal">∥</mi><mi>x</mi><mi mathvariant="normal">∥</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\sin(\cos(\Vert x \Vert))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">sin</span><span class="mopen">(</span><span class="mop">cos</span><span class="mopen">(</span><span class="mord">∥</span><span class="mord mathnormal">x</span><span class="mord">∥</span><span class="mclose">))</span></span></span></span>, where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∥</mi><mi>x</mi><mi mathvariant="normal">∥</mi><mo>=</mo><msqrt><mrow><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><msup><mi>y</mi><mn>2</mn></msup></mrow></msqrt></mrow><annotation encoding="application/x-tex">\Vert x \Vert = \sqrt{x^2 + y^2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∥</span><span class="mord mathnormal">x</span><span class="mord">∥</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.24em;vertical-align:-0.2822em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9578em;"><span class="svg-align" style="top:-3.2em;"><span class="pstrut" style="height:3.2em;"></span><span class="mord" style="padding-left:1em;"><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7401em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7401em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span><span style="top:-2.9178em;"><span class="pstrut" style="height:3.2em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.28em;"><svg xmlns="http://www.w3.org/2000/svg" width='400em' height='1.28em' viewBox='0 0 400000 1296' preserveAspectRatio='xMinYMin slice'><path d='M263,681c0.7,0,18,39.7,52,119
+<p>as input. When the input is an object of type <code>Point</code>, the function returns <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>sin</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>cos</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi mathvariant="normal">∥</mi><mi>x</mi><mi mathvariant="normal">∥</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\sin(\cos(\Vert x \Vert))</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">sin</span><span class="mopen">(</span><span class="mop">cos</span><span class="mopen">(</span><span class="mord">∥</span><span class="mord mathnormal">x</span><span class="mord">∥</span><span class="mclose">))</span></span></span></span>, where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∥</mi><mi>x</mi><mi mathvariant="normal">∥</mi><mo>=</mo><msqrt><mrow><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><msup><mi>y</mi><mn>2</mn></msup></mrow></msqrt></mrow><annotation encoding="application/x-tex">\Vert x \Vert = \sqrt{x^2 + y^2}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∥</span><span class="mord mathnormal">x</span><span class="mord">∥</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.24em;vertical-align:-0.2822em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9578em;"><span class="svg-align" style="top:-3.2em;"><span class="pstrut" style="height:3.2em;"></span><span class="mord" style="padding-left:1em;"><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7401em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.7401em;"><span style="top:-2.989em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span><span style="top:-2.9178em;"><span class="pstrut" style="height:3.2em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.28em;"><svg xmlns="http://www.w3.org/2000/svg" width='400em' height='1.28em' viewBox='0 0 400000 1296' preserveAspectRatio='xMinYMin slice'><path d='M263,681c0.7,0,18,39.7,52,119
 c34,79.3,68.167,158.7,102.5,238c34.3,79.3,51.8,119.3,52.5,120
 c340,-704.7,510.7,-1060.3,512,-1067
 l0 -0
@@ -396,34 +427,22 @@ M1001 80h400000v40h-400000z'/></svg></span></span></span><span class="vlist-s">�
     y::T
 <span class="hljs-keyword">end</span>
 
-<span class="hljs-keyword">function</span> sincos(x::T) <span class="hljs-keyword">where</span> T&lt;:<span class="hljs-built_in">Real</span>
-    <span class="hljs-keyword">return</span> sin(cos(x))
-<span class="hljs-keyword">end</span>
+sincos(x::<span class="hljs-built_in">Real</span>) = sin(cos(x))
 
-<span class="hljs-keyword">function</span> sincos(x::Point{T}) <span class="hljs-keyword">where</span> T&lt;:<span class="hljs-built_in">Real</span>
-    norm = sqrt(x.x^<span class="hljs-number">2</span> + x.y^<span class="hljs-number">2</span>)
-    
-    <span class="hljs-keyword">return</span> sin(cos(norm))
-<span class="hljs-keyword">end</span></code></pre>
+sincos(point::Point{&lt;:<span class="hljs-built_in">Real</span>}) = sincos(sqrt(point.x^<span class="hljs-number">2</span> + point.y^<span class="hljs-number">2</span>))</code></pre>
 <p>Then, we get</p>
-<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> p = Point{<span class="hljs-built_in">Float64</span>}(<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>)
-</span>Point{Float64}(1.0, 2.0)
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> sin(cos(<span class="hljs-number">0</span>)) == sincos(Point(<span class="hljs-number">0</span>, <span class="hljs-number">0</span>))
+</span>true
 
-<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> sincos(p)
-</span>-0.578813455551511
-
-<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> pim = Point{<span class="hljs-built_in">Complex</span>}(<span class="hljs-number">1</span><span class="hljs-literal">im</span>, <span class="hljs-number">2.0</span>)
-</span>Point{Complex}(0 + 1im, 2.0 + 0.0im)
-
-<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> sincos(pim)
-</span>ERROR: MethodError: no method matching sincos(::Point{Complex})
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> sincos(<span class="hljs-number">1.0</span> + <span class="hljs-literal">im</span>)
+</span>ERROR: MethodError: no method matching sincos(::ComplexF64)
 You may have intended to import Base.sincos
 Closest candidates are:
-  sincos(::T) where T&lt;:Real at REPL[3]:1
-  sincos(::Point{T}) where T&lt;:Real at REPL[4]:1
+  sincos(::Real) at REPL[2]:1
+  sincos(::Point) at REPL[3]:1
 Stacktrace:
  [1] top-level scope
-   @ REPL[9]:1</code></pre>
+   @ REPL[8]:1</code></pre>
 <p></div> </div>
 <h2 id="constructors"><a href="#constructors" class="header-anchor">Constructors</a></h2>
 <p>Note from the previous exercise, that it might be convenient if every object of type <code>Point</code> computes and stores the norm. Of course this can be done by defining</p>
@@ -433,7 +452,7 @@ Stacktrace:
     norm
 <span class="hljs-keyword">end</span></code></pre>
 <p>and creating objects of type <code>PointFull</code> via</p>
-<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> p = PointFull{<span class="hljs-built_in">Float64</span>}(<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>, sqrt(<span class="hljs-number">1.0</span>^<span class="hljs-number">2</span> + <span class="hljs-number">2.0</span>^<span class="hljs-number">2</span>))
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> p = PointFull(<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>, sqrt(<span class="hljs-number">1.0</span>^<span class="hljs-number">2</span> + <span class="hljs-number">2.0</span>^<span class="hljs-number">2</span>))
 </span>PointFull{Float64}(1.0, 2.0, 2.23606797749979)
 
 <span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> p = PointFull{<span class="hljs-built_in">Float32</span>}(<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>, sqrt(<span class="hljs-number">1.0</span>^<span class="hljs-number">2</span> + <span class="hljs-number">2.0</span>^<span class="hljs-number">2</span>))
@@ -445,10 +464,11 @@ Stacktrace:
 <pre><code class="julia hljs"><span class="hljs-keyword">struct</span> PointFull1{T&lt;:<span class="hljs-built_in">Real</span>}
     x::T
     y::T
-    norm
+    norm::T
 
-    <span class="hljs-keyword">function</span> PointFull1(x::T, y::T) <span class="hljs-keyword">where</span> {T&lt;:<span class="hljs-built_in">Real</span>}
-        norm = sqrt(x^<span class="hljs-number">2</span> + y^<span class="hljs-number">2</span>)
+    <span class="hljs-keyword">function</span> PointFull1(x::T1, y::T2) <span class="hljs-keyword">where</span> {T1&lt;:<span class="hljs-built_in">Real</span>,T2&lt;:<span class="hljs-built_in">Real</span>}
+        T = promote_type(T1, T2)
+        norm = T(sqrt(x^<span class="hljs-number">2</span> + y^<span class="hljs-number">2</span>))
         new{T}(x, y, norm)
     <span class="hljs-keyword">end</span>
 <span class="hljs-keyword">end</span></code></pre>
@@ -456,16 +476,21 @@ Stacktrace:
 <pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> PointFull1(<span class="hljs-number">1.0</span>, <span class="hljs-number">2.0</span>)
 </span>PointFull1{Float64}(1.0, 2.0, 2.23606797749979)
 
-<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> PointFull1(<span class="hljs-number">1</span>, <span class="hljs-number">2</span>)
-</span>PointFull1{Int64}(1, 2, 2.23606797749979)
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> PointFull1(<span class="hljs-number">1.0</span>, <span class="hljs-number">2</span>)
+</span>PointFull1{Float64}(1.0, 2.0, 2.23606797749979)
 
-<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> PointFull1(<span class="hljs-number">1</span><span class="hljs-literal">im</span>, <span class="hljs-number">2</span><span class="hljs-literal">im</span>)
-</span>ERROR: MethodError: no method matching PointFull1(::Complex{Int64}, ::Complex{Int64})
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> PointFull1(<span class="hljs-number">1</span>, <span class="hljs-number">3</span>//<span class="hljs-number">4</span>)
+</span>PointFull1{Rational{Int64}}(1//1, 3//4, 5//4)
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> PointFull1(<span class="hljs-number">1</span>, <span class="hljs-number">1.0</span><span class="hljs-literal">im</span>)
+</span>ERROR: MethodError: no method matching PointFull1(::Int64, ::ComplexF64)
+Closest candidates are:
+  PointFull1(::T1, ::T2) where {T1&lt;:Real, T2&lt;:Real} at REPL[10]:6
 Stacktrace:
  [1] top-level scope
-   @ REPL[20]:1</code></pre>
+   @ REPL[16]:1</code></pre>
 <div class="page-foot">
-    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: August 16, 2022.
+    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: October 19, 2022.
     Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
 </div>
 </div><!-- CONTENT ENDS HERE -->

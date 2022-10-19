@@ -118,11 +118,11 @@
 <span class="hljs-meta prompt_">julia&gt;</span></code></pre>
 <p></div>
 <ul>
-<li><p><strong>Package mode</strong>: We can switch to this mode by typing <code>&#93;</code> and the prompt will change to <code>&#40;@v1.7&#41; pkg&gt;</code> &#40;the version number will depend on the installation&#41;. Here we can directly interact with the <a href="./package_manager/">package manager</a> and add or update packages. To get a complete list of possibilities type <code>?</code></p>
+<li><p><strong>Package mode</strong>: We can switch to this mode by typing <code>&#93;</code> and the prompt will change to <code>&#40;@v1.8&#41; pkg&gt;</code> &#40;the version number will depend on the installation&#41;. Here we can directly interact with the <a href="./package_manager/">package manager</a> and add or update packages. To get a complete list of possibilities type <code>?</code></p>
 </li>
 </ul>
 <button type="button" class="collapsible" style="background-color:#caffa5"> Example </button><div class="collapsiblecontent">  </p>
-<pre><code class="julia-repl hljs"><span class=hljs-metap>(@v1.7) pkg&gt;</span> ?
+<pre><code class="julia-repl hljs"><span class=hljs-metap>(@v1.8) pkg&gt;</span> ?
   Welcome to the Pkg REPL-mode. To return to the julia&gt; prompt, either press backspace when the input line is empty or press Ctrl+C.
 
   Full documentation available at https://pkgdocs.julialang.org/
@@ -179,7 +179,7 @@
 
   registry update, up: update package registries
 
-<span class=hljs-metap>(@v1.7) pkg&gt;</span></code></pre>
+<span class=hljs-metap>(@v1.8) pkg&gt;</span></code></pre>
 <p></div>
 <ul>
 <li><p><strong>Help mode</strong>: We can switch to this mode by typing <code>?</code> and the prompt will change to <code>help?&gt;</code>. Julia will print the help and documentation for everything we ask for &#40;related to Julia&#41;.</p>
@@ -217,11 +217,12 @@ search: +
 </ul>
 <button type="button" class="collapsible" style="background-color:#caffa5"> Example </button><div class="collapsiblecontent">  </p>
 <pre><code class="julia hljs">shell&gt; pwd
-/home/user/ws22_julia_workshop
+/home/user/ws22_julia_ulg
 
 shell&gt;</code></pre>
 <p></div>
 <p><strong>You exit all of the &#40;non&#41; Julia modes by pressing Backspace.</strong></p>
+<p>Note that all this modes use julia functions under the hood. For examples <code>?&#43;</code> is equivalent to <code>Base.Docs.doc&#40;&#43;&#41;</code> and all the package functions can be called inside julia by using <code>import Pkg</code> and then e.g. <code>Pkg.update&#40;&#41;</code>.</p>
 <h3 id="visual_studio_code"><a href="#visual_studio_code" class="header-anchor">Visual Studio Code </a></h3>
 <p>See <a href="../../#julia_and_vscode">Main introduction</a></p>
 <h3 id="other_interactive_development_environments"><a href="#other_interactive_development_environments" class="header-anchor">Other Interactive Development Environments </a></h3>
@@ -230,7 +231,7 @@ shell&gt;</code></pre>
 <h2 id="additional_sources"><a href="#additional_sources" class="header-anchor">Additional sources</a></h2>
 <p>If you are already familiar with another programming language it might be worth visiting <a href="https://docs.julialang.org/en/v1/manual/noteworthy-differences/">Noteworthy Differences from other Languages</a> from the Julia documentation. </p>
 <div class="page-foot">
-    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: August 16, 2022.
+    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: October 19, 2022.
     Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
 </div>
 </div><!-- CONTENT ENDS HERE -->
