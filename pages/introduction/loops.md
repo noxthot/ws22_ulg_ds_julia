@@ -18,6 +18,7 @@ for i in N:-2:1
 end
 ```
 If we want to iterate over a list or vector $v$, we can use `for i in v`. In this case, $i$ will take values in the vector $v$. 
+Alternatively to iterate over the indices use `for i in eachindex(v)`.
 
 A further loop that can be used is the `while` loop, which performs a given instruction as long as a specified condition holds. Our previous example written as a while loop looks like this
 ```julia
@@ -32,7 +33,7 @@ end
 1. Create a matrix $A\in\mathbb{R}^{5 \times 5}$ with entries $A_{ij} = (i-j)^2$ using a `for` loop. 
 2. Apply this matrix to a random vector `v = rand(5)` and normalize the result. That is, $v_{\mathrm{new}} = Av/\Vert Av\Vert$.
 3. Repeat this process using $v_{\mathrm{new}}$ as input (i.e., $v\leftarrow v_{\mathrm{new}}$) until $\Vert v_{\mathrm{new}}- v \Vert < 10^{-5}$ using a `while` loop.
-4. Print out $A\cdot v_{\mathrm{new}}$ and check against the eigenvalues of $A$ using `eigvals(A)`.
+4. Print out $A\cdot v_{\mathrm{new}}$ and check against the maximum eigenvalue of $A$ using `eigmax(A)`.
 
 \solution{
 ```julia

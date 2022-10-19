@@ -20,9 +20,9 @@ julia> 1 + 1
 julia> 
 ```
 }
-- **Package mode**: We can switch to this mode by typing `]` and the prompt will change to `(@v1.7) pkg>` (the version number will depend on the installation). Here we can directly interact with the [package manager](./package_manager/) and add or update packages. To get a complete list of possibilities type `?`
+- **Package mode**: We can switch to this mode by typing `]` and the prompt will change to `(@v1.8) pkg>` (the version number will depend on the installation). Here we can directly interact with the [package manager](./package_manager/) and add or update packages. To get a complete list of possibilities type `?`
 \example{```julia-repl
-(@v1.7) pkg> ?
+(@v1.8) pkg> ?
   Welcome to the Pkg REPL-mode. To return to the julia> prompt, either press backspace when the input line is empty or press Ctrl+C.
 
   Full documentation available at https://pkgdocs.julialang.org/
@@ -79,7 +79,7 @@ julia>
 
   registry update, up: update package registries
 
-(@v1.7) pkg> 
+(@v1.8) pkg> 
 ```
 }
 - **Help mode**: We can switch to this mode by typing `?` and the prompt will change to `help?>`. Julia will print the help and documentation for everything we ask for (related to Julia).
@@ -115,13 +115,16 @@ julia>
 \example{
 ```
 shell> pwd
-/home/user/ws22_julia_workshop
+/home/user/ws22_julia_ulg
 
 shell>
 ```
 }
 
 **You exit all of the (non) Julia modes by pressing Backspace.**
+
+Note that all this modes use julia functions under the hood. For examples `?+` is equivalent to `Base.Docs.doc(+)`
+and all the package functions can be called inside julia by using `import Pkg` and then e.g. `Pkg.update()`.
 
 ### Visual Studio Code 
 See [Main introduction](../../#julia_and_vscode)

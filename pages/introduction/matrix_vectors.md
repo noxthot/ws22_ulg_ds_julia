@@ -305,7 +305,7 @@ julia> H = [v[1:5] v[2:6] v[3:7] v[4:8] v[5:9]]
  4  5  6  7  8
  5  6  7  8  9
 
-julia> H = [1:5 2:6 3:7 4:8 5:9]  # alternative solution
+julia> H = hcat([k:k+4 for k in 1:5]...)  # alternative solution
 5×5 Matrix{Int64}:
  1  2  3  4  5
  2  3  4  5  6
