@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  
+   <link rel="stylesheet" href="/ws22_ulg_ds_julia/libs/katex/katex.min.css">
+     
    <link rel="stylesheet" href="/ws22_ulg_ds_julia/libs/highlight/github.min.css">
    
     <script src="/ws22_ulg_ds_julia/libs/clipboard.min.js"></script>
@@ -51,7 +52,7 @@
   }
 </style>
 
-   <title>Parallel Computing - Performance</title>  
+   <title>Performance</title>  
 </head>
 <body>                      <!-- closed in foot.html -->
 <div class="page-wrap">   <!-- closed in foot.html -->
@@ -76,6 +77,7 @@
             <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/loops/" class="menu-list-link ">Loops</a>
             <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/functions/" class="menu-list-link ">Functions</a>
             <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/macros/" class="menu-list-link ">Macros</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/performance/" class="menu-list-link active">Performance</a>
           </ul>
         <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/data_management/" class="menu-list-link ">Data Management</a>
           <ul class="menu-list-child-list ">
@@ -117,10 +119,10 @@
 V = rand(<span class="hljs-number">100_000</span>)
 <span class="hljs-meta">@time</span> mysum(V)
 <span class="hljs-meta">@time</span> mysum(V)</code></pre>
-<pre><code class="plaintext hljs">  0.006545 seconds (5.25 k allocations: 286.451 KiB, 97.14% compilation time)
-  0.000175 seconds (1 allocation: 16 bytes)
-50141.53265315474</code></pre>
-<div class="important">In order to optimize the loop call we use the <a href="https://docs.julialang.org/en/v1/devdocs/boundscheck/"><code>@inbounds</code></a> macro to eliminate inbound checks - does the index exist - for the array access.</div>
+<pre><code class="plaintext hljs">  0.006652 seconds (5.25 k allocations: 286.451 KiB, 97.20% compilation time)
+  0.000173 seconds (1 allocation: 16 bytes)
+50168.79130633436</code></pre>
+<div class="important">In order to optimize the loop call we use the <a href="https://docs.julialang.org/en/v1/devdocs/boundscheck/"><code>@inbounds</code></a> macro to eliminate inbound checks - does the index exist - for the array access. <strong>Note</strong> that this macro is potentially very dangerous since the program will silently fail if we try to index into a smaller array.</div>
 <p>The downside with the <code>@time</code> macro is, that it really just measures the execution time of what is given to it. This means, if the function is not already compiled this might include compiling or if the CPU is busy with something else it is often not accurate. </p>
 <p>Therefore, if we are serious about measuring performance we should stick to the <a href="https://juliaci.github.io/BenchmarkTools.jl/stable/"><code>BenchmarkTools</code></a>. It comes with a couple of macros that we should test out:</p>
 <button type="button" class="collapsible" style="background-color:#b5ddff"> Exercise </button><div class="collapsiblecontent">  In order to use the BenchmarkTools we need to include it with <code>using BenchmarkTools</code>, as any other package.  Benchmark our <code>mysum</code> function with the following macros:</p>
@@ -137,12 +139,12 @@ V = rand(<span class="hljs-number">100_000</span>)
 
 <span class="hljs-meta">@benchmark</span> mysum($V)</code></pre>
 <p><pre><code class="plaintext hljs">BenchmarkTools.Trial: 10000 samples with 1 evaluation.
- Range (min … max):  160.399 μs … 222.800 μs  ┊ GC (min … max): 0.00% … 0.00%
+ Range (min … max):  160.399 μs … 204.500 μs  ┊ GC (min … max): 0.00% … 0.00%
  Time  (median):     160.400 μs               ┊ GC (median):    0.00%
- Time  (mean ± σ):   160.731 μs ±   1.645 μs  ┊ GC (mean ± σ):  0.00% ± 0.00%
+ Time  (mean ± σ):   160.710 μs ±   1.436 μs  ┊ GC (mean ± σ):  0.00% ± 0.00%
 
   █                                                             ▁
-  █▅▆▅▃▁▃▁▁▁▃▁▁▆█▇▇▇▆▄▄▄▃▃▁▁▁▁▁▁▁▁▁▁▁▁▃▁▁▁▁▅▆▆▇▇▇▇▇▇▇▆▇▆▅▅▅▄▄▅▆ █
+  █▄▄▄▄▄▃▃▁▁▁▁▄▆▇█▇▆▆▅▆▁▅▃▁▁▁▃▁▁▁▃▁▁▁▁▁▁▁▁▄▅▅▆▆▇▇▇▇▇▇▆▇▇▆▅▅▅▅▆▅ █
   160 μs        Histogram: log(frequency) by time        167 μs &lt;
 
  Memory estimate: 0 bytes, allocs estimate: 0.</code></pre> the full details with </p>
@@ -158,42 +160,92 @@ dump(t)</code></pre>
     gcsample: Bool false
     time_tolerance: Float64 0.05
     memory_tolerance: Float64 0.01
-  times: Array{Float64}((10000,)) [167800.0, 161399.0, 160500.0, 160400.0, 160500.0, 160399.0, 160400.0, 170400.0, 160399.0, 160400.0  …  166500.0, 160500.0, 160400.0, 160499.0, 160400.0, 160500.0, 160399.0, 160400.0, 160400.0, 160400.0]
+  times: Array{Float64}((10000,)) [179200.0, 160700.0, 160399.0, 160400.0, 160400.0, 160500.0, 160399.0, 160400.0, 160400.0, 160499.0  …  160400.0, 160400.0, 160499.0, 160400.0, 169300.0, 160399.0, 160400.0, 160500.0, 160500.0, 160399.0]
   gctimes: Array{Float64}((10000,)) [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0  …  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
   memory: Int64 0
   allocs: Int64 0
 </code></pre> and the often used sanity check, that actually also shows you the output of your code.</p>
 <pre><code class="julia hljs"><span class="hljs-meta">@btime</span> mysum($V)</code></pre>
 <p><pre><code class="plaintext hljs">  160.399 μs (0 allocations: 0 bytes)
-50141.53265315474</code></pre> </div> </div>
-<div class="important">Note that for benchmarking we often use the <code>&#36;</code> literal for variables to tell the Julia interpreter to use interpolation.  This will make sure that the variable is not allocated inside the function and the measurement is more accurate, or more likely what we actually want to know.</div>
-<p>We can also use the <a href="https://docs.julialang.org/en/v1/manual/profile/#Profiling"><code>Profiler</code></a> package to really dig into profiling the code but this is a bit too much of a deep dive for this class, it would look like this:</p>
-<pre><code class="julia hljs"><span class="hljs-keyword">using</span> Profile
+50168.79130633436</code></pre> </div> </div>
+<div class="important">Note that for benchmarking with BenchmarkTools we often use the <code>&#36;</code> literal for variables to tell the Julia interpreter to use interpolation.  This will make sure that the variable is not allocated inside the function and the measurement is more accurate, or more likely what we actually want to know.</div>
+<p>We can also use the <a href="https://docs.julialang.org/en/v1/manual/profile/#Profiling"><code>Profiler</code></a> package to really dig into profiling the code but this is a bit too much of a deep dive for this class.</p>
+<p>One should also take a look at the <a href="https://docs.julialang.org/en/v1/manual/performance-tips/">performance tips</a> section of the manual. Especially the parts about avoiding untyped global variables and putting code inside functions are sometimes very performance critical.</p>
+<h1 id="performance_optimization_-_case_study"><a href="#performance_optimization_-_case_study" class="header-anchor">Performance Optimization - Case Study</a></h1>
+<p>We give an example of how one can optimize the code of a simple program. The goal is to calculate pairwise distances of 3D points and save the results inside a matrix. That is given <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mrow><mn>3</mn><mo>×</mo><mi>N</mi></mrow></msup><mo separator="true">,</mo><mi>y</mi><mo>∈</mo><msup><mi mathvariant="double-struck">R</mi><mrow><mn>3</mn><mo>×</mo><mi>M</mi></mrow></msup></mrow><annotation encoding="application/x-tex">x\in\mathbb{R}^{3\times N}, y\in\mathbb{R}^{3\times M}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0358em;vertical-align:-0.1944em;"></span><span class="mord"><span class="mord mathbb">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">3</span><span class="mbin mtight">×</span><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span></span></span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">∈</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8413em;"></span><span class="mord"><span class="mord mathbb">R</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">3</span><span class="mbin mtight">×</span><span class="mord mathnormal mtight" style="margin-right:0.10903em;">M</span></span></span></span></span></span></span></span></span></span></span></span> we want to calculate <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>z</mi><mrow><mi>i</mi><mo separator="true">,</mo><mi>j</mi></mrow></msub><mo>=</mo><mi mathvariant="normal">∥</mi><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><msub><mi>y</mi><mi>j</mi></msub><msubsup><mi mathvariant="normal">∥</mi><mn>2</mn><mn>2</mn></msubsup></mrow><annotation encoding="application/x-tex">z_{i,j} = \Vert x_i - y_j \Vert_2^2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7167em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.044em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∥</span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.1002em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0359em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span><span class="mord"><span class="mord">∥</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-2.4519em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2481em;"><span></span></span></span></span></span></span></span></span></span>. for <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>=</mo><mn>1</mn><mo separator="true">,</mo><mo>…</mo><mo separator="true">,</mo><mi>N</mi><mo separator="true">,</mo><mtext>  </mtext><mi>j</mi><mo>=</mo><mn>1</mn><mo separator="true">,</mo><mo>…</mo><mo separator="true">,</mo><mi>M</mi></mrow><annotation encoding="application/x-tex">i=1,\ldots,N, \; j=1,\ldots,M</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6595em;"></span><span class="mord mathnormal">i</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner">…</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8778em;vertical-align:-0.1944em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner">…</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">M</span></span></span></span>.</p>
+<p>First we have a simple one-liner</p>
+<pre><code class="julia hljs">calc1(x, y) = [norm(x[:,i] - y[:,j])^<span class="hljs-number">2</span> <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-number">1</span>:size(x, <span class="hljs-number">2</span>), j <span class="hljs-keyword">in</span> <span class="hljs-number">1</span>:size(y, <span class="hljs-number">2</span>)]</code></pre>
+<p>A first improvement can be achieved by preallocation the result and using views since accessing slices in julia always performs a copy and therefore allocates.</p>
+<pre><code class="julia hljs"><span class="hljs-keyword">function</span> calc2!(z::<span class="hljs-built_in">Matrix</span>{T}, x::<span class="hljs-built_in">Matrix</span>{T}, y::<span class="hljs-built_in">Matrix</span>{T}) <span class="hljs-keyword">where</span> {T&lt;:<span class="hljs-built_in">AbstractFloat</span>}
+    <span class="hljs-comment"># check dimensions since we later use `@inbounds`</span>
+    <span class="hljs-meta">@assert</span> size(x, <span class="hljs-number">1</span>) == size(y, <span class="hljs-number">1</span>)
+    <span class="hljs-meta">@assert</span> size(z) == (size(x, <span class="hljs-number">2</span>), size(y, <span class="hljs-number">2</span>))
 
-Profile.clear()
-<span class="hljs-meta">@profile</span> <span class="hljs-keyword">for</span> _ <span class="hljs-keyword">in</span> <span class="hljs-number">1</span>:<span class="hljs-number">100_000</span>; mysum(V); <span class="hljs-keyword">end</span>
-Profile.print(maxdepth=<span class="hljs-number">15</span>)</code></pre>
-<pre><code class="bash hljs">Overhead ╎ [+additional indent] Count File:Line; Function
-=========================================================
-    ╎8281  @Base/client.jl:495; _start()
-    ╎ 8281  @Base/client.jl:309; exec_options(opts::Base.JLOptions)
-    ╎  8281  @Base/client.jl:379; run_main_repl(interactive::Bool, quiet::Bool, banner::Bool, history_file::Bool, color_set::Bool)
-    ╎   8281  @Base/essentials.jl:714; invokelatest
-    ╎    8281  @Base/essentials.jl:716; <span class="hljs-comment">#invokelatest#2</span>
-    ╎     8281  @Base/client.jl:394; (::Base.var<span class="hljs-string">&quot;#936#938&quot;</span>{Bool, Bool, Bool})(REPL::Module)
-    ╎    ╎ 8281  ...r/worker/package_linux64/build/usr/share/julia/stdlib/v1.7/REPL/src/REPL.jl:351; run_repl(repl::REPL.AbstractREPL, consumer::Any)
-    ╎    ╎  8281  ...r/worker/package_linux64/build/usr/share/julia/stdlib/v1.7/REPL/src/REPL.jl:364; run_repl(repl::REPL.AbstractREPL, consumer::Any; backend_on_current_task::Bool)
-    ╎    ╎   8281  .../worker/package_linux64/build/usr/share/julia/stdlib/v1.7/REPL/src/REPL.jl:231; start_repl_backend(backend::REPL.REPLBackend, consumer::Any)
-    ╎    ╎    8281  .../worker/package_linux64/build/usr/share/julia/stdlib/v1.7/REPL/src/REPL.jl:246; repl_backend_loop(backend::REPL.REPLBackend)
-    ╎    ╎     8281  ...worker/package_linux64/build/usr/share/julia/stdlib/v1.7/REPL/src/REPL.jl:150; eval_user_input(ast::Any, backend::REPL.REPLBackend)
-    ╎    ╎    ╎ 8281  @Base/boot.jl:373; <span class="hljs-built_in">eval</span>
-    ╎    ╎    ╎  8281  .../package_linux64/build/usr/share/julia/stdlib/v1.7/Profile/src/Profile.jl:28; top-level scope
-   1╎    ╎    ╎   8281  REPL[18]:1; macro expansion
-    ╎    ╎    ╎    1     REPL[7]:3; mysum(V::Vector{Float64})
-    ╎    ╎    ╎     1     @Base/abstractarray.jl:279; eachindex
-    ╎    ╎    ╎    8279  REPL[7]:4; mysum(V::Vector{Float64})
-    ╎    ╎    ╎     8279  @Base/range.jl:837; iterate
-Total snapshots: 16562</code></pre>
+    <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> axes(z, <span class="hljs-number">2</span>), i <span class="hljs-keyword">in</span> axes(z, <span class="hljs-number">1</span>)
+        <span class="hljs-comment"># allocates 2 times</span>
+        <span class="hljs-comment"># 1 from - and 1 from .^</span>
+        <span class="hljs-meta">@inbounds</span> <span class="hljs-meta">@views</span> z[i,j] = sum((x[:, i] - y[:, j]).^<span class="hljs-number">2</span>)
+    <span class="hljs-keyword">end</span>
+    <span class="hljs-keyword">return</span> z
+<span class="hljs-keyword">end</span></code></pre>
+<pre><code class="julia hljs"><span class="hljs-keyword">function</span> calc3!(z::<span class="hljs-built_in">Matrix</span>{T}, x::<span class="hljs-built_in">Matrix</span>{T}, y::<span class="hljs-built_in">Matrix</span>{T}) <span class="hljs-keyword">where</span> {T&lt;:<span class="hljs-built_in">AbstractFloat</span>}
+    <span class="hljs-meta">@assert</span> size(x, <span class="hljs-number">1</span>) == size(y, <span class="hljs-number">1</span>)
+    <span class="hljs-meta">@assert</span> size(z) == (size(x, <span class="hljs-number">2</span>), size(y, <span class="hljs-number">2</span>))
+
+    <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> axes(z, <span class="hljs-number">2</span>), i <span class="hljs-keyword">in</span> axes(z, <span class="hljs-number">1</span>)
+        <span class="hljs-keyword">for</span> k <span class="hljs-keyword">in</span> <span class="hljs-number">1</span>:size(x, <span class="hljs-number">1</span>)
+            <span class="hljs-meta">@inbounds</span> z[i,j] += (x[k, i] - y[k, j])^<span class="hljs-number">2</span>
+        <span class="hljs-keyword">end</span>
+    <span class="hljs-keyword">end</span>
+    <span class="hljs-keyword">return</span> z
+<span class="hljs-keyword">end</span></code></pre>
+<pre><code class="julia hljs"><span class="hljs-keyword">using</span> Base.Threads
+
+<span class="hljs-keyword">function</span> calc4!(z::<span class="hljs-built_in">Matrix</span>{T}, x::<span class="hljs-built_in">Matrix</span>{T}, y::<span class="hljs-built_in">Matrix</span>{T}) <span class="hljs-keyword">where</span> {T&lt;:<span class="hljs-built_in">AbstractFloat</span>}
+    <span class="hljs-meta">@assert</span> size(x, <span class="hljs-number">1</span>) == size(y, <span class="hljs-number">1</span>)
+    <span class="hljs-meta">@assert</span> size(z) == (size(x, <span class="hljs-number">2</span>), size(y, <span class="hljs-number">2</span>))
+
+    <span class="hljs-meta">@threads</span> <span class="hljs-keyword">for</span> j <span class="hljs-keyword">in</span> axes(z, <span class="hljs-number">2</span>)
+        <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> axes(z, <span class="hljs-number">1</span>)
+            <span class="hljs-keyword">for</span> k <span class="hljs-keyword">in</span> <span class="hljs-number">1</span>:size(x, <span class="hljs-number">1</span>)
+                <span class="hljs-meta">@inbounds</span> z[i,j] += (x[k, i] - y[k, j])^<span class="hljs-number">2</span>
+            <span class="hljs-keyword">end</span>
+        <span class="hljs-keyword">end</span>
+    <span class="hljs-keyword">end</span>
+    <span class="hljs-keyword">return</span> z
+<span class="hljs-keyword">end</span></code></pre>
+<pre><code class="julia hljs"><span class="hljs-keyword">using</span> BenchmarkTools, LinearAlgebra, Test
+
+<span class="hljs-meta">@testset</span> <span class="hljs-keyword">begin</span>
+    x, y = rand(<span class="hljs-number">3</span>, <span class="hljs-number">10</span>), rand(<span class="hljs-number">3</span>, <span class="hljs-number">5</span>)
+    ref = calc1(x, y)
+    <span class="hljs-keyword">for</span> f <span class="hljs-keyword">in</span> [calc2!, calc3!, calc4!]
+        out = zeros(size(ref))
+        f(out, x, y)
+        <span class="hljs-meta">@test</span> ref ≈ out
+    <span class="hljs-keyword">end</span>
+<span class="hljs-keyword">end</span>
+
+<span class="hljs-comment"># Time code</span>
+x, y = rand(<span class="hljs-number">3</span>, <span class="hljs-number">100</span>), rand(<span class="hljs-number">3</span>, <span class="hljs-number">200</span>)
+z = zeros(size(x, <span class="hljs-number">2</span>), size(y, <span class="hljs-number">2</span>))
+
+println(<span class="hljs-string">&quot;\nUsing <span class="hljs-subst">$(nthreads()</span>) threads\n&quot;</span>)
+
+<span class="hljs-meta">@btime</span> calc1(x, y)
+<span class="hljs-meta">@btime</span> calc2!(z, x, y)
+<span class="hljs-meta">@btime</span> calc3!(z, x, y)
+<span class="hljs-meta">@btime</span> calc4!(z, x, y);</code></pre>
+<pre><code class="plaintext hljs">Test Summary: | Pass  Total  Time
+test set      |    3      3  0.7s
+
+Using 1 threads
+
+  2.641 ms (60002 allocations: 4.73 MiB)
+  1.565 ms (40000 allocations: 3.05 MiB)
+  66.699 μs (0 allocations: 0 bytes)
+  68.299 μs (6 allocations: 560 bytes)
+</code></pre>
 <div class="page-foot">
     <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: October 19, 2022.
     Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
@@ -202,6 +254,11 @@ Total snapshots: 16562</code></pre>
     </div> <!-- end of class main-content -->
     </div> <!-- end of class main-content-wrap -->
     </div> <!-- end of class page-wrap-->
+    
+      
+
+
+
     
     
       
