@@ -30,6 +30,7 @@ julia> greekText = "Στυπιδ Ρ"
 Julia supports basic data types like Integers, Floating-Point Numbers, Strings and [many more](https://docs.julialang.org/en/v1/manual/types/). The most generic type is called `Any` and thus every type is a subtype of `Any`. Types are built in a hierarchical manner and can be visualized as a type graph (examples for partial type graphs are given in [Wikibooks - Introducing Julia](https://en.wikibooks.org/wiki/Introducing_Julia/Types)).
 
 Although Julia's type system is dynamic, it also allows to explicitly set a specific type for certain values and thus also gains advantages of static type systems.
+To be more precise during compilation the used types get inferred and optimal version for these specific types get compiled.
 
 In the following we will briefly look into some basic data types and the operations defined on them. 
 
@@ -144,7 +145,7 @@ julia> 1 + 5 * (3 - 2.1) + (2^5)
 - `x && y` (logical AND), 
 - `x || y` (logical OR). 
 
-Note that `Bool` is still an integer type and and thus all the numerical operations are also defined for this type:
+Note that `Bool` is still an integer type and thus all the numerical operations are also defined for this type:
 ```julia-repl
 julia> true && false
 false
@@ -286,13 +287,14 @@ julia> struct Point{T}
           y::T
        end
 
-julia> pFloat = Point{Float64}(1.0, 2.0)
+julia> pFloat = Point(1.0, 2.0)
 Point{Float64}(1.0, 2.0)
 
-julia> pInt = Point{Int64}(1, 2)
+julia> pInt = Point{Int}(1, 2)
 Point{Int64}(1, 2)
 ```
-Note that using `{T}` behind the struct name lets us use `T` as a new type that can be defined when creating an object of type `Point`. You can also have two different types in one object. To account for such situations, we can define
+Note that using `{T}` behind the struct name lets us use `T` as a new variable that can be defined when creating an object of type `Point`. Then it will try to convert `x` and `y` to this type. Otherwise `T` will be automatically inferred by the other variables.
+You can also have two different types in one object. To account for such situations, we can define
 ```julia-repl
 julia> struct Point1{T, R}
           x::T
@@ -324,18 +326,38 @@ Stacktrace:
  [1] top-level scope
    @ REPL[4]:1
 ```
-Sometimes, we do not want to specify all parameters of a struct during construction. We will revisit this problem once we have introduced functions.
+Sometimes, we do not want to specify all parameters of a struct during construction or set certain default values. We will revisit this problems once we have introduced functions.
 
-An alternative for storing multiple objects under one primary name are *dictionaries*. If we want to store multiple parameters, we can use
+An alternative for storing multiple objects under one primary name are [*tuples*](https://docs.julialang.org/en/v1/manual/functions/#Tuples), [*named tuples*](https://docs.julialang.org/en/v1/manual/functions/#Named-Tuples) or [*dictionaries*](https://docs.julialang.org/en/v1/base/collections/#Dictionaries).
+If we want to store multiple parameters, we can use
 ```julia-repl
-julia> params = Dict("α"=>1, "β"=>2.4)
-Dict{String, Real} with 2 entries:
-  "α" => 1
-  "β" => 2.4
+julia> params = (1, 2.4)
+(1, 2.4)
 
-julia> params["α"]
+julia> params[1]
 1
 
-julia> params["β"]
+julia> params[2]
+2.4
+
+julia> params = (a = 1, b = 2.4)
+(a = 1, b = 2.4)
+
+julia> params.a
+1
+
+julia> params.b
+2.4
+
+julia> params = Dict("a" => 1, "b" => 2.4)
+Dict{String, Real} with 2 entries:
+  "b" => 2.4
+  "a" => 1
+
+julia> params["a"]
+1
+
+julia> params["b"]
 2.4
 ```
+Tuples and named tuples are immutable while dictionaries can be changed.
