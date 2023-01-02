@@ -3,7 +3,7 @@ test set      |    3      3  0.7s
 
 Using 1 threads
 
-  2.641 ms (60002 allocations: 4.73 MiB)
-  1.565 ms (40000 allocations: 3.05 MiB)
-  66.699 μs (0 allocations: 0 bytes)
-  68.299 μs (6 allocations: 560 bytes)
+  2.688 ms (60002 allocations: 4.73 MiB)
+  1.575 ms (40000 allocations: 3.05 MiB)
+  76.601 μs (0 allocations: 0 bytes)
+  63.901 μs (6 allocations: 560 bytes)
