@@ -140,7 +140,7 @@ The same holds for `zeros` and `rand`. To directly specify values inside a matri
  2  5  8
  3  6  9
  ```
- Note, that we specified the three column vectors and combined them into a $3 \times 3$ matrix. 
+ Note that we specified the three column vectors and combined them into a $3 \times 3$ matrix. 
  The row wise definition looks like this:
  ```julia-repl
 julia> B = [1 2 3; 4 5 6; 7 8 9]

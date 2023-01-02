@@ -1,4 +1,4 @@
-@def title = "Conditional evaluations"
+@def title = "Conditional Evaluations"
 @def hascode = true
 
 @def tags = ["conditional_evaluations"]

@@ -280,7 +280,7 @@ julia> p.x = 3.0
 julia> p.y
 2.0
 ```
-Note, that a point does not necessarily need to have coordinates of type `Float64`. To extend usability of structs, Julia provides us with the concept of *type parameters*:
+Note that a point does not necessarily need to have coordinates of type `Float64`. To extend usability of structs, Julia provides us with the concept of *type parameters*:
 ```julia-repl
 julia> struct Point{T}
           x::T
