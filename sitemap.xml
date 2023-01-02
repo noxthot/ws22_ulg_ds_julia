@@ -44,6 +44,12 @@
     <priority>0.5</priority>
 </url>
 <url>
+    <loc>https://noxthot.github.io/ws22_ulg_ds_julia/pages/introduction/development_workflow/index.html</loc>
+    <lastmod>2023-01-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
     <loc>https://noxthot.github.io/ws22_ulg_ds_julia/pages/introduction/functions/index.html</loc>
     <lastmod>2023-01-02</lastmod>
     <changefreq>monthly</changefreq>
@@ -99,6 +105,12 @@
 </url>
 <url>
     <loc>https://noxthot.github.io/ws22_ulg_ds_julia/pages/introduction/package_manager/index.html</loc>
+    <lastmod>2023-01-02</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+</url>
+<url>
+    <loc>https://noxthot.github.io/ws22_ulg_ds_julia/pages/introduction/useful_packages/index.html</loc>
     <lastmod>2023-01-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>

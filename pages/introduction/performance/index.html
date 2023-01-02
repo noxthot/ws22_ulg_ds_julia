@@ -71,13 +71,18 @@
         <li class="menu-list-item active"><a href="/ws22_ulg_ds_julia/pages/introduction/" class="menu-list-link active">Introduction</a>
           <ul class="menu-list-child-list ">
             <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/basis_datatypes_and_operations/" class="menu-list-link ">Basic Data Types and Operations</a>
-            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/package_manager/" class="menu-list-link ">Package Manager</a>
             <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/matrix_vectors/" class="menu-list-link ">Matrix and Vector Operations</a>
             <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/conditional_evaluations/" class="menu-list-link ">Conditional evaluations</a>
             <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/loops/" class="menu-list-link ">Loops</a>
             <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/functions/" class="menu-list-link ">Functions</a>
             <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/macros/" class="menu-list-link ">Macros</a>
             <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/performance/" class="menu-list-link active">Performance</a>
+            <li class="menu-list-item "><a
+                    href="/ws22_ulg_ds_julia/pages/introduction/development_workflow/" class="menu-list-link ">Development workflow</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/package_manager/" class="menu-list-link ">Package manager</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/useful_packages/"
+                    class="menu-list-link ">Useful
+                    packages</a>
           </ul>
         <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/data_management/" class="menu-list-link ">Data Management</a>
           <ul class="menu-list-child-list ">
@@ -119,9 +124,9 @@
 V = rand(<span class="hljs-number">100_000</span>)
 <span class="hljs-meta">@time</span> mysum(V)
 <span class="hljs-meta">@time</span> mysum(V)</code></pre>
-<pre><code class="plaintext hljs">  0.006759 seconds (5.25 k allocations: 286.451 KiB, 97.29% compilation time)
-  0.000194 seconds (1 allocation: 16 bytes)
-50159.591515224674</code></pre>
+<pre><code class="plaintext hljs">  0.006221 seconds (5.25 k allocations: 286.451 KiB, 97.35% compilation time)
+  0.000157 seconds (1 allocation: 16 bytes)
+49962.088539289354</code></pre>
 <div class="important">In order to optimize the loop call we use the <a href="https://docs.julialang.org/en/v1/devdocs/boundscheck/"><code>@inbounds</code></a> macro to eliminate inbound checks - does the index exist - for the array access. <strong>Note</strong> that this macro is potentially very dangerous since the program will silently fail if we try to index into a smaller array.</div>
 <p>The downside with the <code>@time</code> macro is, that it really just measures the execution time of what is given to it. This means, if the function is not already compiled this might include compiling or if the CPU is busy with something else it is often not accurate. </p>
 <p>Therefore, if we are serious about measuring performance we should stick to the <a href="https://juliaci.github.io/BenchmarkTools.jl/stable/"><code>BenchmarkTools</code></a>. It comes with a couple of macros that we should test out:</p>
@@ -139,13 +144,13 @@ V = rand(<span class="hljs-number">100_000</span>)
 
 <span class="hljs-meta">@benchmark</span> mysum($V)</code></pre>
 <p><pre><code class="plaintext hljs">BenchmarkTools.Trial: 10000 samples with 1 evaluation.
- Range (min … max):  129.302 μs … 227.603 μs  ┊ GC (min … max): 0.00% … 0.00%
- Time  (median):     154.303 μs               ┊ GC (median):    0.00%
- Time  (mean ± σ):   154.871 μs ±   7.940 μs  ┊ GC (mean ± σ):  0.00% ± 0.00%
+ Range (min … max):  133.602 μs … 308.607 μs  ┊ GC (min … max): 0.00% … 0.00%
+ Time  (median):     133.703 μs               ┊ GC (median):    0.00%
+ Time  (mean ± σ):   134.010 μs ±   2.569 μs  ┊ GC (mean ± σ):  0.00% ± 0.00%
 
-  ▂                        █  ▁    ▂       █  ▁    ▁▂▁          ▂
-  █▁▃▃▁▁▁▅▁▁▁▁▁▁▁▃▄▄▄▄▄▄▃▅▄█▅▆█▄▄▄▅██▆▆▇▆▅▇██▇█▇██████████▇▇▇██ █
-  129 μs        Histogram: log(frequency) by time        175 μs &lt;
+  █▂                                              ▁             ▁
+  ██▇▆▅▄▄▁▁▁▁▁▄▃▅▆▇▇▇▄▃▄▃▃▃▃▁▁▃▁▃▁▃▁▃▁▁▁▁▁▁▃▃▃▃▃▄▇█▇█▇▆▅▆▅▄▄▃▄▄ █
+  134 μs        Histogram: log(frequency) by time        141 μs &lt;
 
  Memory estimate: 0 bytes, allocs estimate: 0.</code></pre> the full details with </p>
 <pre><code class="julia hljs">t = <span class="hljs-meta">@benchmark</span> mysum($V)
@@ -160,14 +165,14 @@ dump(t)</code></pre>
     gcsample: Bool false
     time_tolerance: Float64 0.05
     memory_tolerance: Float64 0.01
-  times: Array{Float64}((10000,)) [168703.0, 162803.0, 160403.0, 160503.0, 160502.0, 160703.0, 160403.0, 160402.0, 160403.0, 160503.0  …  160403.0, 160403.0, 160402.0, 160403.0, 162903.0, 160402.0, 160403.0, 160403.0, 167003.0, 160502.0]
+  times: Array{Float64}((10000,)) [143903.0, 135003.0, 133803.0, 133702.0, 133703.0, 133703.0, 133702.0, 133703.0, 133702.0, 146202.0  …  133803.0, 133702.0, 133703.0, 133703.0, 133702.0, 133703.0, 133702.0, 133703.0, 133703.0, 133702.0]
   gctimes: Array{Float64}((10000,)) [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0  …  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
   memory: Int64 0
   allocs: Int64 0
 </code></pre> and the often used sanity check, that actually also shows you the output of your code.</p>
 <pre><code class="julia hljs"><span class="hljs-meta">@btime</span> mysum($V)</code></pre>
-<p><pre><code class="plaintext hljs">  129.302 μs (0 allocations: 0 bytes)
-50159.591515224674</code></pre> </div> </div>
+<p><pre><code class="plaintext hljs">  133.602 μs (0 allocations: 0 bytes)
+49962.088539289354</code></pre> </div> </div>
 <div class="important">Note that for benchmarking with BenchmarkTools we often use the <code>&#36;</code> literal for variables to tell the Julia interpreter to use interpolation.  This will make sure that the variable is not allocated inside the function and the measurement is more accurate, or more likely what we actually want to know.</div>
 <p>We can also use the <a href="https://docs.julialang.org/en/v1/manual/profile/#Profiling"><code>Profiler</code></a> package to really dig into profiling the code but this is a bit too much of a deep dive for this class.</p>
 <p>One should also take a look at the <a href="https://docs.julialang.org/en/v1/manual/performance-tips/">performance tips</a> section of the manual. Especially the parts about avoiding untyped global variables and putting code inside functions are sometimes very performance critical.</p>
@@ -241,10 +246,10 @@ test set      |    3      3  0.7s
 
 Using 1 threads
 
-  2.688 ms (60002 allocations: 4.73 MiB)
-  1.575 ms (40000 allocations: 3.05 MiB)
-  76.601 μs (0 allocations: 0 bytes)
-  63.901 μs (6 allocations: 560 bytes)
+  2.658 ms (60002 allocations: 4.73 MiB)
+  1.580 ms (40000 allocations: 3.05 MiB)
+  68.901 μs (0 allocations: 0 bytes)
+  66.401 μs (6 allocations: 560 bytes)
 </code></pre>
 <div class="page-foot">
     <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: January 02, 2023.
