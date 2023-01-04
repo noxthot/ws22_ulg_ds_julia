@@ -1,85 +1,61 @@
-@def title = "Introduction - Macros"
+@def title = "Introduction - Metaprogramming"
 @def hascode = true
 
-@def tags = ["introduction", "macros"]
+@def tags = ["introduction", "macros", "metaprogramming"]
 
-# Macros
+# Metaprogramming
 
-[Macros](https://docs.julialang.org/en/v1/manual/metaprogramming/#man-macros) are a very powerful concept in Julia and we will use them throughout the next sessions.
-The main idea of macros is to allow the generation of code in the final body of a program.
+[Metaprogramming](https://docs.julialang.org/en/v1/manual/metaprogramming) is a very powerful concept of Julia.
+Since Julia code is itself represented in the language via its own datastructure (an `Expr`) a Julia program can
+freely manipulate and generate its own code. However, in this section we will only give a brief overview of the
+concepts of metaprogramming because it is a more advanced feature of the language. First we give a short overview of
+how Julia code is actually run. To get from text to native code roughly the following steps are performed:
+1. Parsing (`Meta.parse`)
+2. Lowering and type inference (`@code_warntype`)
+3. Compile to LLVM intermediate representation (`@code_llvm`)
+4. Compile to native code using LLVM (`@code_native`)
+
+where we put the function/macro in the parentheses that yields the output of the corresponding step i.e. one can use
+them to look at the outputs of them interactively. In step 1 the code is read and transformed into `Expr`s. Then
+types are computed/inferred which means that the compiler tries to find out the concrete type of each expression i.e.
+each variable and each return type. If type inference fails, it gets highlighted in the output of `@code_warntype`. This can be useful because it can cause big performance problems.
+The final two steps are not really important for us since their output is already quite low level and difficult to
+read and understand. But one can use `@code_llvm` to debug performance problems or for optimization.
+Metaprogramming is usually performed in between steps 1 and 2 and one common use case are macros.
+
 At its basis, a macro is similar to a function, as it maps a tuple of arguments to a returned expression. 
 Therefore, in order to distinguish macros in the code, Julia reserves the `@` symbol as the first character for macro definitions. 
 Apart from that convention, there are two major differences between macros and functions.
 A macro:
 1. is compiled directly and not at the first call,
-1. is executed when the code is parsed.
+2. is executed when the code is parsed.
 
 The second feature is the important one, as we can manipulate the code at runtime.
 The nice thing about macros is, we can insert quite powerful code by still keeping the readability high. 
-Later on we will see how this works, but let us keep it simple to begin with.  
+We have already seen multiple macros i.e. `@time` which basically just inserts `Base.time_ns()` before the expression
+passed to the macro and after it and then returns the difference (the actual definitions is more complex). Once the
+code is run we thus get the time it took to run the code contained in the expression passed to the macro. The `@time`
+macros is more convenient than a function since it allows the timing of arbitrary Julia code which would not be
+possible with a function.
+Defining a useful macro can be quite difficult/different compared to ordinary Julia code, because one has to perform
+all operations on `Expr`. Thus we will not discuss it here. However, one should look at the documentation of all the
+macros used this far and also the following ones: `@view`, `@views`, `@.`, `@assert`, `@info`, `@warn`,
+`@error` and `@__DIR__`.
 
-An easy example from the [Julia documentation on macros](https://docs.julialang.org/en/v1/manual/metaprogramming/#man-macros) is:
-```julia-repl
-julia> macro sayhello(name)
-          return :( println("Hello, ", $name) )
-       end
-@sayhello (macro with 1 method)
-
-julia> @sayhello("student n")
-Hello, student n
-
-julia> @sayhello "student n+1"
-Hello, student n+1
-```
-One thing to note here is, that in the REPL the macro is executed immediately and we see the result right away. 
-
-It would not be Julia if there was not a macro that can be used to view what a macro is actually doing with an argument. 
-This is the `@macroexpand` macro:
-```julia-repl
-julia> @macroexpand @sayhello "Student n+1"
-:(Main.println("Hello, ", "Student n+1"))
-```
-
-Of course we can also use the other features of Julia with macros, like multiple dispatch, which is something for the exercise. 
-
-\exercise{
-Program the following tasks.
-1. Write a macro `m` with different invocations for one argument and for two arguments (just print `x arguments` as return value). 
-1. Add a version where the input is an integer and test with `@m 1`
-1. What happens when you run the code 
+Finally we will show an example of another use case for metaprogramming namely the definition of multiple functions
+using a loop.
+In the following example from the manual we have defined a custom number type. Now we also want to define methods
+of common built-in functions for this type. One could easily do this by hand but using metaprogramming makes it
+shorter and easier to read and extend.
 ```julia
-x = 1
-@m x
+struct MyNumber
+    x::Float64
+end
+
+for op in (:sin, :cos, :tan, :log, :exp)
+    @eval Base.$op(a::MyNumber) = MyNumber($op(a.x))
+end
 ```
-
-\solution{
-```julia-repl
-julia> macro m(x)
-           return :( println("One arguments") )
-       end
-@m (macro with 1 method)
-
-julia> macro m(x, y)
-           return :( println("Two arguments") )
-       end
-@m (macro with 2 methods)
-
-julia> macro m(::Int)
-           return :( println("An Integer") )
-       end
-@m (macro with 3 methods)
-
-julia> @m 1
-An Integer
-
-julia> @m x y
-Two arguments
-
-julia> x = 1
-1
-
-julia> @m x
-One arguments
-```
-}
-}
+Here the main ingredient is the `@eval` macro which creates an expression and then evaluates it i.e. it is equivalent
+to `eval(:(Base.$op(a::MyNumber) = MyNumber($op(a.x))))`. The above method can also be used for more complex function
+definitions not just one liners.
