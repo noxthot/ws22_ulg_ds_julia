@@ -51,7 +51,7 @@
   }
 </style>
 
-   <title>Introduction - Macros</title>  
+   <title>Introduction - Metaprogramming</title>  
 </head>
 <body>                      <!-- closed in foot.html -->
 <div class="page-wrap">   <!-- closed in foot.html -->
@@ -74,7 +74,7 @@
             <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/conditional_evaluations/" class="menu-list-link ">Conditional evaluations</a>
             <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/loops/" class="menu-list-link ">Loops</a>
             <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/functions/" class="menu-list-link ">Functions</a>
-            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/macros/" class="menu-list-link active">Macros</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/metaprogramming/" class="menu-list-link active">Metaprogramming</a>
             <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/performance/" class="menu-list-link ">Performance</a>
             <li class="menu-list-item "><a
                     href="/ws22_ulg_ds_julia/pages/introduction/development_workflow/" class="menu-list-link ">Development workflow</a>
@@ -108,72 +108,38 @@
 
 
 <!-- Content appended here (in class franklin-content) -->
-<div class="franklin-content"><h1 id="macros"><a href="#macros" class="header-anchor">Macros</a></h1>
-<p><a href="https://docs.julialang.org/en/v1/manual/metaprogramming/#man-macros">Macros</a> are a very powerful concept in Julia and we will use them throughout the next sessions. The main idea of macros is to allow the generation of code in the final body of a program. At its basis, a macro is similar to a function, as it maps a tuple of arguments to a returned expression.  Therefore, in order to distinguish macros in the code, Julia reserves the <code>@</code> symbol as the first character for macro definitions.  Apart from that convention, there are two major differences between macros and functions. A macro:</p>
+<div class="franklin-content"><h1 id="metaprogramming"><a href="#metaprogramming" class="header-anchor">Metaprogramming</a></h1>
+<p><a href="https://docs.julialang.org/en/v1/manual/metaprogramming">Metaprogramming</a> is a very powerful concept of Julia. Since Julia code is itself represented in the language via its own datastructure &#40;an <code>Expr</code>&#41; a Julia program can freely manipulate and generate its own code. However, in this section we will only give a brief overview of the concepts of metaprogramming because it is a more advanced feature of the language. First we give a short overview of how Julia code is actually run. To get from text to native code roughly the following steps are performed:</p>
+<ol>
+<li><p>Parsing &#40;<code>Meta.parse</code>&#41;</p>
+</li>
+<li><p>Lowering and type inference &#40;<code>@code_warntype</code>&#41;</p>
+</li>
+<li><p>Compile to LLVM intermediate representation &#40;<code>@code_llvm</code>&#41;</p>
+</li>
+<li><p>Compile to native code using LLVM &#40;<code>@code_native</code>&#41;</p>
+</li>
+</ol>
+<p>where we put the function/macro in the parentheses that yields the output of the corresponding step i.e. one can use them to look at the outputs of them interactively. In step 1 the code is read and transformed into <code>Expr</code>s. Then types are computed/inferred which means that the compiler tries to find out the concrete type of each expression i.e. each variable and each return type. If type inference fails, it gets highlighted in the output of <code>@code_warntype</code>. This can be useful because it can cause big performance problems. The final two steps are not really important for us since their output is already quite low level and difficult to read and understand. But one can use <code>@code_llvm</code> to debug performance problems or for optimization. Metaprogramming is usually performed in between steps 1 and 2 and one common use case are macros.</p>
+<p>At its basis, a macro is similar to a function, as it maps a tuple of arguments to a returned expression.  Therefore, in order to distinguish macros in the code, Julia reserves the <code>@</code> symbol as the first character for macro definitions.  Apart from that convention, there are two major differences between macros and functions. A macro:</p>
 <ol>
 <li><p>is compiled directly and not at the first call,</p>
 </li>
 <li><p>is executed when the code is parsed.</p>
 </li>
 </ol>
-<p>The second feature is the important one, as we can manipulate the code at runtime. The nice thing about macros is, we can insert quite powerful code by still keeping the readability high.  Later on we will see how this works, but let us keep it simple to begin with.  </p>
-<p>An easy example from the <a href="https://docs.julialang.org/en/v1/manual/metaprogramming/#man-macros">Julia documentation on macros</a> is:</p>
-<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-keyword">macro</span> sayhello(name)
-          <span class="hljs-keyword">return</span> :( println(<span class="hljs-string">&quot;Hello, &quot;</span>, $name) )
-       <span class="hljs-keyword">end</span>
-</span>@sayhello (macro with 1 method)
+<p>The second feature is the important one, as we can manipulate the code at runtime. The nice thing about macros is, we can insert quite powerful code by still keeping the readability high.  We have already seen multiple macros i.e. <code>@time</code> which basically just inserts <code>Base.time_ns&#40;&#41;</code> before the expression passed to the macro and after it and then returns the difference &#40;the actual definitions is more complex&#41;. Once the code is run we thus get the time it took to run the code contained in the expression passed to the macro. The <code>@time</code> macros is more convenient than a function since it allows the timing of arbitrary Julia code which would not be possible with a function. Defining a useful macro can be quite difficult/different compared to ordinary Julia code, because one has to perform all operations on <code>Expr</code>. Thus we will not discuss it here. However, one should look at the documentation of all the macros used this far and also the following ones: <code>@view</code>, <code>@views</code>, <code>@.</code>, <code>@assert</code>, <code>@info</code>, <code>@warn</code>, <code>@error</code> and <code>@__DIR__</code>.</p>
+<p>Finally we will show an example of another use case for metaprogramming namely the definition of multiple functions using a loop. In the following example from the manual we have defined a custom number type. Now we also want to define methods of common built-in functions for this type. One could easily do this by hand but using metaprogramming makes it shorter and easier to read and extend.</p>
+<pre><code class="julia hljs"><span class="hljs-keyword">struct</span> MyNumber
+    x::<span class="hljs-built_in">Float64</span>
+<span class="hljs-keyword">end</span>
 
-<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-meta">@sayhello</span>(<span class="hljs-string">&quot;student n&quot;</span>)
-</span>Hello, student n
-
-<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-meta">@sayhello</span> <span class="hljs-string">&quot;student n+1&quot;</span>
-</span>Hello, student n+1</code></pre>
-<p>One thing to note here is, that in the REPL the macro is executed immediately and we see the result right away. </p>
-<p>It would not be Julia if there was not a macro that can be used to view what a macro is actually doing with an argument.  This is the <code>@macroexpand</code> macro:</p>
-<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-meta">@macroexpand</span> <span class="hljs-meta">@sayhello</span> <span class="hljs-string">&quot;Student n+1&quot;</span>
-</span>:(Main.println(&quot;Hello, &quot;, &quot;Student n+1&quot;))</code></pre>
-<p>Of course we can also use the other features of Julia with macros, like multiple dispatch, which is something for the exercise. </p>
-<button type="button" class="collapsible" style="background-color:#b5ddff"> Exercise </button><div class="collapsiblecontent">  Program the following tasks.</p>
-<ol>
-<li><p>Write a macro <code>m</code> with different invocations for one argument and for two arguments &#40;just print <code>x arguments</code> as return value&#41;. </p>
-</li>
-<li><p>Add a version where the input is an integer and test with <code>@m 1</code></p>
-</li>
-<li><p>What happens when you run the code </p>
-</li>
-</ol>
-<pre><code class="julia hljs">x = <span class="hljs-number">1</span>
-<span class="hljs-meta">@m</span> x</code></pre>
-<p><div class="solution"> Solution </div><div class="solutioncollapsible">  </p>
-<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-keyword">macro</span> m(x)
-           <span class="hljs-keyword">return</span> :( println(<span class="hljs-string">&quot;One arguments&quot;</span>) )
-       <span class="hljs-keyword">end</span>
-</span>@m (macro with 1 method)
-
-<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-keyword">macro</span> m(x, y)
-           <span class="hljs-keyword">return</span> :( println(<span class="hljs-string">&quot;Two arguments&quot;</span>) )
-       <span class="hljs-keyword">end</span>
-</span>@m (macro with 2 methods)
-
-<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-keyword">macro</span> m(::<span class="hljs-built_in">Int</span>)
-           <span class="hljs-keyword">return</span> :( println(<span class="hljs-string">&quot;An Integer&quot;</span>) )
-       <span class="hljs-keyword">end</span>
-</span>@m (macro with 3 methods)
-
-<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-meta">@m</span> <span class="hljs-number">1</span>
-</span>An Integer
-
-<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-meta">@m</span> x y
-</span>Two arguments
-
-<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> x = <span class="hljs-number">1</span>
-</span>1
-
-<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-meta">@m</span> x
-</span>One arguments</code></pre>
-<p></div> </div>
+<span class="hljs-keyword">for</span> op <span class="hljs-keyword">in</span> (:sin, :cos, :tan, :log, :exp)
+    <span class="hljs-meta">@eval</span> Base.$op(a::MyNumber) = MyNumber($op(a.x))
+<span class="hljs-keyword">end</span></code></pre>
+<p>Here the main ingredient is the <code>@eval</code> macro which creates an expression and then evaluates it i.e. it is equivalent to <code>eval&#40;:&#40;Base.&#36;op&#40;a::MyNumber&#41; &#61; MyNumber&#40;&#36;op&#40;a.x&#41;&#41;&#41;&#41;</code>. The above method can also be used for more complex function definitions not just one liners.</p>
 <div class="page-foot">
-    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: January 03, 2023.
+    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: January 04, 2023.
     Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
 </div>
 </div><!-- CONTENT ENDS HERE -->
