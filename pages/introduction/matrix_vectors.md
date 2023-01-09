@@ -243,6 +243,7 @@ julia> B = [A a]
  0.0  0.0  0.0  0.0  1.0
  0.0  0.0  0.0  0.0  1.0
 ```
+Alternatively we could also use `hcat(A, a)` or `cat(A, a; dims=2)`.
 
 We can also add a row $b$ by
 ```julia-repl
@@ -260,6 +261,7 @@ julia> C = [B; b']
  0.0  0.0  0.0  0.0  1.0
  2.0  2.0  2.0  2.0  2.0
 ```
+or by `vcat(B, b')` or `cat(B, b'; dims=1)`.
 
 \exercise{
   A Hankel Matrix is a Matrix of the form
@@ -361,69 +363,40 @@ julia> sA \ v
  1.1102230246251565e-16
  0.09999999999999995
 ```
-A further functionality of the LinearAlgebra package is given by efficient storage routines for sparse matrices, i.e., matrices that are zero except for a small number of entries. A very common sparse matrix is a diagonal matrix. To create a diagonal matrix $D$ which has entries $d = (d_1, \cdots, d_{10})$ on the diagonal, we can use `D = Diagonal(d)`. If the matrix is a tridiagonal matrix, that is, it has the form
-$$
-\mathbf{T} = \begin{pmatrix}
-    b_1 & c_1 &  &      &   \\
-    a_1  & b_2       & c_2   &     &    \\
-      &         & \ddots         & \ddots    &     \\
-      &         &    \ddots       &     b_{N-1}      & c_{N-1}   \\
-      &         &           &     a_{N-1}      & b_N
-  \end{pmatrix}\;,
-$$ 
-we can use `T = Tridiagonal(a, b, c)`.
+A further functionality of the LinearAlgebra package is given by efficient storage routines for sparse matrices, i.e., matrices that are zero except for a small number of entries. A very common sparse matrix is a diagonal matrix. To create a diagonal matrix $D$ which has entries $d = (d_1, \cdots, d_{10})$ on the diagonal, we can use `D = Diagonal(d)`. 
+For a list of special matrix types see the [manual](https://docs.julialang.org/en/v1/stdlib/LinearAlgebra/#Special-matrices).
+Above we tagged the matrix `A` as a symmetric matrix. Thus Julia automatically uses an optimized method for solving the linear system in the next line.
+Usually one should use `\\` for solving linear systems of equations since it automatically picks the right algorithm 
+for the problem i.e. for overdetermined systems it solves the least square problem.
+
 The rest we need to know about vectors and matrices we will introduce along the way.
 
 \exercise{
-1. Create a sparse matrix $\mathbf{L}\in\mathbb{R}^{10 \times 10}$ of the form
-$$
-\mathbf{L} = \begin{pmatrix}
-    -1 & 1 &   &      &   \\
-      & -1       & 1   &      &    \\
-      &         & -1         & \ddots    &     \\
-      &         &           &    \ddots      & 1   \\
-      &         &           &           & -1
-\end{pmatrix}\;.
-$$
-2. Compute a vector $\mathbf{x}$ such that $\mathbf{L}\mathbf{x} = \mathbf{1}$ where $\mathbf{1} = (1,\cdots,1)^{\top}$.
+1. Create a random matrix $A$ of size $10\times 10$ and a vector $b$ of size $10$ with ones as entries.
+Then find $x$ such that $Ax = b$ and test it with `isapprox`.
+
+2. Now generate $B$ as a matrix of size $10\times 8$, find $x$ such that $\|Bx - b\|_2^2$ is minimal and compute the norm.
 
 \solution{
-1. We can store this matrix by again using a tridiagonal matrix which has a zero lower off-diagonal. That is,
+1.
 ```julia-repl
-julia> L = Tridiagonal(zeros(9), -ones(10), ones(9))
-10×10 Tridiagonal{Float64, Vector{Float64}}:
- -1.0   1.0    ⋅     ⋅     ⋅     ⋅     ⋅     ⋅     ⋅     ⋅ 
-  0.0  -1.0   1.0    ⋅     ⋅     ⋅     ⋅     ⋅     ⋅     ⋅ 
-   ⋅    0.0  -1.0   1.0    ⋅     ⋅     ⋅     ⋅     ⋅     ⋅ 
-   ⋅     ⋅    0.0  -1.0   1.0    ⋅     ⋅     ⋅     ⋅     ⋅ 
-   ⋅     ⋅     ⋅    0.0  -1.0   1.0    ⋅     ⋅     ⋅     ⋅ 
-   ⋅     ⋅     ⋅     ⋅    0.0  -1.0   1.0    ⋅     ⋅     ⋅ 
-   ⋅     ⋅     ⋅     ⋅     ⋅    0.0  -1.0   1.0    ⋅     ⋅ 
-   ⋅     ⋅     ⋅     ⋅     ⋅     ⋅    0.0  -1.0   1.0    ⋅ 
-   ⋅     ⋅     ⋅     ⋅     ⋅     ⋅     ⋅    0.0  -1.0   1.0
-   ⋅     ⋅     ⋅     ⋅     ⋅     ⋅     ⋅     ⋅    0.0  -1.0
+julia> A = rand(10, 10); b = ones(10);
 
+julia> x = A \ b;
+
+julia> isapprox(A * x, b)
+true
 ```
-2. We can use the backslash operator to solve the system:
+Note that x ≈ lu(A) \ b
+
+2.
 ```julia-repl
-julia> y = ones(10);
+julia> B = rand(10, 8); b = ones(10);
 
-julia> x = L \ y
-10-element Vector{Float64}:
- -10.0
-  -9.0
-  -8.0
-  -7.0
-  -6.0
-  -5.0
-  -4.0
-  -3.0
-  -2.0
-  -1.0
+julia> x = B \ b;
 
+julia> norm(B * x .- b)
+0.24041976740709148
 ```
-}
-
-$\,$
-}
-
+Note that x ≈ qr(A) \ b
+}}
