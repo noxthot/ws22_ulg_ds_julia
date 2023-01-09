@@ -61,41 +61,31 @@ This also holds true for function included in julia itself e.g. `sincos` already
 Let us practice this syntax by revisiting loops:
 
 \exercise{
-For a vector $V\in\mathrm{R}^n$ with elements $v_1, \ldots, v_n$ compute the sum of all the elements in the following fashion
-    
+For a vector $V\in\mathrm{R}^n$ with elements $v_1, \ldots, v_n$ compute the mean of all the elements in the following fashion
+
 1. Sum over the elements per index:
-    $$s_1 = \sum_{i=1}^n v_i$$
-2. Sum over the elements (hint `for each`):
-    $$s_2 = \sum_{v\in V} v$$
-3. Transform these loops into functions `mysum1` and `mysum2`
-4. Test against `V = rand(100_000)` and `s_1 ≈ s_2` (use `\approx + TAB` for ≈)
+   $$m = \frac{1}{n}\sum_{i=1}^n v_i$$
+2. Transform this loop into a function `mymean`
+3. Test against `V = rand(100_000)` and `mymean(V) ≈ mean(V)` (use `\approx + TAB` for ≈) using the `Statistics` standard library
 
 \solution{
+
 ```julia
-function mysum1(V)
+function mymean(V)
     s = zero(eltype(V))
 
     for i in eachindex(V)
         s += V[i]
     end
 
-    return s
+    return s / length(V)
 end
 
-function mysum2(V)
-    s = zero(eltype(V))
-
-    for v in V
-        s += v
-    end
-
-    return s
-end
-
+using Statistics
 V = rand(100_000)
-mysum1(V) ≈ mysum2(V)
-isapprox(mysum1(V),  mysum2(V); atol=1e-10, rtol=1e-10)
+mymean(V) ≈ mean(V)
 ```
+
 }
 }
 

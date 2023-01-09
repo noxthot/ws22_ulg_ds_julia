@@ -105,7 +105,7 @@ julia> w' + v
 \exercise{
   1. Create a vector $x$ with entries $x_1 = 0.01$, $x_2 = 0.02$, $\ldots, x_{100} = 1.0$.
   2. Use $x$ to set up a second vector $y$ with entries $y_1 = 1.01$, $y_2 = 1.02$, $\ldots, y_{100} = 2.0$.
-  3. Check the type of $z = 100 (x + y)$. Create an object of type `adjoint(::Vector{Int64})` that has the same values as $z$. You can ignore rounding errors in your vector $z$ if there are any.
+  3. Check the type of $z = 100 (x + y)$. Create an object of type `LinearAlgebra.Adjoint{Int64, Vector{Int64}}` that has the same values as $z$. You can ignore rounding errors in your vector $z$ if there are any.
 
   \solution{
     ```julia-repl
@@ -263,78 +263,6 @@ julia> C = [B; b']
 ```
 or by `vcat(B, b')` or `cat(B, b'; dims=1)`.
 
-\exercise{
-  A Hankel Matrix is a Matrix of the form
-  $$
-    H = \begin{pmatrix}
-    a & b & c & d & e\\
-    b & c & d & e & f\\
-    c & d & e & f & g\\
-    d & e & f & g & h\\
-    e & f & g & h & i\\
-    \end{pmatrix}.
-  $$
-  Use the concatenation commands to construct the Hankel matrix
-  $$
-    H = \begin{pmatrix}
-    1 & 2 & 3 & 4 & 5\\
-    2 & 3 & 4 & 5 & 6\\
-    3 & 4 & 5 & 6 & 7\\
-    4 & 5 & 6 & 7 & 8\\
-    5 & 6 & 7 & 8 & 9\\
-    \end{pmatrix}.
-  $$
-  Make sure $H$ is of type `Matrix{Int64}`. Print out and check if squaring every entry in $H$ will again be a Hankel matrix. How about $H^2$?
-  \solution{
-    ```julia-repl
-julia> v = collect(Int64, range(1, 9, 9))
-9-element Vector{Int64}:
- 1
- 2
- 3
- 4
- 5
- 6
- 7
- 8
- 9
-
-julia> H = [v[1:5] v[2:6] v[3:7] v[4:8] v[5:9]]
-5×5 Matrix{Int64}:
- 1  2  3  4  5
- 2  3  4  5  6
- 3  4  5  6  7
- 4  5  6  7  8
- 5  6  7  8  9
-
-julia> H = hcat([k:k+4 for k in 1:5]...)  # alternative solution
-5×5 Matrix{Int64}:
- 1  2  3  4  5
- 2  3  4  5  6
- 3  4  5  6  7
- 4  5  6  7  8
- 5  6  7  8  9
-
-
-julia> H.^2
-5×5 Matrix{Int64}:
-  1   4   9  16  25
-  4   9  16  25  36
-  9  16  25  36  49
- 16  25  36  49  64
- 25  36  49  64  81
-
-julia> H^2
-5×5 Matrix{Int64}:
-  55   70   85  100  115
-  70   90  110  130  150
-  85  110  135  160  185
- 100  130  160  190  220
- 115  150  185  220  255
-    ```
-  }
-}
-
 To find the entire list of operations that can be performed and a lot more on arrays in Julia visit the [docs](https://docs.julialang.org/en/v1/base/arrays/#lib-arrays).
 
 # Linear Algebra
@@ -363,7 +291,7 @@ julia> sA \ v
  1.1102230246251565e-16
  0.09999999999999995
 ```
-A further functionality of the LinearAlgebra package is given by efficient storage routines for sparse matrices, i.e., matrices that are zero except for a small number of entries. A very common sparse matrix is a diagonal matrix. To create a diagonal matrix $D$ which has entries $d = (d_1, \cdots, d_{10})$ on the diagonal, we can use `D = Diagonal(d)`. 
+A further functionality of the `LinearAlgebra` package is given by efficient storage routines for sparse matrices, i.e., matrices that are zero except for a small number of entries. A very common sparse matrix is a diagonal matrix. To create a diagonal matrix $D$ which has entries $d = (d_1, \cdots, d_{10})$ on the diagonal, we can use `D = Diagonal(d)`. 
 For a list of special matrix types see the [manual](https://docs.julialang.org/en/v1/stdlib/LinearAlgebra/#Special-matrices).
 Above we tagged the matrix `A` as a symmetric matrix. Thus Julia automatically uses an optimized method for solving the linear system in the next line.
 Usually one should use `\\` for solving linear systems of equations since it automatically picks the right algorithm 
