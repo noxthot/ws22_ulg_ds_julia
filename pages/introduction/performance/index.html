@@ -124,9 +124,9 @@
 V = rand(<span class="hljs-number">100_000</span>)
 <span class="hljs-meta">@time</span> mysum(V)
 <span class="hljs-meta">@time</span> mysum(V)</code></pre>
-<pre><code class="plaintext hljs">  0.006493 seconds (5.25 k allocations: 286.451 KiB, 96.99% compilation time)
-  0.000177 seconds (1 allocation: 16 bytes)
-49832.7219210864</code></pre>
+<pre><code class="plaintext hljs">  0.006541 seconds (5.25 k allocations: 286.451 KiB, 97.15% compilation time)
+  0.000172 seconds (1 allocation: 16 bytes)
+50074.55262618548</code></pre>
 <div class="important">In order to optimize the loop call we use the <a href="https://docs.julialang.org/en/v1/devdocs/boundscheck/"><code>@inbounds</code></a> macro to eliminate inbound checks - does the index exist - for the array access. <strong>Note</strong> that this macro is potentially very dangerous since the program will silently fail if we try to index into a smaller array.</div>
 <p>The downside with the <code>@time</code> macro is, that it really just measures the execution time of what is given to it. This means, if the function is not already compiled this might include compiling or if the CPU is busy with something else it is often not accurate. </p>
 <p>Therefore, if we are serious about measuring performance we should stick to the <a href="https://juliaci.github.io/BenchmarkTools.jl/stable/"><code>BenchmarkTools</code></a>. It comes with a couple of macros that we should test out:</p>
@@ -144,13 +144,13 @@ V = rand(<span class="hljs-number">100_000</span>)
 
 <span class="hljs-meta">@benchmark</span> mysum($V)</code></pre>
 <p><pre><code class="plaintext hljs">BenchmarkTools.Trial: 10000 samples with 1 evaluation.
- Range (min … max):  133.601 μs … 224.902 μs  ┊ GC (min … max): 0.00% … 0.00%
- Time  (median):     133.701 μs               ┊ GC (median):    0.00%
- Time  (mean ± σ):   134.084 μs ±   2.373 μs  ┊ GC (mean ± σ):  0.00% ± 0.00%
+ Range (min … max):  160.398 μs … 210.099 μs  ┊ GC (min … max): 0.00% … 0.00%
+ Time  (median):     160.399 μs               ┊ GC (median):    0.00%
+ Time  (mean ± σ):   160.723 μs ±   1.565 μs  ┊ GC (mean ± σ):  0.00% ± 0.00%
 
-  █▄                                                            ▁
-  ██▇▇▅▅▃▄▁▄▁▃▄▅▇▇▇▆▆▄▆▅▅▃▅▄▄▄▁▃▃▁▁▃▁▄▅▆▆▆▇▅▇▅▇▆▆▆▇▇▅▇▅▆▄▄▄▅▃▄▄ █
-  134 μs        Histogram: log(frequency) by time        143 μs &lt;
+  █                                                             ▁
+  █▆▅▅▄▁▁▁▁▁▃▁▃▄▆▇▇▇▇▇▆▄▁▃▃▄▁▁▁▁▃▁▁▁▁▁▁▁▁▁▄▄▅▆▆▆▇▇▇▇█▆▆▆▆▆▆▄▆▅▆ █
+  160 μs        Histogram: log(frequency) by time        167 μs &lt;
 
  Memory estimate: 0 bytes, allocs estimate: 0.</code></pre> the full details with </p>
 <pre><code class="julia hljs">t = <span class="hljs-meta">@benchmark</span> mysum($V)
@@ -165,14 +165,14 @@ dump(t)</code></pre>
     gcsample: Bool false
     time_tolerance: Float64 0.05
     memory_tolerance: Float64 0.01
-  times: Array{Float64}((10000,)) [188302.0, 140601.0, 133701.0, 133701.0, 133602.0, 133701.0, 133701.0, 133701.0, 133701.0, 133701.0  …  133701.0, 133702.0, 133601.0, 133701.0, 133701.0, 133701.0, 133701.0, 133701.0, 133701.0, 133701.0]
+  times: Array{Float64}((10000,)) [164999.0, 160698.0, 160399.0, 160499.0, 160499.0, 160499.0, 160398.0, 160399.0, 160399.0, 160399.0  …  160399.0, 160499.0, 160399.0, 160398.0, 160399.0, 160399.0, 160399.0, 160398.0, 160399.0, 160399.0]
   gctimes: Array{Float64}((10000,)) [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0  …  0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
   memory: Int64 0
   allocs: Int64 0
 </code></pre> and the often used sanity check, that actually also shows you the output of your code.</p>
 <pre><code class="julia hljs"><span class="hljs-meta">@btime</span> mysum($V)</code></pre>
-<p><pre><code class="plaintext hljs">  133.601 μs (0 allocations: 0 bytes)
-49832.7219210864</code></pre> </div> </div>
+<p><pre><code class="plaintext hljs">  160.398 μs (0 allocations: 0 bytes)
+50074.55262618548</code></pre> </div> </div>
 <div class="important">Note that for benchmarking with BenchmarkTools we often use the <code>&#36;</code> literal for variables to tell the Julia interpreter to use interpolation.  This will make sure that the variable is not allocated inside the function and the measurement is more accurate, or more likely what we actually want to know.</div>
 <p>We can also use the <a href="https://docs.julialang.org/en/v1/manual/profile/#Profiling"><code>Profiler</code></a> package to really dig into profiling the code but this is a bit too much of a deep dive for this class.</p>
 <p>One should also take a look at the <a href="https://docs.julialang.org/en/v1/manual/performance-tips/">performance tips</a> section of the manual. Especially the parts about avoiding untyped global variables and putting code inside functions are sometimes very performance critical.</p>
@@ -246,13 +246,13 @@ test set      |    3      3  0.7s
 
 Using 1 threads
 
-  2.707 ms (60002 allocations: 4.73 MiB)
-  1.628 ms (40000 allocations: 3.05 MiB)
-  68.900 μs (0 allocations: 0 bytes)
-  66.400 μs (6 allocations: 560 bytes)
+  2.505 ms (60002 allocations: 4.73 MiB)
+  1.494 ms (40000 allocations: 3.05 MiB)
+  66.200 μs (0 allocations: 0 bytes)
+  68.199 μs (6 allocations: 560 bytes)
 </code></pre>
 <div class="page-foot">
-    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: January 04, 2023.
+    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: January 09, 2023.
     Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
 </div>
 </div><!-- CONTENT ENDS HERE -->
