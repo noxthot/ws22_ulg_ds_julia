@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   
+   <link rel="stylesheet" href="/ws22_ulg_ds_julia/libs/highlight/github.min.css">
+   
+    <script src="/ws22_ulg_ds_julia/libs/clipboard.min.js"></script>
   
   
   <script src="/ws22_ulg_ds_julia/libs/plotly-1_58_5.min.js"></script> 
@@ -73,9 +76,8 @@
             <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/functions/" class="menu-list-link ">Functions</a>
             <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/metaprogramming/" class="menu-list-link ">Metaprogramming</a>
             <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/performance/" class="menu-list-link ">Performance</a>
-            <li class="menu-list-item "><a
-                    href="/ws22_ulg_ds_julia/pages/introduction/development_workflow/" class="menu-list-link active">Development workflow</a>
             <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/package_manager/" class="menu-list-link ">Package manager</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/development_workflow/" class="menu-list-link active">Development workflow</a>
             <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/useful_packages/"
                     class="menu-list-link ">Useful
                     packages</a>
@@ -106,8 +108,57 @@
 
 <!-- Content appended here (in class franklin-content) -->
 <div class="franklin-content"><h1 id="development_workflow"><a href="#development_workflow" class="header-anchor">Development workflow</a></h1>
-<div class="franklin-toc"><ol><li><a href="#todo">TODO</a></li></ol></div>
-<h2 id="todo"><a href="#todo" class="header-anchor">TODO</a></h2>
+<h2 id="project_setup"><a href="#project_setup" class="header-anchor">Project setup</a></h2>
+<p>Julia has an built-in function <code>Pkg.generate</code> which generates the minimal file structure for a new project. For example, to initialize a project called <code>ULG</code> all you need to do is run the following commands.</p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-keyword">using</span> Pkg
+</span>
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> Pkg.generate(<span class="hljs-string">&quot;ULG.jl&quot;</span>)
+</span>  Generating  project ULG:
+    ULG.jl/Project.toml
+    ULG.jl/src/ULG.jl
+Dict{SubString{String}, Base.UUID} with 1 entry:
+  &quot;ULG&quot; =&gt; UUID(&quot;7f50121b-566d-49a5-8387-754b659c937e&quot;)</code></pre>
+<p>This writes two important files to disk.</p>
+<ul>
+<li><p><code>Project.toml</code> contains metainformation about the project and &#40;optionally&#41; a list of required packages including their version restrictions.</p>
+</li>
+<li><p><code>src/ULG.jl</code> the main code file where the <code>ULG</code> module is defined.</p>
+</li>
+</ul>
+<p>To load and use the <code>ULG</code> package first activate the package environment then load the code with <code>using ULG</code>.</p>
+<h2 id="modules"><a href="#modules" class="header-anchor">Modules</a></h2>
+<p><a href="https://docs.julialang.org/en/v1/manual/modules/">Modules</a> are a way of organizing code in Julia. For example, each package is a module of its own. Above we generated the <code>ULG</code> module. After loading it all of the function and variables can not be used directly since they are in the module&#39;s own namespace. Thus, we have to prepend <code>ULG.</code> e.g. <code>ULG.greet&#40;&#41;</code>. It is also inconvenient to put all of your code into a single file. Julia provides the <code>include</code> function which behaves as if the contents of the source file were written in the <code>ULG.jl</code> file.</p>
+<p>As we have already seen in the exercise of the <a href="/ws22_ulg_ds_julia/pages/introduction/functions#syntax">Functions#Syntax</a> section with <code>mean</code> we do not always have to put the module name in front of the function. Julia achieves this with the <code>export</code> keyword. In order to make the <code>ULG.greet</code> function available inside of the global scope &#40;after <code>using ULG</code>&#41; we just add the line <code>export greet</code> to <code>src/ULG.jl</code>.</p>
+<h2 id="testing"><a href="#testing" class="header-anchor">Testing</a></h2>
+<p>When we are done programming our package it is always good practice to write <a href="https://pkgdocs.julialang.org/dev/creating-packages/#Adding-tests-to-the-package">unit tests</a>. These code snippets test whether our code behaves as intended. Start by creating the <code>test/</code> folder and put a file called <code>runtests.jl</code> inside it. This file tells Julia how to run all tests. In order to test <code>ULG.greet</code> we could for example add these lines.</p>
+<pre><code class="julia hljs"><span class="hljs-keyword">using</span> Test
+<span class="hljs-keyword">using</span> ULG
+
+<span class="hljs-meta">@testset</span> <span class="hljs-keyword">begin</span>
+    <span class="hljs-meta">@test</span> isnothing(ULG.greet())
+    <span class="hljs-meta">@test</span> <span class="hljs-number">1</span> + <span class="hljs-number">1</span> == <span class="hljs-number">3</span>
+<span class="hljs-keyword">end</span></code></pre>
+<p>Then we can run these tests with</p>
+<pre><code class="julia-repl hljs"><span class=hljs-metap>(ULG) pkg&gt;</span> add Test
+
+<span class=hljs-metap>(ULG) pkg&gt;</span> test
+
+Test Summary: | Pass  Fail  Total  Time
+test set      |    1     1      2  0.5s
+ERROR: LoadError: Some tests did not pass: 1 passed, 1 failed, 0 errored, 0 broken.
+in expression starting at /tmp/ULG/test/runtests.jl:4
+ERROR: Package ULG errored during testing</code></pre>
+<h2 id="revise"><a href="#revise" class="header-anchor">Revise</a></h2>
+<p>After we have changed existing code Julia needs to recompile it. Depending on the package size restarting Julia for this can take a while. However, we do not necessarily have to exit Julia since only the files containing the changes need to be reloaded. <a href="https://timholy.github.io/Revise.jl/stable/"><code>Revise</code></a> automates this task.</p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-keyword">using</span> Revise
+</span>
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-keyword">using</span> ULG
+</span>
+# here we edit some code
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> revise()
+</span>
+# new code is loaded without restarting</code></pre>
 <div class="page-foot">
     <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: January 09, 2023.
     Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
@@ -117,6 +168,69 @@
     </div> <!-- end of class main-content-wrap -->
     </div> <!-- end of class page-wrap-->
     
+    
+      
+
+
+      <script>
+    (function(){
+    
+      // Get the elements.
+      // - the 'pre' element.
+      // - the 'div' with the 'paste-content' id.
+    
+      var pre = document.getElementsByTagName('pre');
+    
+      // Add a copy button in the 'pre' element.
+      // which only has the className of 'language-'.
+    
+      for (var i = 0; i < pre.length; i++) {
+        var isLanguage = pre[i].children[0].tagName == 'CODE';
+    
+        if ( isLanguage ) {
+          var button           = document.createElement('button');
+              button.className = 'copy-button';
+              button.textContent = 'Copy';
+    
+              pre[i].appendChild(button);
+        }
+      };
+    
+      // Run Clipboard
+    
+      var copyCode = new Clipboard('.copy-button', {
+        target: function(trigger) {
+          return trigger.previousElementSibling;
+        }
+      });
+    
+      // On success:
+      // - Change the "Copy" text to "Copied".
+      // - Swap it to "Copy" in 2s.
+      // - Lead user to the "contenteditable" area with Velocity scroll.
+    
+      copyCode.on('success', function(event) {
+        event.clearSelection();
+        event.trigger.textContent = 'Copied';
+        window.setTimeout(function() {
+          event.trigger.textContent = 'Copy';
+        }, 2000);
+    
+      });
+    
+      // On error (Safari):
+      // - Change the  "Press Ctrl+C to copy"
+      // - Swap it to "Copy" in 2s.
+    
+      copyCode.on('error', function(event) {
+        event.trigger.textContent = 'Press "Ctrl + C" to copy';
+        window.setTimeout(function() {
+          event.trigger.textContent = 'Copy';
+        }, 5000);
+      });
+    
+    })();
+</script>
     
   </body>
 </html>

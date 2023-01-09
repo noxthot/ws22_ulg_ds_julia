@@ -77,9 +77,8 @@
             <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/functions/" class="menu-list-link ">Functions</a>
             <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/metaprogramming/" class="menu-list-link ">Metaprogramming</a>
             <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/performance/" class="menu-list-link ">Performance</a>
-            <li class="menu-list-item "><a
-                    href="/ws22_ulg_ds_julia/pages/introduction/development_workflow/" class="menu-list-link ">Development workflow</a>
             <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/package_manager/" class="menu-list-link active">Package manager</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/development_workflow/" class="menu-list-link ">Development workflow</a>
             <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/useful_packages/"
                     class="menu-list-link ">Useful
                     packages</a>
@@ -119,7 +118,7 @@
 <p>If we now want to install a specific version of a package we can add <code>@&lt;versionnumber&gt;</code> behind the package name. As an example, to install <code>Revise</code> at version <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3.4.0</mn></mrow><annotation encoding="application/x-tex">3.4.0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">3.4.0</span></span></span></span> we type</p>
 <pre><code class="julia-repl hljs"><span class=hljs-metap>(@v1.8) pkg&gt;</span> add Revise@3.4.0</code></pre>
 <p>Or in order to install the latest development version</p>
-<pre><code class="julia-repl hljs">(@1.8) pgk&gt; add Revise#master</code></pre>
+<pre><code class="julia-repl hljs"><span class=hljs-metap>(@v1.8) pkg&gt;</span> add Revise#master</code></pre>
 <p>which used git to get the latest commit from the master branch. Moreover, we can update all packages that we have added by typing</p>
 <pre><code class="julia-repl hljs"><span class=hljs-metap>(@v1.8) pkg&gt;</span> update</code></pre>
 <p>or just a specific package &#40;for example Revise&#41; by typing</p>
