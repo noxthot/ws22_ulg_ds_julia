@@ -23,7 +23,7 @@ If we now want to install a specific version of a package we can add `@<versionn
 ```
 Or in order to install the latest development version
 ```julia-repl
-(@1.8) pgk> add Revise#master
+(@v1.8) pkg> add Revise#master
 ```
 which used git to get the latest commit from the master branch.
 Moreover, we can update all packages that we have added by typing

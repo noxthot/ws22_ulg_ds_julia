@@ -36,3 +36,8 @@
 
 - [JLD2.jl](https://juliaio.github.io/JLD2.jl/dev/) An efficient data format for serializing Julia objects similar to
   HDF5.
+
+- [Infiltrator.jl](https://juliadebug.github.io/Infiltrator.jl/stable/) Set breakpoints in your code dropping you into
+  an interactive REPL session.
+
+- [Debugger.jl](https://github.com/JuliaDebug/Debugger.jl) Enter and step through functions in debugging mode.
