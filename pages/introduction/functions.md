@@ -61,12 +61,12 @@ This also holds true for function included in julia itself e.g. `sincos` already
 Let us practice this syntax by revisiting loops:
 
 \exercise{
-For a vector $V\in\mathrm{R}^n$ with elements $v_1, \ldots, v_n$ compute the mean of all the elements in the following fashion
+For a vector $V\in\mathrm{R}^n$ with elements $v_1, \ldots, v_n$ compute the mean of all the elements in the following fashion.
 
-1. Sum over the elements per index:
+1. Sum over the elements per index and divide by the length of the vector.
    $$m = \frac{1}{n}\sum_{i=1}^n v_i$$
-2. Transform this loop into a function `mymean`
-3. Test against `V = rand(100_000)` and `mymean(V) ≈ mean(V)` (use `\approx + TAB` for ≈) using the `Statistics` standard library
+2. Transform this loop into a function `mymean`.
+3. Test against `V = rand(100_000)` and `mymean(V) ≈ mean(V)` (use `\approx + TAB` for ≈) using the `Statistics` standard library.
 
 \solution{
 

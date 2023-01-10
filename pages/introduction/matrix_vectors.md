@@ -292,6 +292,7 @@ julia> sA \ v
  0.09999999999999995
 ```
 A further functionality of the `LinearAlgebra` package is given by efficient storage routines for sparse matrices, i.e., matrices that are zero except for a small number of entries. A very common sparse matrix is a diagonal matrix. To create a diagonal matrix $D$ which has entries $d = (d_1, \cdots, d_{10})$ on the diagonal, we can use `D = Diagonal(d)`. 
+
 For a list of special matrix types see the [manual](https://docs.julialang.org/en/v1/stdlib/LinearAlgebra/#Special-matrices).
 Above we tagged the matrix `A` as a symmetric matrix. Thus Julia automatically uses an optimized method for solving the linear system in the next line.
 Usually one should use `\\` for solving linear systems of equations since it automatically picks the right algorithm 
@@ -319,7 +320,9 @@ Note that x ≈ lu(A) \ b
 
 2.
 ```julia-repl
-julia> B = rand(10, 8); b = ones(10);
+julia> B = rand(10, 8)
+
+julia> b = ones(10)
 
 julia> x = B \ b;
 
