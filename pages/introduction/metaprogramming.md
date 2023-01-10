@@ -5,50 +5,45 @@
 
 # Metaprogramming
 
-[Metaprogramming](https://docs.julialang.org/en/v1/manual/metaprogramming) is a very powerful concept of Julia.
-Since Julia code is itself represented in the language via its own datastructure (an `Expr`) a Julia program can
-freely manipulate and generate its own code. However, in this section we will only give a brief overview of the
-concepts of metaprogramming because it is a more advanced feature of the language. First we give a short overview of
-how Julia code is actually run. To get from text to native code roughly the following steps are performed:
+[Metaprogramming](https://docs.julialang.org/en/v1/manual/metaprogramming) is a very powerful concept.
+Since Julia code itself is represented in the language via its own datastructure (an `Expr`ession) a Julia program can
+freely manipulate and generate its own code. However, in this section we only give a short overview of metaprogramming concepts because it is an advanced feature of the language. When we run Julia code roughly the following steps are performed to get from text to native code:
 
 1. Parsing (`Meta.parse`)
-2. Lowering and type inference (`@code_warntype`)
-3. Compile to LLVM intermediate representation (`@code_llvm`)
-4. Compile to native code using LLVM (`@code_native`)
+1. Lowering and type inference (`@code_warntype`)
+1. Compile to LLVM intermediate representation (`@code_llvm`)
+1. Compile to native code using LLVM (`@code_native`)
 
-where we put the function/macro in the parentheses that yields the output of the corresponding step i.e. one can use
-them to look at the outputs of them interactively. In step 1 the code is read and transformed into `Expr`s. Then
-types are computed/inferred which means that the compiler tries to find out the concrete type of each expression i.e.
-each variable and each return type. If type inference fails, it gets highlighted in the output of `@code_warntype`. This can be useful because it can cause big performance problems.
+The function/macros in parentheses allow us to further investigate each step by letting us take a look at the output interactively. In step 1 the code is read and transformed into `Expr`essions. Then
+the compiler tries to find the concrete type of each expression i.e.
+each variable and each return type. If type inference fails, it is highlighted in the `@code_warntype` output. This can be useful since it sometimes leads to performance problems.
 The final two steps are not really important for us since their output is already quite low level and difficult to
 read and understand. But one can use `@code_llvm` to debug performance problems or for optimization.
-Metaprogramming is usually performed in between steps 1 and 2 and one common use case are macros.
+Metaprogramming is usually performed between steps 1 and 2. A common use case are macros.
 
-At its basis, a macro is similar to a function, as it maps a tuple of arguments to a returned expression.
-Therefore, in order to distinguish macros in the code, Julia reserves the `@` symbol as the first character for macro definitions.
-Apart from that convention, there are two major differences between macros and functions.
-A macro:
+In principle a macro is similar to a function as it maps a tuple of arguments to an expression that is then returned.
+Therefore, Julia reserves the `@` symbol as the first character for macro definitions in order to distinguish them from functions in the code.
+Apart from that what differentiates macros from functions most is that macros
 
-1. is compiled directly and not at the first call,
-1. is executed when the code is parsed.
+1. are compiled directly and not at first call,
+1. are executed when the code is parsed.
 
-The second feature is the important one, as we can manipulate the code at runtime.
-The nice thing about macros is, we can insert quite powerful code by still keeping the readability high.
-We have already seen multiple macros i.e. `@time` which basically just inserts `Base.time_ns()` before and after the expression
-passed to the macro and returns the difference (the actual definition is more complex). Once the
-code is run we thus get the time it took to run the code contained in the expression passed to the macro. The `@time`
-macros is more convenient than a function since it allows the timing of arbitrary Julia code which would not be
-possible with a function.
-Defining a useful macro can be quite difficult/different compared to ordinary Julia code, because one has to perform
-all operations on `Expr`. Thus we will not discuss it here. However, one should look at the documentation of all the
-macros used so far and also the following ones: `@view`, `@views`, `@.`, `@assert`, `@info`, `@warn`,
+The second feature is the important one as it lets us manipulate code at runtime.
+Another convenient thing about macros is their ability to insert quite powerful code while also keeping the readability high.
+We have already seen multiple macros, e.g., `@time` which basically just inserts `Base.time_ns()` before and after the expression
+passed to the macro and returns the difference. Keep in mind that the actual definition is more complex.
+
+```julia-repl
+julia> @time sleep(1)
+  1.002452 seconds (5 allocations: 144 bytes)
+```
+
+In contrast to functions it is possible to time arbitrary Julia code with the `@time` macro. Defining a useful macro can be difficult and also quite different from ordinary Julia code because all operations have to be performed on `Expr`. Thus, we will not discuss it here. However, have a look at the documentation of all the
+macros we have been using so far as well as these ones: `@view`, `@views`, `@.`, `@assert`, `@info`, `@warn`,
 `@error` and `@__DIR__`.
 
-Finally we will show an example of another use case for metaprogramming namely the definition of multiple functions
-using a loop.
-In the following example from the manual we have defined a custom number type. Now we also want to define methods
-of common built-in functions for this type. One could easily do this by hand but using metaprogramming makes it
-shorter and easier to read and extend.
+Another useful example for metaprogramming is the definition of multiple functions using a `for` loop.
+In the following example from the [Julia manual](https://docs.julialang.org/en/v1/manual/metaprogramming/#Code-Generation) we have defined a custom number type. We would also like to define methods of common built-in functions for this type. We could do it manually but metaprogramming makes it shorter, easier to read, and easier to extend.
 
 ```julia
 struct MyNumber
@@ -60,6 +55,4 @@ for op in (:sin, :cos, :tan, :log, :exp)
 end
 ```
 
-Here the main ingredient is the `@eval` macro which creates an expression and then evaluates it i.e. it is equivalent
-to `eval(:(Base.$op(a::MyNumber) = MyNumber($op(a.x))))`. The above method can also be used for more complex function
-definitions not just one-liners.
+The main ingredient is the `@eval` macro which creates an expression and then evaluates it. This is equivalent to `eval(:(Base.$op(a::MyNumber) = MyNumber($op(a.x))))`. The above method can also be used for more complex function definitions and not just one-liners.
