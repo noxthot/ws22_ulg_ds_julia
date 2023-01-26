@@ -143,15 +143,11 @@
 <p>Alternatively you can also use <a href="https://github.com/JuliaLang/juliaup">juliaup</a> to install and use Julia. This handy little gadget allows for automatic updates as well as easy parallel installation of and switching between different Julia versions.</p>
 <h4 id="additional_information_for_linux"><a href="#additional_information_for_linux" class="header-anchor">Additional information for Linux:</a></h4>
 <p>Some distributions allow for Julia to be installed via the package manager or software center. Note that very often this is an old version so this method is not recommended.</p>
-<p>A convenient location for the Julia folder is <code>/opt/</code>. By creating a link to the binary in <code>/usr/local/bin/</code> we can make sure it is found in the path.</p>
-<p>In your terminal use <code>curl</code> to download the latest version</p>
-<pre><code class="bash hljs">curl -o julia.tar.gz https://julialang-s3.julialang.org/bin/linux/x64/1.8/julia-1.8.2-linux-x86_64.tar.gz</code></pre>
-<p>extract the tar ball with</p>
-<pre><code class="bash hljs">tar xzf julia.tar.gz</code></pre>
-<p>copy the folder to <code>/opt/</code></p>
-<pre><code class="bash hljs">sudo <span class="hljs-built_in">cp</span> -r julia-1.8.2 /opt/</code></pre>
-<p>and link the binary</p>
-<pre><code class="bash hljs">sudo <span class="hljs-built_in">ln</span> -s /opt/julia-1.8.2/bin/julia /usr/local/bin/julia</code></pre>
+<p>A very convenient way to manage your Julia installation is <a href="https://github.com/JuliaLang/juliaup">juliaup</a>. To install this tool, simply call the following command from your terminal:</p>
+<pre><code class="bash hljs">curl -fsSL https://install.julialang.org | sh</code></pre>
+<p>Once installed, simply reopen your terminal and call <code>juliaup add 1.8.4</code> to add the very version used for this course. In case you installed Julia just for this course, you could then set</p>
+<pre><code class="bash hljs">juliaup default 1.8.4</code></pre>
+<p>to pin your default version to <code>1.8.4</code> whenever you start <code>julia</code>. Alternatively you can launch this specific version by calling <code>julia &#43;1.8.4</code>.</p>
 <h3 id="visual_studio_code"><a href="#visual_studio_code" class="header-anchor">Visual Studio Code</a></h3>
 <p>Installing Visual Studio Code is optional since one can use any editor for programming in Julia but Visual Studio Code &#40;&#43;plugin&#41; is the most common &quot;Julia IDE&quot;. For example <a href="https://github.com/JuliaEditorSupport">JuliaEditorSupport</a> has plugins for some alternative editors.</p>
 <p>Follow the instructions on <a href="https://code.visualstudio.com/">https://code.visualstudio.com/</a> to install Visual Studio Code.</p>
@@ -175,7 +171,7 @@
 <p>With these short basics and <a href="https://www.julia-vscode.org">https://www.julia-vscode.org</a> you are good to go for the lecture. You can also find a list of <a href="https://www.julia-vscode.org/docs/dev/userguide/keybindings/">keybindings</a> once you are more familiar with the IDE and never want to get your hands off the keyboard.</p>
 <p>In VS Code you can always type <code>CTRL &#43; SHIFT &#43; P</code> to get access to the prompt and execute commands within VS Code.</p>
 <div class="page-foot">
-    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: January 10, 2023.
+    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: January 26, 2023.
     Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
 </div>
 </div><!-- CONTENT ENDS HERE -->
