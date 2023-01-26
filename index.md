@@ -57,31 +57,17 @@ Alternatively you can also use [juliaup](https://github.com/JuliaLang/juliaup) t
 
 Some distributions allow for Julia to be installed via the package manager or software center. Note that very often this is an old version so this method is not recommended.
 
-A convenient location for the Julia folder is `/opt/`. By creating a link to the binary in `/usr/local/bin/` we can make sure it is found in the path.
-
-In your terminal use `curl` to download the latest version
-
+A very convenient way to manage your Julia installation is [juliaup](https://github.com/JuliaLang/juliaup). To install this tool, simply call the following command from your terminal:
 ```bash
-curl -o julia.tar.gz https://julialang-s3.julialang.org/bin/linux/x64/1.8/julia-1.8.2-linux-x86_64.tar.gz
+curl -fsSL https://install.julialang.org | sh
 ```
 
-extract the tar ball with
-
+Once installed, simply reopen your terminal and call `juliaup add 1.8.4` to add the very version used for this course. In case you installed Julia just for this course, you could then set
 ```bash
-tar xzf julia.tar.gz
+juliaup default 1.8.4
 ```
+to pin your default version to `1.8.4` whenever you start `julia`. Alternatively you can launch this specific version by calling `julia +1.8.4`.
 
-copy the folder to `/opt/`
-
-```bash
-sudo cp -r julia-1.8.2 /opt/
-```
-
-and link the binary
-
-```bash
-sudo ln -s /opt/julia-1.8.2/bin/julia /usr/local/bin/julia
-```
 
 ### Visual Studio Code
 
