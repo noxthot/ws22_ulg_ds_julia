@@ -51,7 +51,7 @@
   }
 </style>
 
-   <title>Reporting</title>  
+   <title>Exercise</title>  
 </head>
 <body>                      <!-- closed in foot.html -->
 <div class="page-wrap">   <!-- closed in foot.html -->
@@ -89,11 +89,11 @@
             <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/data_management/exploratory_da/" class="menu-list-link ">Exploratory Data Analysis</a>
             <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/data_management/datasets/" class="menu-list-link ">Data Sets</a>
           </ul>
-          <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/neural_networks/" class="menu-list-link ">Neural Networks</a>
+          <li class="menu-list-item active"><a href="/ws22_ulg_ds_julia/pages/neural_networks/" class="menu-list-link active">Neural Networks</a>
             <ul class="menu-list-child-list ">
-              <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/neural_networks/exercise/" class="menu-list-link ">Exercise</a>
+              <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/neural_networks/exercise/" class="menu-list-link active">Exercise</a>
             </ul>
-          <li class="menu-list-item active"><a href="/ws22_ulg_ds_julia/pages/reporting/" class="menu-list-link active">Reporting</a>
+          <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/reporting/" class="menu-list-link ">Reporting</a>
       </ul>
     </div>
     <div class="footer">
@@ -110,19 +110,27 @@
 
 
 <!-- Content appended here (in class franklin-content) -->
-<div class="franklin-content"><h1 id="reporting"><a href="#reporting" class="header-anchor">Reporting</a></h1>
-<h2 id="pluto_notebook"><a href="#pluto_notebook" class="header-anchor">Pluto Notebook</a></h2>
-<p>With <a href="https://github.com/fonsp/Pluto.jl"><code>Pluto.jl</code></a> Julia provides notebooks that are simple, lightweight and reactive. The notebooks can be shared easily since they also keep track of the used packages and their versions. By using <a href="https://github.com/JuliaPluto/PlutoUI.jl"><code>PlutoUI.jl</code></a> one can add UI elements like sliders, text fields and so on. It also has markdown support and it is possible to create a nice looking HTML export.</p>
-<p>To get started, simply add <code>Pluto</code> and start the Pluto server with:</p>
-<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-keyword">using</span> Pluto
-</span>
-<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> Pluto.run()
-</span>[ Info: Loading...
-┌ Info: 
-└ Opening http://localhost:1234/?secret=J6cPXwBB in your default browser... ~ have fun!</code></pre>
-<p>In the end, Pluto should automatically get opened in your default browser.</p>
-<h2 id="pluto_demo"><a href="#pluto_demo" class="header-anchor">Pluto demo</a></h2>
-<p>Check our <a href="/ws22_ulg_ds_julia/notebooks/html/pluto_example.jl/">sample notebook</a> and please note that UI elements are only working when the code is run within Pluto. On the top right you will find instructions on how to run the code on your machine.</p>
+<div class="franklin-content"><h1 id="our_exercise"><a href="#our_exercise" class="header-anchor">Our Exercise</a></h1>
+<div class="franklin-toc"><ol><li><a href="#preparations">Preparations</a></li></ol></div>
+<h2 id="preparations"><a href="#preparations" class="header-anchor">Preparations</a></h2>
+<p>Since you are familiar with git and gitlab, you might want to fork the repository of our exercise first. To do so, head to <a href="https://git.uibk.ac.at/c7021138/ulg_ws22_julia_workshop_exercises_pub">gitlab</a>.</p>
+<p>Afterwards clone your forked repository with</p>
+<pre><code class="bash hljs">git <span class="hljs-built_in">clone</span> &lt;YOUR_FORK&gt;</code></pre>
+<p>Head to this project and open the Julia REPL &#40;be sure to use the default version of this course&#41;. The project comes with a <code>Manifest.toml</code> and <code>Project.toml</code>, so be sure to activate and instantiate the environment:</p>
+<pre><code class="julia-repl hljs"><span class=hljs-metap>(@v1.8) pkg&gt;</span> activate .
+  Activating project at `~/uibk/teaching/ulg-ws-22-julia-workshop-exercises-pub`
+
+<span class=hljs-metap>(ulg-ws-22-julia-workshop-exercises-pub) pkg&gt;</span> instantiate</code></pre>
+<p>In this exercise we will work with <a href="https://jupyter.org/">JupyterLab</a>. The Package <a href="https://github.com/JuliaLang/IJulia.jl"><code>IJulia</code></a> is a Julia-language backend combined with the Jupyter interactive environment and enables us to use JupyterLab with Julia. You already instantiated this package in your environment, so from the REPL simply call:</p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-keyword">using</span> IJulia</span></code></pre>
+<p>And to open JupyterLab with the current directory being the working directory, call:</p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> jupyterlab(dir=pwd())</span></code></pre>
+<p>In case you do not have Jupyter ready on your system, IJulia will offer you to install Jupyter via Conda. You might want to take this offer and let IJulia do the work for you. Once ready, JupyterLab will be started and your default Browser open with the JupyterLab start screen.</p>
+<p>Sometimes you will not find your desired Julia Kernel. Usually closing JupyterLab, and rebuilding your IJulia from the desired Julia version should fix this problem:</p>
+<pre><code class="julia-repl hljs">pkg&gt; activate .
+  Activating project at `~/uibk/teaching/ulg_ws22_julia_workshop_exercises_pub`
+
+<span class=hljs-metap>(ulg_ws22_julia_workshop_exercises_pub) pkg&gt;</span> build IJulia</code></pre>
 <div class="page-foot">
     <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: January 27, 2023.
     Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
