@@ -23,7 +23,7 @@ Alternatively, we can also load the arrow-file which we created in the previous 
 ```julia
 using Arrow, DataFrames
 
-df_survey = DataFrame(Arrow.columntable(Arrow.Table("survey.arrow")))
+df_survey = DataFrame(Arrow.Table("survey.arrow"); copycols=true)
 ```
 
 ## Data Wrangling
@@ -80,9 +80,10 @@ Type:           Int64
 
 The arithmetic mean is a lot higher than the median which indicates that the data is heavily skewed to the right. 25% of the data appears to be smaller than $27025$ and 75% of the data larger than $100000$. The maximum is given by an entry of over 45Mio and there are also participants with a yearly income of one Dollar. 
 
-Let us create some plots to gain deeper insights. We have already seen the use of `Plots.jl` before. In this section, we will switch to `StatsPlots.jl` (which is a drop-in replacement for `Plots.jl`) since on one hand it supports easy plotting of dataframes and on the other hand also offers additional statistical recipes.
+Let us create some plots to gain deeper insights. We have already seen the use of `Plots.jl` before. In this section, we will switch to `StatsPlots.jl` (which is an extension of `Plots.jl`) since on one hand it supports easy plotting of dataframes and on the other hand also offers additional statistical recipes.
 
-Creating a boxplot is fairly simple using the `@df` macro:
+Creating a boxplot is fairly simple using the `@df` macro, which takes a `DataFrame` and the plot function where we
+direcelty use the names of the columns we want to plot:
 ```julia
 using StatsPlots
 
@@ -166,9 +167,9 @@ $~$
 }
 }
 
-You should now see $4061$ entries. In a final step, let us convert the compensation from dollars into euros and store this information in a column named `EuroCompYearly`. As of July 1st, 2022, one Dollar corresponds to $0.96$ Euros:
+You should now see $4061$ entries. In a final step, let us convert the compensation from dollars into euros and store this information in a column named `EuroCompYearly`. As of January 31st, 2023, one Dollar corresponds to $0.92$ Euros:
 ```julia
-df_survey[!, :EuroCompYearly] = 0.96 * df_survey[!, :ConvertedCompYearly]
+df_survey[!, :EuroCompYearly] = 0.92 * df_survey[!, :ConvertedCompYearly]
 ```
 
 Here you find the solution for all manipulating tasks in this section.
@@ -186,7 +187,7 @@ filter!(x -> x.ConvertedCompYearly <= 1e6, df_survey)
 filter!(x -> x.Country in ["Austria", "Germany", "Switzerland"], df_survey)
 filter!(x -> !ismissing(x.Gender) && (x.Gender in ["Man", "Woman"]), df_survey)
 
-df_survey[!, :EuroCompYearly] = 0.96 * df_survey[!, :ConvertedCompYearly]
+df_survey[!, :EuroCompYearly] = 0.92 * df_survey[!, :ConvertedCompYearly]
 ```
 $~$
 }
@@ -203,7 +204,6 @@ $~$
 1. How does the median salary of data scientists compare to non data scientists in the DACH region. Hint: Have a look at `occursin` and `transform`.
 1. How many data scientists per country are left in our data set?
 $\,$
-}
 
 \solution{
 1. 
@@ -264,6 +264,7 @@ julia> combine(groupby(df_survey, [:Country, :isdatascientist]), nrow => :count)
    3 │ Germany                 true      7
    4 │ Switzerland            false    529
 ```
+}
 }
 
 ## Data Visualization
@@ -334,6 +335,3 @@ Here is a screenshot that shows this tool in action:
 \figalt{Data Voyager}{/assets/pages/data_management/datavoyager.png}
 
 \exercise{Explore our dataframe with `DataVoyager.jl`.}
-
-## Pluto Notebook
-\collapssol{[Click here](/notebooks/html/ds_exploratory_da.jl/) to download the complementary Pluto notebook.}

@@ -79,7 +79,7 @@ Also note that the data types of the columns are printed below the column name.
 
 ## Working with real data
 
-To get things more exciting, let us take a look at real data. [Stack Overflow](https://www.stackoverflow.com) provides [annual developer surveys](https://insights.stackoverflow.com/survey/). We will have a look at the latest available data set from [2021](https://info.stackoverflowsolutions.com/rs/719-EMH-566/images/stack-overflow-developer-survey-2021.zip). Please download this file and extract it into your workspace. Note that besides the actual data there is also a file which describes the contents of the dataset.
+To get things more exciting, let us take a look at real data. [Stack Overflow](https://www.stackoverflow.com) provides [annual developer surveys](https://insights.stackoverflow.com/survey/). We will have a look at the data set from [2021](https://info.stackoverflowsolutions.com/rs/719-EMH-566/images/stack-overflow-developer-survey-2021.zip). Please download this file and extract it into your workspace. Note that besides the actual data there is also a file which describes the contents of the dataset.
 
 The filename is `survey_results_public.csv` and the extension indicates that the file format is a [comma-separated values](https://en.wikipedia.org/wiki/Comma-separated_values) file. Thus, we need a package that is able to handle CSV-files. Luckily there is [CSV.jl](https://csv.juliadata.org/stable/) which makes it easy to load a file into a `DataFrame`. All we need to do is adding and loading `CSV`. Then we can read the data by using `DataFrame` as `sink` (second argument). `sink`? How do we even know that such a thing exists? It is always good to consult the manual first:
 ```julia-repl
@@ -254,6 +254,12 @@ Union{Missing, String31}[missing, "7", "17", "3", "4", "6", "16", "12", "15", "1
 julia> show(unique(df_survey.OrgSize))
 Union{Missing, String}["20 to 99 employees", missing, "100 to 499 employees", "Just me - I am a freelancer, sole proprietor, etc.", "10,000 or more employees", "10 to 19 employees", "1,000 to 4,999 employees", "500 to 999 employees", "5,000 to 9,999 employees", "2 to 9 employees", "I don’t know"]
 ```
+It might be useful to convert `YearsCode` by ignoring entries with letters in them. This could be done the following
+way
+```julia-repl
+julia> map(x -> ismissing(x) ? missing : something(tryparse(Int, x), missing), df[!, :YearsCode]);
+```
+
 $~$
 }}
 
