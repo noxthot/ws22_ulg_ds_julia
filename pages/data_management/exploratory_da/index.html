@@ -112,7 +112,7 @@
 
 <!-- Content appended here (in class franklin-content) -->
 <div class="franklin-content"><h1 id="exploratory_data_analysis"><a href="#exploratory_data_analysis" class="header-anchor">Exploratory Data Analysis</a></h1>
-<div class="franklin-toc"><ol><li><a href="#introduction">Introduction</a></li><li><a href="#data_wrangling">Data Wrangling</a></li><li><a href="#case_studies">Case Studies</a></li><li><a href="#data_visualization">Data Visualization</a><ol><li><a href="#barplot_show_survey_participants_by_country">Barplot: Show survey participants by country</a></li><li><a href="#boxplot_salary_in_comparison_to_employment_status">Boxplot: Salary in comparison to employment status</a></li></ol></li><li><a href="#pluto_notebook">Pluto Notebook</a></li></ol></div>
+<div class="franklin-toc"><ol><li><a href="#introduction">Introduction</a></li><li><a href="#data_wrangling">Data Wrangling</a></li><li><a href="#case_studies">Case Studies</a></li><li><a href="#data_visualization">Data Visualization</a><ol><li><a href="#barplot_show_survey_participants_by_country">Barplot: Show survey participants by country</a></li><li><a href="#boxplot_salary_in_comparison_to_employment_status">Boxplot: Salary in comparison to employment status</a></li></ol></li></ol></div>
 <h2 id="introduction"><a href="#introduction" class="header-anchor">Introduction</a></h2>
 <p>In most data science projects <em>exploratory data analysis</em> &#40;EDA&#41; is an essential first step. The primary aim is to analyze a given data set to summarize its main characteristics. Therefore, EDA often uses data visualization and statistical methods.</p>
 <p>In this section, we will continue to work with the Stack Overflow survey data set as shown in the previous section <a href="../loading_data/">Loading data</a>. To summarize, the necessary steps to start with this section can be found in the code snippet below:</p>
@@ -123,7 +123,7 @@ df_survey = CSV.read(<span class="hljs-string">&quot;survey_results_public.csv&q
 <p>Alternatively, we can also load the arrow-file which we created in the previous section:</p>
 <pre><code class="julia hljs"><span class="hljs-keyword">using</span> Arrow, DataFrames
 
-df_survey = DataFrame(Arrow.columntable(Arrow.Table(<span class="hljs-string">&quot;survey.arrow&quot;</span>)))</code></pre>
+df_survey = DataFrame(Arrow.Table(<span class="hljs-string">&quot;survey.arrow&quot;</span>); copycols=<span class="hljs-literal">true</span>)</code></pre>
 <h2 id="data_wrangling"><a href="#data_wrangling" class="header-anchor">Data Wrangling</a></h2>
 <p>In a first step, let us get a descriptive overview over the data by applying <code>describe&#40;&#41;</code>.  Also note the additional arguments that are given to <code>show&#40;&#41;</code> for displaying all rows and columns.</p>
 <pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> show(describe(df_survey), allrows=<span class="hljs-literal">true</span>, allcols=<span class="hljs-literal">true</span>)
@@ -160,8 +160,8 @@ Median:         56211.000000
 Maximum:        45241312.000000
 Type:           Int64</code></pre>
 <p>The arithmetic mean is a lot higher than the median which indicates that the data is heavily skewed to the right. 25&#37; of the data appears to be smaller than <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>27025</mn></mrow><annotation encoding="application/x-tex">27025</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">27025</span></span></span></span> and 75&#37; of the data larger than <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>100000</mn></mrow><annotation encoding="application/x-tex">100000</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">100000</span></span></span></span>. The maximum is given by an entry of over 45Mio and there are also participants with a yearly income of one Dollar. </p>
-<p>Let us create some plots to gain deeper insights. We have already seen the use of <code>Plots.jl</code> before. In this section, we will switch to <code>StatsPlots.jl</code> &#40;which is a drop-in replacement for <code>Plots.jl</code>&#41; since on one hand it supports easy plotting of dataframes and on the other hand also offers additional statistical recipes.</p>
-<p>Creating a boxplot is fairly simple using the <code>@df</code> macro:</p>
+<p>Let us create some plots to gain deeper insights. We have already seen the use of <code>Plots.jl</code> before. In this section, we will switch to <code>StatsPlots.jl</code> &#40;which is an extension of <code>Plots.jl</code>&#41; since on one hand it supports easy plotting of dataframes and on the other hand also offers additional statistical recipes.</p>
+<p>Creating a boxplot is fairly simple using the <code>@df</code> macro, which takes a <code>DataFrame</code> and the plot function where we direcelty use the names of the columns we want to plot:</p>
 <pre><code class="julia hljs"><span class="hljs-keyword">using</span> StatsPlots
 
 <span class="hljs-meta">@df</span> df_survey boxplot(:ConvertedCompYearly)</code></pre>
@@ -196,8 +196,8 @@ Type:           Int64</code></pre>
 <p><div class="solution"> Solution </div><div class="solutioncollapsible">  </p>
 <pre><code class="julia hljs">filter!(x -&gt; !ismissing(x.Gender) &amp;&amp; (x.Gender <span class="hljs-keyword">in</span> [<span class="hljs-string">&quot;Man&quot;</span>, <span class="hljs-string">&quot;Woman&quot;</span>]), df_survey)</code></pre>
 <p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext> </mtext></mrow><annotation encoding="application/x-tex">~</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0em;"></span><span class="mspace nobreak"> </span></span></span></span> </div> </div>
-<p>You should now see <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4061</mn></mrow><annotation encoding="application/x-tex">4061</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">4061</span></span></span></span> entries. In a final step, let us convert the compensation from dollars into euros and store this information in a column named <code>EuroCompYearly</code>. As of July 1st, 2022, one Dollar corresponds to <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0.96</mn></mrow><annotation encoding="application/x-tex">0.96</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.96</span></span></span></span> Euros:</p>
-<pre><code class="julia hljs">df_survey[!, :EuroCompYearly] = <span class="hljs-number">0.96</span> * df_survey[!, :ConvertedCompYearly]</code></pre>
+<p>You should now see <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>4061</mn></mrow><annotation encoding="application/x-tex">4061</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">4061</span></span></span></span> entries. In a final step, let us convert the compensation from dollars into euros and store this information in a column named <code>EuroCompYearly</code>. As of January 31st, 2023, one Dollar corresponds to <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0.92</mn></mrow><annotation encoding="application/x-tex">0.92</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.92</span></span></span></span> Euros:</p>
+<pre><code class="julia hljs">df_survey[!, :EuroCompYearly] = <span class="hljs-number">0.92</span> * df_survey[!, :ConvertedCompYearly]</code></pre>
 <p>Here you find the solution for all manipulating tasks in this section.</p>
 <button type="button" class="collapsible" style="background-color:#fffca5"> Solution </button><div class="collapsiblecontent">  </p>
 <pre><code class="julia hljs"><span class="hljs-keyword">using</span> CSV, DataFrames
@@ -211,7 +211,7 @@ filter!(x -&gt; x.ConvertedCompYearly &lt;= <span class="hljs-number">1e6</span>
 filter!(x -&gt; x.Country <span class="hljs-keyword">in</span> [<span class="hljs-string">&quot;Austria&quot;</span>, <span class="hljs-string">&quot;Germany&quot;</span>, <span class="hljs-string">&quot;Switzerland&quot;</span>], df_survey)
 filter!(x -&gt; !ismissing(x.Gender) &amp;&amp; (x.Gender <span class="hljs-keyword">in</span> [<span class="hljs-string">&quot;Man&quot;</span>, <span class="hljs-string">&quot;Woman&quot;</span>]), df_survey)
 
-df_survey[!, :EuroCompYearly] = <span class="hljs-number">0.96</span> * df_survey[!, :ConvertedCompYearly]</code></pre>
+df_survey[!, :EuroCompYearly] = <span class="hljs-number">0.92</span> * df_survey[!, :ConvertedCompYearly]</code></pre>
 <p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext> </mtext></mrow><annotation encoding="application/x-tex">~</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0em;"></span><span class="mspace nobreak"> </span></span></span></span> </div>
 <h2 id="case_studies"><a href="#case_studies" class="header-anchor">Case Studies</a></h2>
 <p>Continuing with the same data set, let us conduct some case studies in the upcoming exercise.</p>
@@ -232,8 +232,8 @@ df_survey[!, :EuroCompYearly] = <span class="hljs-number">0.96</span> * df_surve
 <li><p>How many data scientists per country are left in our data set?</p>
 </li>
 </ol>
-<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext> </mtext></mrow><annotation encoding="application/x-tex">\,</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0em;"></span><span class="mspace" style="margin-right:0.1667em;"></span></span></span></span> </div>
-<div class="solution"> Solution </div><div class="solutioncollapsible">  1. </p>
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext> </mtext></mrow><annotation encoding="application/x-tex">\,</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0em;"></span><span class="mspace" style="margin-right:0.1667em;"></span></span></span></span>
+<p><div class="solution"> Solution </div><div class="solutioncollapsible">  1. </p>
 <pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> combine(groupby(df_survey, :Country), nrow =&gt; :count)
 </span>3×2 DataFrame
  Row │ Country      count 
@@ -286,7 +286,7 @@ df_survey[!, :EuroCompYearly] = <span class="hljs-number">0.96</span> * df_surve
    2 │ Germany                false   3088
    3 │ Germany                 true      7
    4 │ Switzerland            false    529</code></pre>
-<p></div>
+<p></div> </div>
 <h2 id="data_visualization"><a href="#data_visualization" class="header-anchor">Data Visualization</a></h2>
 <p>In this workshop we have already used <code>Plots.jl</code> and <code>StatsPlots.jl</code> a couple of times to visualize functions and data. It may come to a surprise that <code>Plots.jl</code> and <code>StatsPlots.jl</code> are actually no plotting packages. They are rather plotting metapackages which provide an interface over many different plotting libraries. The specific plotting library that is actually being used to create the plots is referred to as the <a href="https://docs.juliaplots.org/stable/tutorial/#plotting-backends"><em>backend</em></a> and it is easy to switch and therefore to use different plotting libraries. So far we always used the default backend <code>GR</code> which is fast, but lacks interactivity. Depending on the requirements you might like to try <code>PlotlyJS.jl</code> for interactivity or <code>PyPlot.jl</code> because you like the functionality of Matplotlib &#40;known from Python&#41;. To get a good overview, have a look at the <a href="https://docs.juliaplots.org/stable/backends/#backends"><code>Plots.jl</code> documentation</a>.</p>
 <p>In the last section we used methods from <code>DataFrames.jl</code> and <code>Statistics.jl</code> to do some case studies. Now we will supplement the studies with visualizations.</p>
@@ -304,9 +304,9 @@ df_survey[!, :EuroCompYearly] = <span class="hljs-number">0.96</span> * df_surve
   &quot;Austria&quot;     =&gt; 437
 
 <span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-meta">@df</span> df_survey bar(countmap(:Country), legend=<span class="hljs-literal">false</span>)</span></code></pre>
-<div id="fdphhi" style=""></div>
+<div id="fdpolz" style=""></div>
 <script>
-graphDiv = document.getElementById("fdphhi");
+graphDiv = document.getElementById("fdpolz");
 plotlyPromise = PlotlyJS_json(graphDiv, '/ws22_ulg_ds_julia/assets/pages/data_management/plot_explorative_da_country.json');
 </script>
 
@@ -314,9 +314,9 @@ plotlyPromise = PlotlyJS_json(graphDiv, '/ws22_ulg_ds_julia/assets/pages/data_ma
 <p>Boxplots are a nice tool to visualize some distributional characteristics &#40;locality, spread, skewness&#41; of a given data sample. Dividing the data set into different groups allows an easy comparison.</p>
 <p>In the following plot we compare the salary of different employment states:</p>
 <pre><code class="julia hljs"><span class="hljs-meta">@df</span> df_survey boxplot(:Employment, :EuroCompYearly, xrotation=<span class="hljs-number">30</span>, size=(<span class="hljs-number">500</span>, <span class="hljs-number">900</span>), legend=<span class="hljs-literal">false</span>)</code></pre>
-<div id="fdpaxl" style=""></div>
+<div id="fdpkbg" style=""></div>
 <script>
-graphDiv = document.getElementById("fdpaxl");
+graphDiv = document.getElementById("fdpkbg");
 plotlyPromise = PlotlyJS_json(graphDiv, '/ws22_ulg_ds_julia/assets/pages/data_management/plot_explorative_da_salary_1.json');
 </script>
 
@@ -334,9 +334,9 @@ plotlyPromise = PlotlyJS_json(graphDiv, '/ws22_ulg_ds_julia/assets/pages/data_ma
 <p>Since visualizations usually condense information up to some extend, it is always a good idea to look at the data from different perspectives. Adding e.g. a dots plot &#40;where every sample is visualized by a dot&#41; shows that two of the groups have only very little sample sizes.</p>
 <pre><code class="julia hljs"><span class="hljs-meta">@df</span> df_survey boxplot(:Employment, :EuroCompYearly, xrotation=<span class="hljs-number">30</span>, size=(<span class="hljs-number">500</span>, <span class="hljs-number">900</span>), legend=<span class="hljs-literal">false</span>)
 <span class="hljs-meta">@df</span> df_survey dotplot!(:Employment, :EuroCompYearly, legend=<span class="hljs-literal">false</span>)</code></pre>
-<div id="fdpjeu" style=""></div>
+<div id="fdpamr" style=""></div>
 <script>
-graphDiv = document.getElementById("fdpjeu");
+graphDiv = document.getElementById("fdpamr");
 plotlyPromise = PlotlyJS_json(graphDiv, '/ws22_ulg_ds_julia/assets/pages/data_management/plot_explorative_da_salary_2.json');
 </script>
 
@@ -347,10 +347,8 @@ plotlyPromise = PlotlyJS_json(graphDiv, '/ws22_ulg_ds_julia/assets/pages/data_ma
 v = Voyager(df_survey)</code></pre>
 <p>Here is a screenshot that shows this tool in action: <img src="/ws22_ulg_ds_julia/assets/pages/data_management/datavoyager.png" alt="Data Voyager"></p>
 <button type="button" class="collapsible" style="background-color:#b5ddff"> Exercise </button><div class="collapsiblecontent">  Explore our dataframe with <code>DataVoyager.jl</code>. </div>
-<h2 id="pluto_notebook"><a href="#pluto_notebook" class="header-anchor">Pluto Notebook</a></h2>
-<button type="button" class="collapsible" style="background-color:#fffca5"> Solution </button><div class="collapsiblecontent">  <a href="/ws22_ulg_ds_julia/notebooks/html/ds_exploratory_da.jl/">Click here</a> to download the complementary Pluto notebook. </div>
 <div class="page-foot">
-    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: January 27, 2023.
+    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: January 31, 2023.
     Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
 </div>
 </div><!-- CONTENT ENDS HERE -->

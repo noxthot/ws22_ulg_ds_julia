@@ -51,7 +51,7 @@
   }
 </style>
 
-   <title>Saving Dataframes</title>  
+   <title>Saving Dataframes and Tables.jl</title>  
 </head>
 <body>                      <!-- closed in foot.html -->
 <div class="page-wrap">   <!-- closed in foot.html -->
@@ -111,17 +111,68 @@
 
 <!-- Content appended here (in class franklin-content) -->
 <div class="franklin-content"><h1 id="saving_dataframes"><a href="#saving_dataframes" class="header-anchor">Saving dataframes</a></h1>
-<p>Now that we prepared our data source and noticed how much work it was to restore the original data types, it make sense to save the current state of our dataframe. Our data source was provided in the CSV format which has the major disadvantage that Julia needs to elaborately guess the data type of each column, the used decimal symbol, and so on. But it is also possible to store this so-called meta data along with the dataframe. <a href="https://juliaio.github.io/HDF5.jl/stable/"><code>Arrow.jl</code></a> provides sufficient metadata to know how each item has to be interpreted &#40;at least for simple types&#41;. Additionally, this format is compatible across different computer architectures and can be read with various programming languages &#40;like e.g. Julia, Python and R&#41;.</p>
+<p>Now that we prepared our data source and noticed how much work it was to restore the original data types, it make sense to save the current state of our dataframe. Our data source was provided in the CSV format which has the major disadvantage that Julia needs to elaborately guess the data type of each column, the used decimal symbol, and so on. But it is also possible to store this so-called meta data along with the dataframe. <a href="https://arrow.juliadata.org/stable/"><code>Arrow.jl</code></a> provides sufficient metadata to know how each item has to be interpreted &#40;at least for simple types&#41;. Additionally, this format is compatible across different computer architectures and can be read with various programming languages &#40;like e.g. Julia, Python and R&#41;.</p>
 <p>To write a dataframe into an arrow-file simply call:</p>
 <pre><code class="julia hljs"><span class="hljs-keyword">using</span> Arrow
 
 Arrow.write(<span class="hljs-string">&quot;survey.arrow&quot;</span>, df_survey)</code></pre>
-<p>Loading the file again is slightly more complicated since <code>Arrow.Table</code> is immutable by default. Thus we first need to convert it into a named tuple of vectors which then can be transformed into a mutable dataframe.</p>
+<p>We can also pass additional options such as <code>compress &#61; :zstd</code> for compressing the data. Loading the file again is slightly more complicated since <code>Arrow.Table</code> is immutable by default and not fully loaded into memory. Thus we need to <code>copy</code> each column in order to convert the Arrow data into normal <code>Vector</code>s.</p>
 <pre><code class="julia hljs"><span class="hljs-keyword">using</span> Arrow, DataFrames
 
-df_survey = DataFrame(Arrow.columntable(Arrow.Table(<span class="hljs-string">&quot;survey.arrow&quot;</span>)))</code></pre>
+df_survey = DataFrame(Arrow.Table(<span class="hljs-string">&quot;survey.arrow&quot;</span>); copycols=<span class="hljs-literal">true</span>)</code></pre>
+<h1 id="tablesjl"><a href="#tablesjl" class="header-anchor">Tables.jl</a></h1>
+<p>Columnar data also called tables is quite a general concept seen in databases, CSV files, Excel files, <code>Dataframes</code> and in many more instances. It would be possible to always use <code>DataFrames</code> in order for Julia to interact with these. However, <code>DataFrames</code> are quite special since they make certain assumptions on the table e.g. that each element can be accessed and changed independently. But we have already seen above that for <code>Arrow.Table</code> this is not the case.</p>
+<p>So packages which operate on tabular data e.g. <a href="https://juliadatabases.org/SQLite.jl/stable/">SQLite.jl</a> and <a href="https://csv.juliadata.org/stable/">CSV.jl</a>  do not use <code>Dataframes</code> but the small interface package <a href="https://tables.juliadata.org/stable/">Tables.jl</a> which defines a common set of functions that should work on all tabular data types. Thus <a href="https://github.com/JuliaData/Tables.jl/blob/master/INTEGRATIONS.md">each package</a> implementing the table interface can work with a <code>DataFrame</code> or other tabular types. For example</p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-keyword">using</span> Arrow, Tables, DataFrames
+</span>
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> table = (x = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>], y = [<span class="hljs-string">&quot;a&quot;</span>, <span class="hljs-literal">missing</span>, <span class="hljs-string">&quot;b&quot;</span>], z = rand(<span class="hljs-number">3</span>));
+</span>
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> Tables.istable(table)
+</span>true
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> Tables.schema(table)
+</span>Tables.Schema:
+ :x  Int64
+ :y  Union{Missing, String}
+ :z  Float64
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> Arrow.write(<span class="hljs-string">&quot;test.arrow&quot;</span>, table)
+</span>&quot;test.arrow&quot;
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> df = DataFrame(Arrow.Table(<span class="hljs-string">&quot;test.arrow&quot;</span>); copycols=<span class="hljs-literal">true</span>)
+</span>3×3 DataFrame
+ Row │ x      y        z         
+     │ Int64  String?  Float64   
+─────┼───────────────────────────
+   1 │     1  a        0.457727
+   2 │     2  missing  0.0677743
+   3 │     3  b        0.529353
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> Tables.istable(df)
+</span>true
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> Tables.materializer(df)
+</span>DataFrame
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> Tables.materializer(table)
+</span>columntable (generic function with 5 methods)
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> Tables.materializer(table)(df)
+</span>(x = [1, 2, 3], y = Union{Missing, String}[&quot;a&quot;, missing, &quot;b&quot;], z = [0.45772704497893035, 0.06777425699530504, 0.5293528119836353])</code></pre>
+<p>Let us go into more details on each concept that we see her:</p>
+<ul>
+<li><p>any <code>NamedTuple</code> of vectors is a table</p>
+</li>
+<li><p><code>Arrow.write</code> accept and can save any table</p>
+</li>
+<li><p><code>Tables.materializer</code> returns the initialization/construction functions of the input table</p>
+</li>
+<li><p>the materializer for dataframes is simply <code>DataFrame</code></p>
+</li>
+</ul>
+<p>The last point is important since it means that any <code>Tables.jl</code> compatible type can be converted into a <code>DataFrame</code> by using <code>DataFrame&#40;...; copycols&#61;true&#41;</code> and then work with it as expected.</p>
 <div class="page-foot">
-    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: January 27, 2023.
+    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: January 31, 2023.
     Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
 </div>
 </div><!-- CONTENT ENDS HERE -->
