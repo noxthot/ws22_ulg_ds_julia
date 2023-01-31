@@ -123,5 +123,52 @@ $~$
 
 When using different algorithms, we always have to keep in mind in which format and shape our data is stored. Different algorithms have different requirements. Sometimes observations have to be stored row wise (each observation in a separate row), sometimes they have to be stored column wise. Some algorithms require a `Matrix` and others a `DataFrame`.
 
-## Pluto Notebook
-\collapssol{[Click here](/notebooks/html/ds_dataset.jl/) to download the complementary Pluto notebook.}
+## Custom Datasets and Iterating over Data
+
+The [MLUtils.jl](https://juliaml.github.io/MLUtils.jl/stable/) package contains utility functions for creating your
+own custom dataset (that can also be larger than your memory) and to iterate over a subset (minibatches) of your data.
+For example in order to iterate over the MNIST dataset we can use `MLUtils.eachobs`, which returns an iterator that
+one uses with a `for` loop. We can also use `first` in order to get the first iteration in order to check what we
+will be iterating over
+```julia-repl
+julia> first(eachobs(df_train; batchsize=256)) |> typeof
+NamedTuple{(:features, :targets), Tuple{Array{Float32, 3}, Vector{Int64}}}
+
+julia> first(eachobs(df_train; batchsize=256)).features |> size
+(28, 28, 256)
+
+julia> first(eachobs(df_train; batchsize=256)).targets |> size
+(256,)
+```
+Here we see that we will receive a `NamedTuple` of the images and the corresponding labels. Iterating over this
+dataset and optimize a [neural network](../../neural_networks) would then look like the following
+```julia
+for (images, labels) in eachobs(df_train; batchsize=256)
+    # calculate loss and gradients and update parameters
+end
+```
+
+Additional useful
+functions might be `shuffleobs`, `splitobs` for random shuffling and splitting the data or `kfolds` for k-fold cross
+validation.
+
+\exercise{
+Implement your own dataset type `FakeData` that can be used by `MLUtils.eachobs` and that conists of a variable number of arrays
+with normal random `Float64` entries of size `(3, 4)`.
+
+Hint: You need to implement the following methods: 
+- `MLUtils.numobs(data::FakeData)`
+- `MLUtils.getobs(data::FakeData, idx::AbstractVector{<:Integer})`
+
+\solution{
+```julia
+using MLUtils
+
+struct FakeData
+    n::Int
+end
+MLUtils.numobs(data::FakeData) = data.n
+MLUtils.getobs(data::FakeData, idx::AbstractVector{<:Integer} = randn(3, 4, length(idx))
+```
+}
+}
