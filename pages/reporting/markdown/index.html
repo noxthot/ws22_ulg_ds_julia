@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+   <link rel="stylesheet" href="/ws22_ulg_ds_julia/libs/highlight/github.min.css">
+   
+    <script src="/ws22_ulg_ds_julia/libs/clipboard.min.js"></script>
+  
+  
+  <script src="/ws22_ulg_ds_julia/libs/plotly-1_58_5.min.js"></script> 
+  <script>
+    // This function is used when calling `\fig{...}` See # Using \fig{...} below
+    const PlotlyJS_json = async (div, url) => {
+      response = await fetch(url); // get file
+      fig = await response.json(); // convert it to json
+      // Make the plot fit the screen responsively. See the documentation of plotly.js. https://plotly.com/javascript/responsive-fluid-layout/
+      if (typeof fig.config === 'undefined') { fig["config"]={} }
+      delete fig.layout.width
+      delete fig.layout.height
+      fig["layout"]["autosize"] = true
+      fig["config"]["autosizable"] = true
+      fig["config"]["responsive"] = true
+
+      // make it easier to scroll throught the website rather than being blocked by a figure.
+      fig.config["scrollZoom"] = false
+
+      // PlotlyJS.savefig by default add the some more attribute to make a static plot.
+      // Disable them to make the website fancier.
+      delete fig.config.staticPlot
+      delete fig.config.displayModeBar
+      delete fig.config.doubleClick
+      delete fig.config.showTips
+
+      Plotly.newPlot(div, fig);
+    };
+  </script>
+  
+  <link rel="stylesheet" href="/ws22_ulg_ds_julia/css/jtd.css">
+<link rel="stylesheet" href="/ws22_ulg_ds_julia/css/extras.css">
+<link rel="icon" href="/ws22_ulg_ds_julia/assets/favicon.ico">
+
+<style>
+  /* #148 wrap long header */
+  .franklin-content a.header-anchor,
+  .franklin-toc li a
+   {
+    word-wrap: break-word;
+    white-space: normal;
+  }
+</style>
+
+   <title>Markdown</title>  
+</head>
+<body>                      <!-- closed in foot.html -->
+<div class="page-wrap">   <!-- closed in foot.html -->
+  <!-- SIDE BAR -->
+  <div class="side-bar">
+    <div class="header">
+      <a href="/ws22_ulg_ds_julia/" class="title">
+        Julia
+      </a>
+    </div>
+    <label for="show-menu" class="show-menu">MENU</label>
+    <input type="checkbox" id="show-menu" role="button">
+    <div class="menu" id="side-menu">
+      <ul class="menu-list">
+        <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/" class="menu-list-link ">Start</a>
+        <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/" class="menu-list-link ">Introduction</a>
+          <ul class="menu-list-child-list ">
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/basis_datatypes_and_operations/" class="menu-list-link ">Basic Data Types and Operations</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/matrix_vectors/" class="menu-list-link ">Matrix and Vector Operations</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/conditional_evaluations/" class="menu-list-link ">Conditional evaluations</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/loops/" class="menu-list-link ">Loops</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/functions/" class="menu-list-link ">Functions</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/metaprogramming/" class="menu-list-link ">Metaprogramming</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/performance/" class="menu-list-link ">Performance</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/package_manager/" class="menu-list-link ">Package manager</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/development_workflow/" class="menu-list-link ">Development workflow</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/useful_packages/"
+                    class="menu-list-link ">Useful
+                    packages</a>
+          </ul>
+        <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/data_management/" class="menu-list-link ">Data Management</a>
+          <ul class="menu-list-child-list ">
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/data_management/loading_data/" class="menu-list-link ">Loading data</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/data_management/saving_data/" class="menu-list-link ">Saving data</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/data_management/exploratory_da/" class="menu-list-link ">Exploratory Data Analysis</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/data_management/datasets/" class="menu-list-link ">Data Sets</a>
+          </ul>
+          <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/neural_networks/" class="menu-list-link ">Neural Networks</a>
+            <ul class="menu-list-child-list ">
+              <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/neural_networks/exercise/" class="menu-list-link ">Exercise</a>
+            </ul>
+          <li class="menu-list-item active"><a href="/ws22_ulg_ds_julia/pages/reporting/" class="menu-list-link active">Reporting</a>
+            <ul class="menu-list-child-list ">
+                <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/reporting/latex/" class="menu-list-link ">LaTeX</a>
+                <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/reporting/markdown/" class="menu-list-link active">Markdown</a>
+                <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/reporting/jupyter/" class="menu-list-link ">Jupyter</a>
+                <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/reporting/pluto/" class="menu-list-link ">Pluto.jl</a>
+            </ul>
+      </ul>
+    </div>
+    <div class="footer">
+      This is <em>Just the docs</em>, adapted from the <a href="https://github.com/pmarsceill/just-the-docs" target="_blank">Jekyll theme</a>.
+    </div>
+  </div>
+  <!-- CONTENT -->
+  <div class="main-content-wrap"> <!-- closed in foot.html -->
+    <div class="main-content">    <!-- closed in foot.html -->
+      <div class="main-header">
+        WS22/23 ULG Data Science
+      </div>
+
+
+
+<!-- Content appended here (in class franklin-content) -->
+<div class="franklin-content"><h1 id="markdown"><a href="#markdown" class="header-anchor">Markdown</a></h1>
+<div class="franklin-toc"><ol><li><a href="#introduction">Introduction</a></li><li><a href="#basic_syntax_and_formatting">Basic Syntax and Formatting</a></li><li><a href="#this_is_an_h2">This is an &lt;h2&gt;</a><ol><li><a href="#this_is_an_h3">This is an &lt;h3&gt;</a><ol><li><a href="#this_is_an_h4">This is an &lt;h4&gt;</a><ol><li><a href="#this_is_an_h5">This is an &lt;h5&gt;</a><ol><li><a href="#this_is_an_h6">This is an &lt;h6&gt;</a></li></ol></li></ol></li></ol></li></ol></li><li><a href="#highlighting_code">Highlighting Code</a></li><li><a href="#links_and_references">Links and References</a></li><li><a href="#figures">Figures</a></li><li><a href="#tables">Tables</a></li></ol></div>
+<h2 id="introduction"><a href="#introduction" class="header-anchor">Introduction</a></h2>
+<p>Markdown is a lightweight markup language for creating formatted documents in minutes using nothing but a plain-text editor. You can use the full range of HTML elements in Markdown and they will not be affected by a Markdown parser. Many code sharing platforms like, e.g., GitHub or GitLab as well as programming languages support Markdown. Actually, the webpage you are looking at right now was created by interweaving HTML and Markdown elements.</p>
+<h2 id="basic_syntax_and_formatting"><a href="#basic_syntax_and_formatting" class="header-anchor">Basic Syntax and Formatting</a></h2>
+<p>In order to show you the possibilities of formatting text with simple macros we provide the examples below. On top you can see the plain code and below that what Markdown makes of it.</p>
+<ul>
+<li><p>Comments</p>
+</li>
+</ul>
+<pre><code class="markdown hljs">&lt;!--This is a comment.--&gt;</code></pre>
+<ul>
+<li><p>Headers of different sizes</p>
+</li>
+</ul>
+<pre><code class="markdown hljs"><span class="hljs-section"># This is an <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span></span></span>
+
+<span class="hljs-section">## This is an <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h2</span>&gt;</span></span></span>
+
+<span class="hljs-section">### This is an <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h3</span>&gt;</span></span></span>
+
+<span class="hljs-section">#### This is an <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h4</span>&gt;</span></span></span>
+
+<span class="hljs-section">##### This is an <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h5</span>&gt;</span></span></span>
+
+<span class="hljs-section">###### This is an <span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">h6</span>&gt;</span></span></span></code></pre>
+<h1 id="this_is_an_h1"><a href="#this_is_an_h1" class="header-anchor">This is an &lt;h1&gt;</a></h1>
+<h2 id="this_is_an_h2"><a href="#this_is_an_h2" class="header-anchor">This is an &lt;h2&gt;</a></h2>
+<h3 id="this_is_an_h3"><a href="#this_is_an_h3" class="header-anchor">This is an &lt;h3&gt;</a></h3>
+<h4 id="this_is_an_h4"><a href="#this_is_an_h4" class="header-anchor">This is an &lt;h4&gt;</a></h4>
+<h5 id="this_is_an_h5"><a href="#this_is_an_h5" class="header-anchor">This is an &lt;h5&gt;</a></h5>
+<h6 id="this_is_an_h6"><a href="#this_is_an_h6" class="header-anchor">This is an &lt;h6&gt;</a></h6>
+<ul>
+<li><p>Formatting text the easy way</p>
+</li>
+</ul>
+<pre><code class="markdown hljs"><span class="hljs-emphasis">_This text is in italics._</span></code></pre>
+<p><em>This text is in italics.</em></p>
+<pre><code class="markdown hljs"><span class="hljs-strong">**This text is bold.**</span></code></pre>
+<p><strong>This text is bold.</strong></p>
+<pre><code class="markdown hljs"><span class="hljs-strong">**<span class="hljs-emphasis">_This text is both._</span>**</span></code></pre>
+<p><strong><em>This text is both.</em></strong></p>
+<pre><code class="markdown hljs"><span class="hljs-quote">&gt; This is a quotation.</span>
+<span class="hljs-quote">&gt; You can also add more levels to go deeper with</span>
+<span class="hljs-quote">&gt;
+&gt; &gt; double `&gt;`.</span></code></pre>
+<blockquote>
+<p>This is a quotation. You can also add more levels to go deeper with</p>
+<blockquote>
+<p>double <code>&gt;</code>.</p>
+</blockquote>
+</blockquote>
+<ul>
+<li><p>Add a horizontal rule</p>
+</li>
+</ul>
+<pre><code class="markdown hljs">---</code></pre>
+<hr />
+<ul>
+<li><p>Present things in &#40;enumerated&#41; lists</p>
+</li>
+</ul>
+<pre><code class="markdown hljs"><span class="hljs-bullet">-</span> Item
+<span class="hljs-bullet">-</span> Another item</code></pre>
+<ul>
+<li><p>Item</p>
+</li>
+<li><p>Another item</p>
+</li>
+</ul>
+<pre><code class="markdown hljs"><span class="hljs-bullet">1.</span> Item one
+<span class="hljs-bullet">2.</span> Item two</code></pre>
+<ol>
+<li><p>Item one</p>
+</li>
+<li><p>Item two</p>
+</li>
+</ol>
+<pre><code class="markdown hljs"><span class="hljs-bullet">1.</span> Item one
+<span class="hljs-bullet">2.</span> Item two
+<span class="hljs-bullet">   -</span> Sub-item
+<span class="hljs-bullet">   -</span> Sub-item
+<span class="hljs-bullet">3.</span> Item three</code></pre>
+<ol>
+<li><p>Item one</p>
+</li>
+<li><p>Item two</p>
+<ul>
+<li><p>Sub-item</p>
+</li>
+<li><p>Sub-item</p>
+</li>
+</ul>
+</li>
+<li><p>Item three</p>
+</li>
+</ol>
+<p>Boxes below without the &#39;x&#39; are unchecked HTML checkboxes.</p>
+<pre><code class="markdown hljs"><span class="hljs-bullet">-</span> [ ] First task to complete.
+<span class="hljs-bullet">-</span> [x] This task has been completed.</code></pre>
+<h2 id="highlighting_code"><a href="#highlighting_code" class="header-anchor">Highlighting Code</a></h2>
+<ul>
+<li><p>Formatting code inline</p>
+</li>
+</ul>
+<pre><code class="markdown hljs"><span class="hljs-code">`This is code.`</span></code></pre>
+<code>This is code.</code>
+<ul>
+<li><p>Code blocks and syntax highlighting</p>
+</li>
+</ul>
+<p>In GitHub Flavored Markdown, you can use a special syntax for code. Just add the programming language of your choice after the three ticks.</p>
+<pre><code class="markdown hljs"><span class="hljs-code">```python
+def foobar(x: int = 1, y: str = &quot;Hello&quot;) -&gt; int:
+    print(y)
+    return 2 * x
+end
+```</span></code></pre>
+<pre><code class="python hljs"><span class="hljs-keyword">def</span> <span class="hljs-title function_">foobar</span>(<span class="hljs-params">x: <span class="hljs-built_in">int</span> = <span class="hljs-number">1</span>, y: <span class="hljs-built_in">str</span> = <span class="hljs-string">&quot;Hello&quot;</span></span>) -&gt; <span class="hljs-built_in">int</span>:
+    <span class="hljs-built_in">print</span>(y)
+    <span class="hljs-keyword">return</span> <span class="hljs-number">2</span> * x
+end</code></pre>
+<p>Here is an example of the <code>R</code> programming language.</p>
+<pre><code class="markdown hljs"><span class="hljs-code">```r
+jiggle &lt;- function(x) {
+    x = x + rnorm(1, sd=.1) # add a bit of (controlled) noise
+    return(x)
+}
+```</span></code></pre>
+<pre><code class="r hljs">jiggle <span class="hljs-operator">&lt;-</span> <span class="hljs-keyword">function</span><span class="hljs-punctuation">(</span>x<span class="hljs-punctuation">)</span> <span class="hljs-punctuation">{</span>
+    x <span class="hljs-operator">=</span> x <span class="hljs-operator">+</span> rnorm<span class="hljs-punctuation">(</span><span class="hljs-number">1</span><span class="hljs-punctuation">,</span> sd<span class="hljs-operator">=</span><span class="hljs-number">.1</span><span class="hljs-punctuation">)</span> <span class="hljs-comment"># add a bit of (controlled) noise</span>
+    <span class="hljs-built_in">return</span><span class="hljs-punctuation">(</span>x<span class="hljs-punctuation">)</span>
+<span class="hljs-punctuation">}</span></code></pre>
+<h2 id="links_and_references"><a href="#links_and_references" class="header-anchor">Links and References</a></h2>
+<pre><code class="markdown hljs">[<span class="hljs-string">Click me!</span>](<span class="hljs-link">https://www.uibk.ac.at/weiterbildung/ulg/data-science/index.html.en</span>)</code></pre>
+<p><a href="https://www.uibk.ac.at/weiterbildung/ulg/data-science/index.html.en">Click me&#33;</a></p>
+<p>Also note that</p>
+<pre><code class="markdown hljs"><span class="language-xml">&lt;http://testwebsite.com/&gt;</span></code></pre>
+<p>is equivalent to</p>
+<pre><code class="markdown hljs">[<span class="hljs-string">http://testwebsite.com/</span>](<span class="hljs-link">http://testwebsite.com/</span>)</code></pre>
+<p>Navigating through your local folders and files is possible as well.</p>
+<pre><code class="markdown hljs">[<span class="hljs-string">Go to music</span>](<span class="hljs-link">/music/</span>).</code></pre>
+<p>Before referencing headers or chapter markers you have to label them with <code>&#40;label&#41;</code> first.</p>
+<pre><code class="markdown hljs"><span class="hljs-bullet">-</span> [<span class="hljs-string">Heading</span>](<span class="hljs-link">#heading</span>)
+<span class="hljs-bullet">-</span> [<span class="hljs-string">Chapter</span>](<span class="hljs-link">#chapter</span>)
+<span class="hljs-bullet">  -</span> [<span class="hljs-string">Subchapter &lt;h3 /&gt;</span>](<span class="hljs-link">#subchapter-h3-</span>)</code></pre>
+<ul>
+<li><p><a href="#heading">Heading</a></p>
+</li>
+<li><p><a href="#chapter">Chapter</a></p>
+<ul>
+<li><p><a href="#subchapter-h3-">Subchapter &lt;h3 /&gt;</a></p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="figures"><a href="#figures" class="header-anchor">Figures</a></h2>
+<p>Including pictures from a local or remote source can be done with</p>
+<pre><code class="markdown hljs">![<span class="hljs-string">excel</span>](<span class="hljs-link">https://miro.medium.com/max/624/1*FAzumPnvzKUDolMG7SNcHw.png</span>)</code></pre>
+<p><img src="https://miro.medium.com/max/624/1*FAzumPnvzKUDolMG7SNcHw.png" alt="excel" /></p>
+<h2 id="tables"><a href="#tables" class="header-anchor">Tables</a></h2>
+<pre><code class="markdown hljs">| Col1         |   Col2   |          Col3 |
+| :----------- | :------: | ------------: |
+| Left-aligned | Centered | Right-aligned |
+| foo          |   bar    |           baz |</code></pre>
+<table><tr><th align="left">Col1</th><th align="center">Col2</th><th align="right">Col3</th></tr><tr><td align="left">Left-aligned</td><td align="center">Centered</td><td align="right">Right-aligned</td></tr><tr><td align="left">foo</td><td align="center">bar</td><td align="right">baz</td></tr></table>
+<div class="page-foot">
+    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: February 02, 2023.
+    Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+</div>
+</div><!-- CONTENT ENDS HERE -->
+    </div> <!-- end of class main-content -->
+    </div> <!-- end of class main-content-wrap -->
+    </div> <!-- end of class page-wrap-->
+    
+    
+      
+
+
+      <script>
+    (function(){
+    
+      // Get the elements.
+      // - the 'pre' element.
+      // - the 'div' with the 'paste-content' id.
+    
+      var pre = document.getElementsByTagName('pre');
+    
+      // Add a copy button in the 'pre' element.
+      // which only has the className of 'language-'.
+    
+      for (var i = 0; i < pre.length; i++) {
+        var isLanguage = pre[i].children[0].tagName == 'CODE';
+    
+        if ( isLanguage ) {
+          var button           = document.createElement('button');
+              button.className = 'copy-button';
+              button.textContent = 'Copy';
+    
+              pre[i].appendChild(button);
+        }
+      };
+    
+      // Run Clipboard
+    
+      var copyCode = new Clipboard('.copy-button', {
+        target: function(trigger) {
+          return trigger.previousElementSibling;
+        }
+      });
+    
+      // On success:
+      // - Change the "Copy" text to "Copied".
+      // - Swap it to "Copy" in 2s.
+      // - Lead user to the "contenteditable" area with Velocity scroll.
+    
+      copyCode.on('success', function(event) {
+        event.clearSelection();
+        event.trigger.textContent = 'Copied';
+        window.setTimeout(function() {
+          event.trigger.textContent = 'Copy';
+        }, 2000);
+    
+      });
+    
+      // On error (Safari):
+      // - Change the  "Press Ctrl+C to copy"
+      // - Swap it to "Copy" in 2s.
+    
+      copyCode.on('error', function(event) {
+        event.trigger.textContent = 'Press "Ctrl + C" to copy';
+        window.setTimeout(function() {
+          event.trigger.textContent = 'Copy';
+        }, 5000);
+      });
+    
+    })();
+</script>
+    
+  </body>
+</html>
+
+<script>
+  var coll = document.getElementsByClassName("collapsible");
+  var i;
+
+  for (i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function() {
+      this.classList.toggle("active");
+      var content = this.nextElementSibling;
+      if (content.style.display === "block") {
+        content.style.display = "none";
+      } else {
+        content.style.display = "block";
+      }
+    });
+  }
+</script>
+
+<script>
+  var coll = document.getElementsByClassName("solutioncollapsible");
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const myVar = urlParams.get('solution')
+  if ( myVar == 'true') {
+    for (i = 0; i < coll.length; i++) {
+      coll[i].style.display = "block";
+    }
+  }
+</script>

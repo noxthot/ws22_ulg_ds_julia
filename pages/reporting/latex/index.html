@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link rel="stylesheet" href="/ws22_ulg_ds_julia/libs/katex/katex.min.css">
+     
+   <link rel="stylesheet" href="/ws22_ulg_ds_julia/libs/highlight/github.min.css">
+   
+    <script src="/ws22_ulg_ds_julia/libs/clipboard.min.js"></script>
+  
+  
+  <script src="/ws22_ulg_ds_julia/libs/plotly-1_58_5.min.js"></script> 
+  <script>
+    // This function is used when calling `\fig{...}` See # Using \fig{...} below
+    const PlotlyJS_json = async (div, url) => {
+      response = await fetch(url); // get file
+      fig = await response.json(); // convert it to json
+      // Make the plot fit the screen responsively. See the documentation of plotly.js. https://plotly.com/javascript/responsive-fluid-layout/
+      if (typeof fig.config === 'undefined') { fig["config"]={} }
+      delete fig.layout.width
+      delete fig.layout.height
+      fig["layout"]["autosize"] = true
+      fig["config"]["autosizable"] = true
+      fig["config"]["responsive"] = true
+
+      // make it easier to scroll throught the website rather than being blocked by a figure.
+      fig.config["scrollZoom"] = false
+
+      // PlotlyJS.savefig by default add the some more attribute to make a static plot.
+      // Disable them to make the website fancier.
+      delete fig.config.staticPlot
+      delete fig.config.displayModeBar
+      delete fig.config.doubleClick
+      delete fig.config.showTips
+
+      Plotly.newPlot(div, fig);
+    };
+  </script>
+  
+  <link rel="stylesheet" href="/ws22_ulg_ds_julia/css/jtd.css">
+<link rel="stylesheet" href="/ws22_ulg_ds_julia/css/extras.css">
+<link rel="icon" href="/ws22_ulg_ds_julia/assets/favicon.ico">
+
+<style>
+  /* #148 wrap long header */
+  .franklin-content a.header-anchor,
+  .franklin-toc li a
+   {
+    word-wrap: break-word;
+    white-space: normal;
+  }
+</style>
+
+   <title>LaTeX</title>  
+</head>
+<body>                      <!-- closed in foot.html -->
+<div class="page-wrap">   <!-- closed in foot.html -->
+  <!-- SIDE BAR -->
+  <div class="side-bar">
+    <div class="header">
+      <a href="/ws22_ulg_ds_julia/" class="title">
+        Julia
+      </a>
+    </div>
+    <label for="show-menu" class="show-menu">MENU</label>
+    <input type="checkbox" id="show-menu" role="button">
+    <div class="menu" id="side-menu">
+      <ul class="menu-list">
+        <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/" class="menu-list-link ">Start</a>
+        <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/" class="menu-list-link ">Introduction</a>
+          <ul class="menu-list-child-list ">
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/basis_datatypes_and_operations/" class="menu-list-link ">Basic Data Types and Operations</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/matrix_vectors/" class="menu-list-link ">Matrix and Vector Operations</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/conditional_evaluations/" class="menu-list-link ">Conditional evaluations</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/loops/" class="menu-list-link ">Loops</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/functions/" class="menu-list-link ">Functions</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/metaprogramming/" class="menu-list-link ">Metaprogramming</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/performance/" class="menu-list-link ">Performance</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/package_manager/" class="menu-list-link ">Package manager</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/development_workflow/" class="menu-list-link ">Development workflow</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/introduction/useful_packages/"
+                    class="menu-list-link ">Useful
+                    packages</a>
+          </ul>
+        <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/data_management/" class="menu-list-link ">Data Management</a>
+          <ul class="menu-list-child-list ">
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/data_management/loading_data/" class="menu-list-link ">Loading data</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/data_management/saving_data/" class="menu-list-link ">Saving data</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/data_management/exploratory_da/" class="menu-list-link ">Exploratory Data Analysis</a>
+            <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/data_management/datasets/" class="menu-list-link ">Data Sets</a>
+          </ul>
+          <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/neural_networks/" class="menu-list-link ">Neural Networks</a>
+            <ul class="menu-list-child-list ">
+              <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/neural_networks/exercise/" class="menu-list-link ">Exercise</a>
+            </ul>
+          <li class="menu-list-item active"><a href="/ws22_ulg_ds_julia/pages/reporting/" class="menu-list-link active">Reporting</a>
+            <ul class="menu-list-child-list ">
+                <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/reporting/latex/" class="menu-list-link active">LaTeX</a>
+                <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/reporting/markdown/" class="menu-list-link ">Markdown</a>
+                <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/reporting/jupyter/" class="menu-list-link ">Jupyter</a>
+                <li class="menu-list-item "><a href="/ws22_ulg_ds_julia/pages/reporting/pluto/" class="menu-list-link ">Pluto.jl</a>
+            </ul>
+      </ul>
+    </div>
+    <div class="footer">
+      This is <em>Just the docs</em>, adapted from the <a href="https://github.com/pmarsceill/just-the-docs" target="_blank">Jekyll theme</a>.
+    </div>
+  </div>
+  <!-- CONTENT -->
+  <div class="main-content-wrap"> <!-- closed in foot.html -->
+    <div class="main-content">    <!-- closed in foot.html -->
+      <div class="main-header">
+        WS22/23 ULG Data Science
+      </div>
+
+
+
+<!-- Content appended here (in class franklin-content) -->
+<div class="franklin-content"><h1 id="latex"><a href="#latex" class="header-anchor"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>LaTeX</mtext></mrow><annotation encoding="application/x-tex">\LaTeX</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8988em;vertical-align:-0.2155em;"></span><span class="mord text"><span class="mord textrm">L</span><span class="mspace" style="margin-right:-0.36em;"></span><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6833em;"><span style="top:-2.905em;"><span class="pstrut" style="height:2.7em;"></span><span class="mord"><span class="mord textrm mtight sizing reset-size6 size3">A</span></span></span></span></span></span><span class="mspace" style="margin-right:-0.15em;"></span><span class="mord text"><span class="mord textrm">T</span><span class="mspace" style="margin-right:-0.1667em;"></span><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.4678em;"><span style="top:-2.7845em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord textrm">E</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2155em;"><span></span></span></span></span><span class="mspace" style="margin-right:-0.125em;"></span><span class="mord textrm">X</span></span></span></span></span></span></a></h1>
+<div class="franklin-toc"><ol><li><a href="#introduction">Introduction</a></li><li><a href="#wysiwyg_versus_wysiwyaf">WYSIWYG versus WYSIWYAF</a></li><li><a href="#compiling_a_document">Compiling a Document</a></li><li><a href="#basic_syntax">Basic Syntax</a></li><li><a href="#mathematics">Mathematics</a></li><li><a href="#tables">Tables</a></li></ol></div>
+<h2 id="introduction"><a href="#introduction" class="header-anchor">Introduction</a></h2>
+<p>LaTeX, also stylized as <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>LaTeX</mtext></mrow><annotation encoding="application/x-tex">\LaTeX</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8988em;vertical-align:-0.2155em;"></span><span class="mord text"><span class="mord textrm">L</span><span class="mspace" style="margin-right:-0.36em;"></span><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6833em;"><span style="top:-2.905em;"><span class="pstrut" style="height:2.7em;"></span><span class="mord"><span class="mord textrm mtight sizing reset-size6 size3">A</span></span></span></span></span></span><span class="mspace" style="margin-right:-0.15em;"></span><span class="mord text"><span class="mord textrm">T</span><span class="mspace" style="margin-right:-0.1667em;"></span><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.4678em;"><span style="top:-2.7845em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord textrm">E</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2155em;"><span></span></span></span></span><span class="mspace" style="margin-right:-0.125em;"></span><span class="mord textrm">X</span></span></span></span></span></span>, is a software based on the typesetting system <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>TeX</mtext></mrow><annotation encoding="application/x-tex">\TeX</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8988em;vertical-align:-0.2155em;"></span><span class="mord text"><span class="mord textrm">T</span><span class="mspace" style="margin-right:-0.1667em;"></span><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.4678em;"><span style="top:-2.7845em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord textrm">E</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2155em;"><span></span></span></span></span><span class="mspace" style="margin-right:-0.125em;"></span><span class="mord textrm">X</span></span></span></span></span> which was developed by computer scientist and Stanford University professor Donald Knuth and first released in 1978. It is widely used in academia, especially in STEM fields, because it allows everyone to produce high-quality papers and books with little effort. The most useful features of LaTeX include the following.</p>
+<ul>
+<li><p>Typesetting special characters like <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ε</mi></mrow><annotation encoding="application/x-tex">\varepsilon</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal">ε</span></span></span></span> or <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∫</mo><mn>0</mn><mn>1</mn></msubsup><msup><mi>x</mi><mn>2</mn></msup><mi mathvariant="normal">d</mi><mi>x</mi></mrow><annotation encoding="application/x-tex">\int_0^1 x^2 \mathrm{d}x</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.3648em;vertical-align:-0.3558em;"></span><span class="mop"><span class="mop op-symbol small-op" style="margin-right:0.19445em;position:relative;top:-0.0006em;">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.009em;"><span style="top:-2.3442em;margin-left:-0.1945em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span><span style="top:-3.2579em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3558em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">x</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mord mathrm">d</span><span class="mord mathnormal">x</span></span></span></span> or <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>0</mn></mrow><mi>N</mi></msubsup><mi>j</mi></mrow><annotation encoding="application/x-tex">\sum_{j=0}^N j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.417em;vertical-align:-0.4358em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9812em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span><span class="mrel mtight">=</span><span class="mord mtight">0</span></span></span></span><span style="top:-3.2029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4358em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span></span></span></span> is easy.</p>
+</li>
+<li><p>Figures, tables, sections, pages, etc. are enumerated automatically and updated whenever you compile your document.</p>
+</li>
+<li><p>LaTeX deals with your citations and handles the bibliography.</p>
+</li>
+</ul>
+<h2 id="wysiwyg_versus_wysiwyaf"><a href="#wysiwyg_versus_wysiwyaf" class="header-anchor">WYSIWYG versus WYSIWYAF</a></h2>
+<p>After writing a document with a word processing software like MS Word the printed version of it looks like a copy of what you saw on the monitor. One could also say that &quot;<strong>W</strong>hat <strong>Y</strong>ou <strong>S</strong>ee <strong>I</strong>s <strong>W</strong>hat <strong>Y</strong>ou <strong>G</strong>et&quot;. In contrast, LaTeX uses plain text and macros &#40;commands&#41; to translate your &quot;scripted&quot; document into a PDF which looks nothing like what you saw. Hence, &quot;<strong>W</strong>hat <strong>Y</strong>ou <strong>S</strong>ee <strong>I</strong>s <strong>W</strong>hat <strong>Y</strong>ou <strong>A</strong>sked <strong>F</strong>or&quot;.</p>
+<p>In the beginning remembering the individual LaTeX commands by heart might seem difficult. But quite soon you will notice that letting LaTeX handle all the tedious things like, e.g., formatting the document is actually worth the effort.</p>
+<h2 id="compiling_a_document"><a href="#compiling_a_document" class="header-anchor">Compiling a Document</a></h2>
+<p>Download and install a TeX distribution like <a href="https://miktex.org/">MiKTeX</a> or <a href="https://tug.org/texlive/">TeX Live</a> and &#40;optionally&#41; an IDE, for example <a href="https://www.texniccenter.org/">TeXnicCenter</a>. Put the following in a <code>main.tex</code> file</p>
+<pre><code class="tex hljs"><span class="hljs-keyword">\documentclass</span>[12pt]{article}
+
+<span class="hljs-keyword">\begin</span>{document}
+Hello World!
+<span class="hljs-keyword">\end</span>{document}</code></pre>
+<p>and compile it using</p>
+<pre><code class="bash hljs">pdflatex main.tex</code></pre>
+<p>The output is a white sheet with &quot;Hello World&#33;&quot; written on top of it and the number of the page at the bottom. Notice how LaTeX inserted this number automatically?</p>
+<h2 id="basic_syntax"><a href="#basic_syntax" class="header-anchor">Basic Syntax</a></h2>
+<p>Comment lines start with an <code>&#37;</code>. There are no multi-line comments. Every LaTeX command starts with a backslash <code>\somecommand</code>. Every document starts with a definition of its type.</p>
+<pre><code class="tex hljs"><span class="hljs-keyword">\documentclass</span>[12pt]{article}</code></pre>
+<p>Other possible document types include but are not limited to <code>book</code>, <code>report</code>, <code>presentations</code>, etc. The options for the document appear in the <code>&#91;&#93;</code> brackets. In this case we want to use <code>12pt</code> font.</p>
+<p>If you want to include graphics, colored text, or source code from another language into your document, you need to enhance the capabilities of LaTeX. This is done by adding packages.</p>
+<pre><code class="tex hljs"><span class="hljs-keyword">\usepackage</span>{caption}
+<span class="hljs-keyword">\usepackage</span>{float}
+<span class="hljs-keyword">\usepackage</span>{hyperref}
+...</code></pre>
+<p>Providing information about the title page is as simple as setting the following variables.</p>
+<pre><code class="tex hljs"><span class="hljs-keyword">\author</span>{John Doe <span class="hljs-keyword">\&amp;</span> <span class="hljs-keyword">\\</span>
+Jane Doe}
+<span class="hljs-keyword">\date</span>{<span class="hljs-keyword">\today</span>}
+<span class="hljs-keyword">\title</span>{Reporting ULG 2023}</code></pre>
+<p>Everything we have seen so far belongs to the so-called preamble. The actual document begins with the keyword</p>
+<pre><code class="tex hljs"><span class="hljs-keyword">\begin</span>{document}</code></pre>
+<p>We can let LaTeX create a title page based on the information we provided above and add a table of contents with</p>
+<pre><code class="tex hljs"><span class="hljs-keyword">\maketitle</span>
+
+<span class="hljs-keyword">\tableofcontents</span></code></pre>
+<p>Adding new sections, subsections, and subsubsections is intuitive.</p>
+<pre><code class="tex hljs"><span class="hljs-keyword">\section</span>{First Section}
+<span class="hljs-keyword">\section</span>{Another section}
+<span class="hljs-keyword">\subsection</span>{First Subsection}
+<span class="hljs-keyword">\subsubsection</span>{First Subsubsection}</code></pre>
+<p>If you would like to suppress the numbering just add an asterisk after the keyword.</p>
+<pre><code class="tex hljs"><span class="hljs-keyword">\section</span>*{Unnumbered Section}
+<span class="hljs-keyword">\subsection</span>*{Unnumbered Subsection}
+<span class="hljs-keyword">\subsubsection</span>*{Unnumbered Subsubsection}</code></pre>
+<p>With LaTeX you can label pretty much anything from figures to sections to tables. Let us assume you would like to refer to some previous section in another section of your document. Just label the command and refer to it accordingly. Try and provide a unique informative label.</p>
+<pre><code class="tex hljs"><span class="hljs-keyword">\section</span>{Previous Section}<span class="hljs-keyword">\label</span>{sec:previous}
+
+<span class="hljs-keyword">\section</span>{Some Other Section}
+This is a reference the previous Section~<span class="hljs-keyword">\ref</span>{sec:previous}.</code></pre>
+<p>Lists are one of the easiest things to create in LaTeX. Just wrap the items inside of an <code>enumerate</code> environment if you want to have numbers</p>
+<pre><code class="tex hljs"><span class="hljs-keyword">\begin</span>{enumerate} <span class="hljs-comment">% This creates an &quot;enumerate&quot; environment.</span>
+  <span class="hljs-comment">% \item tells the enumerate to increment</span>
+  <span class="hljs-keyword">\item</span> First item.
+  <span class="hljs-keyword">\item</span> Second item.
+<span class="hljs-keyword">\end</span>{enumerate} <span class="hljs-comment">% All environments must have an end.</span></code></pre>
+<p>or an <code>itemize</code> environment if you need bullet points</p>
+<pre><code class="tex hljs"><span class="hljs-keyword">\begin</span>{itemize} <span class="hljs-comment">% This creates an &quot;itemize&quot; environment.</span>
+  <span class="hljs-keyword">\item</span> First bullet point.
+  <span class="hljs-keyword">\item</span> Second bullet point.
+<span class="hljs-keyword">\end</span>{itemize}</code></pre>
+<h2 id="mathematics"><a href="#mathematics" class="header-anchor">Mathematics</a></h2>
+<p>Many people use LaTex for its abundance of special symbols and characters especially in mathematics. These include set and relation symbols, arrows, operators, and Greek letters just to name a few. You enter the in-line math mode with dollar signs <code>&#36;x&#36;</code> and the regular math mode with</p>
+<pre><code class="tex hljs"><span class="hljs-keyword">\[</span>
+    a + b = c
+<span class="hljs-keyword">\]</span></code></pre>
+<p>Here is a very incomplete list of the most commonly used mathematical symbols.</p>
+<ul>
+<li><p>Quantifiers in logic</p>
+<table><tr><th align="right">Syntax</th><th align="right">Output</th></tr><tr><td align="right"><code>&#36;\forall&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∀</mi></mrow><annotation encoding="application/x-tex">\forall</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord">∀</span></span></span></span></td></tr><tr><td align="right"><code>&#36;\exists&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∃</mi></mrow><annotation encoding="application/x-tex">\exists</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord">∃</span></span></span></span></td></tr><tr><td align="right"><code>&#36;\exists&#33;&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∃</mi><mo stretchy="false">!</mo></mrow><annotation encoding="application/x-tex">\exists!</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord">∃</span><span class="mclose">!</span></span></span></span></td></tr><tr><td align="right"><code>&#36;\neg&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">¬</mi></mrow><annotation encoding="application/x-tex">\neg</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord">¬</span></span></span></span></td></tr><tr><td align="right"><code>&#36;\nexists&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∄</mi></mrow><annotation encoding="application/x-tex">\nexists</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6889em;"></span><span class="mord amsrm">∄</span></span></span></span></td></tr><tr><td align="right"><code>&#36;\neg&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">¬</mi></mrow><annotation encoding="application/x-tex">\neg</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord">¬</span></span></span></span></td></tr></table>
+</li>
+<li><p>Sets and relations</p>
+<table><tr><th align="right">Syntax</th><th align="right">Output</th></tr><tr><td align="right"><code>&#36;\subset&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>⊂</mo></mrow><annotation encoding="application/x-tex">\subset</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mrel">⊂</span></span></span></span></td></tr><tr><td align="right"><code>&#36;\not\subset&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>⊄</mo></mrow><annotation encoding="application/x-tex">\not\subset</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mrel"><span class="mord vbox"><span class="thinbox"><span class="rlap"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="inner"><span class="mord"><span class="mrel"></span></span></span><span class="fix"></span></span></span></span></span></span><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mrel">⊂</span></span></span></span></td></tr><tr><td align="right"><code>&#36;\supset&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>⊃</mo></mrow><annotation encoding="application/x-tex">\supset</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mrel">⊃</span></span></span></span></td></tr><tr><td align="right"><code>&#36;\not\supset&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>⊅</mo></mrow><annotation encoding="application/x-tex">\not\supset</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mrel"><span class="mord vbox"><span class="thinbox"><span class="rlap"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="inner"><span class="mord"><span class="mrel"></span></span></span><span class="fix"></span></span></span></span></span></span><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mrel">⊃</span></span></span></span></td></tr><tr><td align="right"><code>&#36;\gg&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≫</mo></mrow><annotation encoding="application/x-tex">\gg</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mrel">≫</span></span></span></span></td></tr><tr><td align="right"><code>&#36;\geq&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≥</mo></mrow><annotation encoding="application/x-tex">\geq</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mrel">≥</span></span></span></span></td></tr><tr><td align="right"><code>&#36;\ll&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≪</mo></mrow><annotation encoding="application/x-tex">\ll</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5782em;vertical-align:-0.0391em;"></span><span class="mrel">≪</span></span></span></span></td></tr><tr><td align="right"><code>&#36;\leq&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≤</mo></mrow><annotation encoding="application/x-tex">\leq</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mrel">≤</span></span></span></span></td></tr><tr><td align="right"><code>&#36;\approx&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>≈</mo></mrow><annotation encoding="application/x-tex">\approx</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4831em;"></span><span class="mrel">≈</span></span></span></span></td></tr><tr><td align="right"><code>&#36;\neq&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo mathvariant="normal">≠</mo></mrow><annotation encoding="application/x-tex">\neq</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mrel"><span class="mrel"><span class="mord vbox"><span class="thinbox"><span class="rlap"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="inner"><span class="mord"><span class="mrel"></span></span></span><span class="fix"></span></span></span></span></span><span class="mrel">=</span></span></span></span></span></td></tr></table>
+</li>
+<li><p>Greek alphabet</p>
+<table><tr><th align="right">Syntax</th><th align="right">Output</th></tr><tr><td align="right"><code>&#36;\alpha&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi></mrow><annotation encoding="application/x-tex">\alpha</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0037em;">α</span></span></span></span></td></tr><tr><td align="right"><code>&#36;\beta&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>β</mi></mrow><annotation encoding="application/x-tex">\beta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05278em;">β</span></span></span></span></td></tr><tr><td align="right"><code>&#36;\gamma&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>γ</mi></mrow><annotation encoding="application/x-tex">\gamma</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05556em;">γ</span></span></span></span></td></tr><tr><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>…</mo></mrow><annotation encoding="application/x-tex">\ldots</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.123em;"></span><span class="minner">…</span></span></span></span></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>…</mo></mrow><annotation encoding="application/x-tex">\ldots</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.123em;"></span><span class="minner">…</span></span></span></span></td></tr></table>
+</li>
+<li><p>Common functions</p>
+<table><tr><th align="right">Syntax</th><th align="right">Output</th></tr><tr><td align="right"><code>&#36;\sin&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>sin</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\sin</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6679em;"></span><span class="mop">sin</span></span></span></span></td></tr><tr><td align="right"><code>&#36;\cos&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>cos</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\cos</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mop">cos</span></span></span></span></td></tr><tr><td align="right"><code>&#36;\tan&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>tan</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\tan</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mop">tan</span></span></span></span></td></tr><tr><td align="right"><code>&#36;\log&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>log</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\log</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span></span></span></span></td></tr><tr><td align="right"><code>&#36;\exp&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>exp</mi><mo>⁡</mo></mrow><annotation encoding="application/x-tex">\exp</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mop">exp</span></span></span></span></td></tr></table>
+</li>
+<li><p>Miscellaneous</p>
+<table><tr><th align="right">Syntax</th><th align="right">Output</th></tr><tr><td align="right"><code>&#36;\int_0^1&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∫</mo><mn>0</mn><mn>1</mn></msubsup></mrow><annotation encoding="application/x-tex">\int_0^1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.3648em;vertical-align:-0.3558em;"></span><span class="mop"><span class="mop op-symbol small-op" style="margin-right:0.19445em;position:relative;top:-0.0006em;">∫</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.009em;"><span style="top:-2.3442em;margin-left:-0.1945em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span><span style="top:-3.2579em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3558em;"><span></span></span></span></span></span></span></span></span></span></td></tr><tr><td align="right"><code>&#36;\sum_&#123;j&#61;0&#125;^N j&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mn>0</mn></mrow><mi>N</mi></msubsup><mi>j</mi></mrow><annotation encoding="application/x-tex">\sum_{j=0}^N j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.417em;vertical-align:-0.4358em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9812em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span><span class="mrel mtight">=</span><span class="mord mtight">0</span></span></span></span><span style="top:-3.2029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4358em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span></span></span></span></td></tr><tr><td align="right"><code>&#36;\prod_&#123;j&#61;1&#125;^N j&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∏</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>N</mi></msubsup><mi>j</mi></mrow><annotation encoding="application/x-tex">\prod_{j=1}^N j</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.417em;vertical-align:-0.4358em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∏</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9812em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.05724em;">j</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.2029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.10903em;">N</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.4358em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.05724em;">j</span></span></span></span></td></tr><tr><td align="right"><code>&#36;\frac&#123;a&#125;&#123;b&#125;&#36;</code></td><td align="right"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mi>a</mi><mi>b</mi></mfrac></mrow><annotation encoding="application/x-tex">\frac{a}{b}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0404em;vertical-align:-0.345em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6954em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">b</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.394em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">a</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></td></tr></table>
+</li>
+</ul>
+<p>We can also insert equations in an &quot;equation environment&quot;</p>
+<pre><code class="tex hljs"><span class="hljs-keyword">\begin</span>{equation}<span class="hljs-keyword">\label</span>{eq:pythagoras} <span class="hljs-comment">% for referencing</span>
+    a<span class="hljs-built_in">^</span>2 + b<span class="hljs-built_in">^</span>2 = c<span class="hljs-built_in">^</span>2
+<span class="hljs-keyword">\end</span>{equation}</code></pre>
+<p>and reference to it using <code>\ref&#123;eq:pythagoras&#125;</code>. It is best practice to use these labels for different things.</p>
+<table><tr><th align="right">Label</th><th align="right">Refering To</th></tr><tr><td align="right">ch:</td><td align="right">chapter</td></tr><tr><td align="right">sec:</td><td align="right">section</td></tr><tr><td align="right">subsec:</td><td align="right">subsection</td></tr><tr><td align="right">fig:</td><td align="right">figure</td></tr><tr><td align="right">tab:</td><td align="right">table</td></tr><tr><td align="right">eq:</td><td align="right">equation</td></tr><tr><td align="right">lst:</td><td align="right">code listing</td></tr><tr><td align="right">itm:</td><td align="right">enumerated list item</td></tr><tr><td align="right">alg:</td><td align="right">algorithm</td></tr><tr><td align="right">app:</td><td align="right">appendix subsection</td></tr></table>
+<h2 id="tables"><a href="#tables" class="header-anchor">Tables</a></h2>
+<p>With the <code>booktabs</code> package you can create beautiful tables with LaTeX. The syntax is quite self-explanatory.</p>
+<pre><code class="tex hljs"><span class="hljs-keyword">\begin</span>{tabular}{c|cc}  <span class="hljs-comment">% centered, vertical line, centered, centered</span>
+    <span class="hljs-keyword">\toprule</span>
+    A <span class="hljs-built_in">&amp;</span> B <span class="hljs-built_in">&amp;</span> C <span class="hljs-keyword">\\</span>
+    <span class="hljs-keyword">\midrule</span>
+    1 <span class="hljs-built_in">&amp;</span> ULG <span class="hljs-built_in">&amp;</span> 2023 <span class="hljs-keyword">\\</span>
+    2 <span class="hljs-built_in">&amp;</span> Foo <span class="hljs-built_in">&amp;</span> Bar
+    <span class="hljs-keyword">\bottomrule</span>
+<span class="hljs-keyword">\end</span>{tabular}</code></pre>
+<div class="page-foot">
+    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: February 02, 2023.
+    Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
+</div>
+</div><!-- CONTENT ENDS HERE -->
+    </div> <!-- end of class main-content -->
+    </div> <!-- end of class main-content-wrap -->
+    </div> <!-- end of class page-wrap-->
+    
+      
+
+
+
+    
+    
+      
+
+
+      <script>
+    (function(){
+    
+      // Get the elements.
+      // - the 'pre' element.
+      // - the 'div' with the 'paste-content' id.
+    
+      var pre = document.getElementsByTagName('pre');
+    
+      // Add a copy button in the 'pre' element.
+      // which only has the className of 'language-'.
+    
+      for (var i = 0; i < pre.length; i++) {
+        var isLanguage = pre[i].children[0].tagName == 'CODE';
+    
+        if ( isLanguage ) {
+          var button           = document.createElement('button');
+              button.className = 'copy-button';
+              button.textContent = 'Copy';
+    
+              pre[i].appendChild(button);
+        }
+      };
+    
+      // Run Clipboard
+    
+      var copyCode = new Clipboard('.copy-button', {
+        target: function(trigger) {
+          return trigger.previousElementSibling;
+        }
+      });
+    
+      // On success:
+      // - Change the "Copy" text to "Copied".
+      // - Swap it to "Copy" in 2s.
+      // - Lead user to the "contenteditable" area with Velocity scroll.
+    
+      copyCode.on('success', function(event) {
+        event.clearSelection();
+        event.trigger.textContent = 'Copied';
+        window.setTimeout(function() {
+          event.trigger.textContent = 'Copy';
+        }, 2000);
+    
+      });
+    
+      // On error (Safari):
+      // - Change the  "Press Ctrl+C to copy"
+      // - Swap it to "Copy" in 2s.
+    
+      copyCode.on('error', function(event) {
+        event.trigger.textContent = 'Press "Ctrl + C" to copy';
+        window.setTimeout(function() {
+          event.trigger.textContent = 'Copy';
+        }, 5000);
+      });
+    
+    })();
+</script>
+    
+  </body>
+</html>
+
+<script>
+  var coll = document.getElementsByClassName("collapsible");
+  var i;
+
+  for (i = 0; i < coll.length; i++) {
+    coll[i].addEventListener("click", function() {
+      this.classList.toggle("active");
+      var content = this.nextElementSibling;
+      if (content.style.display === "block") {
+        content.style.display = "none";
+      } else {
+        content.style.display = "block";
+      }
+    });
+  }
+</script>
+
+<script>
+  var coll = document.getElementsByClassName("solutioncollapsible");
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const myVar = urlParams.get('solution')
+  if ( myVar == 'true') {
+    for (i = 0; i < coll.length; i++) {
+      coll[i].style.display = "block";
+    }
+  }
+</script>
