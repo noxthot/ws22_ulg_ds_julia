@@ -7,11 +7,35 @@
 
 \toc
 
+## Introduction
+
+Markdown is a lightweight markup language for creating formatted documents in minutes using nothing but a plain-text editor. You can use the full range of HTML elements in Markdown and they will not be affected by a Markdown parser. Many code sharing platforms like, e.g., GitHub or GitLab as well as programming languages support Markdown. Actually, the webpage you are looking at right now was created by interweaving HTML and Markdown elements.
+
+## Basic Syntax and Formatting
+
+In order to show you the possibilities of formatting text with simple macros we provide the examples below.
+On top you can see the plain code and below that what Markdown makes of it.
+
+- Comments
+
 ```markdown
-<!--This means we can use HTML elements in Markdown, such as the comment
-element, and they won't be affected by a markdown parser. However, if you
-create an HTML element in your markdown file, you cannot use markdown syntax
-within that element's contents.-->
+<!--This is a comment.-->
+```
+
+- Headers of different sizes
+
+```markdown
+# This is an <h1>
+
+## This is an <h2>
+
+### This is an <h3>
+
+#### This is an <h4>
+
+##### This is an <h5>
+
+###### This is an <h6>
 ```
 
 # This is an <h1>
@@ -26,126 +50,192 @@ within that element's contents.-->
 
 ###### This is an <h6>
 
-# This is an h1
+- Formatting text the easy way
 
-## This is an h2
+```markdown
+_This text is in italics._
+```
 
 _This text is in italics._
-_And so is this text._
 
-**This text is in bold.**
-**And so is this text.**
+```markdown
+**This text is bold.**
+```
 
-**_This text is in both._**
-**_As is this!_**
-_**And this!**_
+**This text is bold.**
 
-~~This text is rendered with strikethrough.~~
+```markdown
+**_This text is both._**
+```
 
-This is a paragraph. I'm typing in a paragraph isn't this fun?
+**_This text is both._**
 
-Now I'm in paragraph 2.
-I'm still in paragraph 2 too!
-
-I'm in paragraph three!
-
-I end with two spaces (highlight me to see them).
-
-There's a <br /> above me!
-
-> This is a block quote. You can either
-> manually wrap your lines and put a `>` before every line or you can let your lines get really long and wrap on their own.
-> It doesn't make a difference so long as they start with a `>`.
-
-> You can also use more than one level
+```markdown
+> This is a quotation.
+> You can also add more levels to go deeper with
 >
-> > of indentation?
-> > How neat is that?
+> > double `>`.
+```
 
+> This is a quotation.
+> You can also add more levels to go deeper with
+>
+> > double `>`.
+
+- Add a horizontal rule
+
+```markdown
+---
+```
+
+---
+
+- Present things in (enumerated) lists
+
+```markdown
 - Item
+- Another item
+```
+
 - Item
 - Another item
 
-or
-
-- Item
-- Item
-- One more item
-
-or
-
-- Item
-- Item
-- One last item
+```markdown
+1. Item one
+2. Item two
+```
 
 1. Item one
 2. Item two
+
+```markdown
+1. Item one
+2. Item two
+   - Sub-item
+   - Sub-item
 3. Item three
+```
 
-4. Item one
-5. Item two
-6. Item three
-
-7. Item one
-8. Item two
-9. Item three
+1. Item one
+2. Item two
    - Sub-item
    - Sub-item
-10. Item four
+3. Item three
 
 Boxes below without the 'x' are unchecked HTML checkboxes.
 
+```markdown
 - [ ] First task to complete.
-- [ ] Second task that needs done
-      This checkbox below will be a checked HTML checkbox.
-- [x] This task has been completed
+- [x] This task has been completed.
+```
 
-  This is code
-  So is this
+## Highlighting Code
 
-  my_array.each do |item|
-  puts item
-  end
+- Formatting code inline
 
-John didn't even know what the `go_to()` function did!
+```markdown
+`This is code.`
+```
 
----
+`This is code.`
 
----
+- Code blocks and syntax highlighting
 
----
+In GitHub Flavored Markdown, you can use a special syntax for code. Just add the programming language of your choice
+after the three ticks.
 
----
+````markdown
+```python
+def foobar(x: int = 1, y: str = "Hello") -> int:
+    print(y)
+    return 2 * x
+end
+```
+````
 
-[Click me!](http://test.com/)
+```python
+def foobar(x: int = 1, y: str = "Hello") -> int:
+    print(y)
+    return 2 * x
+end
+```
 
-[Click me!](http://test.com/ "Link to Test.com")
+Here is an example of the `R` programming language.
 
+````markdown
+```r
+jiggle <- function(x) {
+    x = x + rnorm(1, sd=.1) # add a bit of (controlled) noise
+    return(x)
+}
+```
+````
+
+```r
+jiggle <- function(x) {
+    x = x + rnorm(1, sd=.1) # add a bit of (controlled) noise
+    return(x)
+}
+```
+
+## Links and References
+
+```markdown
+[Click me!](https://www.uibk.ac.at/weiterbildung/ulg/data-science/index.html.en)
+```
+
+[Click me!](https://www.uibk.ac.at/weiterbildung/ulg/data-science/index.html.en)
+
+Also note that
+
+```markdown
+<http://testwebsite.com/>
+```
+
+is equivalent to
+
+```markdown
+[http://testwebsite.com/](http://testwebsite.com/)
+```
+
+Navigating through your local folders and files is possible as well.
+
+```markdown
 [Go to music](/music/).
+```
+
+Before referencing headers or chapter markers you have to label them with `(label)` first.
+
+```markdown
+- [Heading](#heading)
+- [Chapter](#chapter)
+  - [Subchapter <h3 />](#subchapter-h3-)
+```
 
 - [Heading](#heading)
-- [Another heading](#another-heading)
 - [Chapter](#chapter)
   - [Subchapter <h3 />](#subchapter-h3-)
 
-![This is the alt-attribute for my image](http://imgur.com/myimage.jpg "An optional title")
+## Figures
 
-<http://testwebsite.com/> is equivalent to
-[http://testwebsite.com/](http://testwebsite.com/)
+Including pictures from a local or remote source can be done with
 
-<foo@bar.com>
+```markdown
+![excel](https://miro.medium.com/max/624/1*FAzumPnvzKUDolMG7SNcHw.png)
+```
 
-I want to type _this text surrounded by asterisks_ but I don't want it to be
-in italics, so I do this: \*this text surrounded by asterisks\*.
+![excel](https://miro.medium.com/max/624/1*FAzumPnvzKUDolMG7SNcHw.png)
 
-Your computer crashed? Try sending a
-<kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Del</kbd>
+## Tables
+
+```markdown
+| Col1         |   Col2   |          Col3 |
+| :----------- | :------: | ------------: |
+| Left-aligned | Centered | Right-aligned |
+| foo          |   bar    |           baz |
+```
 
 | Col1         |   Col2   |          Col3 |
 | :----------- | :------: | ------------: |
 | Left-aligned | Centered | Right-aligned |
-| blah         |   blah   |          blah |
-
-| Col 1               |  Col2   | Col3 |
-| :------------------ | :-----: | ---: |
-| Ugh this is so ugly | make it | stop |
+| foo          |   bar    |           baz |
