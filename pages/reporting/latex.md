@@ -158,7 +158,6 @@ Here is a very incomplete list of the most commonly used mathematical symbols.
   | `$\exists!$` | $\exists!$ |
   | `$\neg$`     | $\neg$     |
   | `$\nexists$` | $\nexists$ |
-  | `$\neg$`     | $\neg$     |
 
 - Sets and relations
 
