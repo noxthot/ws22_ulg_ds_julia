@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   
+   <link rel="stylesheet" href="/ws22_ulg_ds_julia/libs/highlight/github.min.css">
+   
+    <script src="/ws22_ulg_ds_julia/libs/clipboard.min.js"></script>
   
   
   <script src="/ws22_ulg_ds_julia/libs/plotly-1_58_5.min.js"></script> 
@@ -114,8 +117,32 @@
 
 <!-- Content appended here (in class franklin-content) -->
 <div class="franklin-content"><h1 id="jupyter"><a href="#jupyter" class="header-anchor">Jupyter</a></h1>
-<div class="franklin-toc"><ol><li><a href="#foo_bar_baz">Foo Bar Baz</a></li></ol></div>
-<h2 id="foo_bar_baz"><a href="#foo_bar_baz" class="header-anchor">Foo Bar Baz</a></h2>
+<div class="franklin-toc"><ol><li><a href="#introduction">Introduction</a></li><li><a href="#installation_and_kernels">Installation and Kernels</a></li><li><a href="#basic_steps">Basic Steps</a></li><li><a href="#tutorial">Tutorial</a></li><li><a href="#disadvantages">Disadvantages</a></li></ol></div>
+<h2 id="introduction"><a href="#introduction" class="header-anchor">Introduction</a></h2>
+<p>Jupyter is a web-based interactive environment for creating and running language-agnostic HTML notebook applications. The three core programming languages <strong>Ju</strong>lia, <strong>py</strong>thon, and <strong>R</strong> are installed via so-called kernels. Each cell in a notebook can contain code, text &#40;using GitHub Flavored Markdown&#41;, mathematics, plots and even images or videos. They are mainly used for creating and sharing computational documents. Jupyter offers a simple, streamlined, document-centric experience.</p>
+<h2 id="installation_and_kernels"><a href="#installation_and_kernels" class="header-anchor">Installation and Kernels</a></h2>
+<p>While Jupyter runs code in many programming languages, Python is a requirement for installing the Jupyter Notebook library. After updating the integrated <code>pip3</code> package manager to the latest version with</p>
+<pre><code class="bash hljs">pip3 install --upgrade pip</code></pre>
+<p>install the Jupyter Notebook package.</p>
+<pre><code class="bash hljs">pip3 install jupyter</code></pre>
+<p>The <code>IPython</code> kernel comes pre-installed so you can start using Python in notebooks straight away. To run notebooks in other languages such as Julia or R you have to install additional kernels. A full list of Jupyter kernels is available here <a href="https://github.com/jupyter/jupyter/wiki/Jupyter-kernels">https://github.com/jupyter/jupyter/wiki/Jupyter-kernels</a>. For instructions on how to install a new kernel we refer to the documentation of each individual programming language.</p>
+<h2 id="basic_steps"><a href="#basic_steps" class="header-anchor">Basic Steps</a></h2>
+<p>Start the notebook server from the command line using</p>
+<pre><code class="bash hljs">jupyter notebook</code></pre>
+<p>This will print some information in your terminal including the URL of the web application. By default this is <a href="http://localhost:8888">http://localhost:8888</a>. In the dashboard you can start, stop, and create new notebooks or list files and directories.</p>
+<h2 id="tutorial"><a href="#tutorial" class="header-anchor">Tutorial</a></h2>
+<p>Based on the PyTorch tutorial <a href="https://pytorch.org/tutorials/beginner/basics/">https://pytorch.org/tutorials/beginner/basics/</a>.</p>
+<h2 id="disadvantages"><a href="#disadvantages" class="header-anchor">Disadvantages</a></h2>
+<ul>
+<li><p>Version control</p>
+</li>
+<li><p>Reproducability</p>
+</li>
+<li><p>Running cells in different order</p>
+</li>
+<li><p>Missing interactive elements</p>
+</li>
+</ul>
 <div class="page-foot">
     <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: February 03, 2023.
     Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
@@ -125,6 +152,69 @@
     </div> <!-- end of class main-content-wrap -->
     </div> <!-- end of class page-wrap-->
     
+    
+      
+
+
+      <script>
+    (function(){
+    
+      // Get the elements.
+      // - the 'pre' element.
+      // - the 'div' with the 'paste-content' id.
+    
+      var pre = document.getElementsByTagName('pre');
+    
+      // Add a copy button in the 'pre' element.
+      // which only has the className of 'language-'.
+    
+      for (var i = 0; i < pre.length; i++) {
+        var isLanguage = pre[i].children[0].tagName == 'CODE';
+    
+        if ( isLanguage ) {
+          var button           = document.createElement('button');
+              button.className = 'copy-button';
+              button.textContent = 'Copy';
+    
+              pre[i].appendChild(button);
+        }
+      };
+    
+      // Run Clipboard
+    
+      var copyCode = new Clipboard('.copy-button', {
+        target: function(trigger) {
+          return trigger.previousElementSibling;
+        }
+      });
+    
+      // On success:
+      // - Change the "Copy" text to "Copied".
+      // - Swap it to "Copy" in 2s.
+      // - Lead user to the "contenteditable" area with Velocity scroll.
+    
+      copyCode.on('success', function(event) {
+        event.clearSelection();
+        event.trigger.textContent = 'Copied';
+        window.setTimeout(function() {
+          event.trigger.textContent = 'Copy';
+        }, 2000);
+    
+      });
+    
+      // On error (Safari):
+      // - Change the  "Press Ctrl+C to copy"
+      // - Swap it to "Copy" in 2s.
+    
+      copyCode.on('error', function(event) {
+        event.trigger.textContent = 'Press "Ctrl + C" to copy';
+        window.setTimeout(function() {
+          event.trigger.textContent = 'Copy';
+        }, 5000);
+      });
+    
+    })();
+</script>
     
   </body>
 </html>
