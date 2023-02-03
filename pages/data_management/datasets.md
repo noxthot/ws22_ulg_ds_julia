@@ -123,6 +123,51 @@ $~$
 
 When using different algorithms, we always have to keep in mind in which format and shape our data is stored. Different algorithms have different requirements. Sometimes observations have to be stored row wise (each observation in a separate row), sometimes they have to be stored column wise. Some algorithms require a `Matrix` and others a `DataFrame`.
 
+## Images
+
+In the previous part we used `MLDatasets` in order to load a dataset consisting of images. Now you might want to prepare
+your custom dataset consisting of raw image files. You can load most images using
+[FileIO.jl](https://juliaio.github.io/FileIO.jl/stable/) with [ImageIO.jl](https://github.com/JuliaIO/ImageIO.jl).
+
+```julia-repl
+julia> using FileIO, ImageIO, Downloads
+
+julia> tmpfile = Downloads.download("https://upload.wikimedia.org/wikipedia/en/7/7d/Lenna_%28test_image%29.png");
+
+julia> img = FileIO.load(tmpfile);
+
+julia> typeof(img)
+Matrix{RGB{N0f8}} (alias for Array{RGB{Normed{UInt8, 8}}, 2})
+
+julia> img[1,1]
+RGB{N0f8}(0.886,0.537,0.49)
+```
+Here we see that the image does not consist of floating point numbers, since RGB images usually only carry 256 distinct
+values in each channel. Using `ImageCore` from [juliaimages](https://juliaimages.org/stable/) we can however easily
+convert it 
+```julia-repl
+julia> channelview(img) |> size
+(3, 512, 512)
+
+julia> float(channelview(img)) |> typeof
+Array{Float32, 3}
+```
+Thus we get our usual `Array{Float32, 3}` and with `permutedims(float(channelview(img)), [2, 3, 1])` we can e.g. swap
+the color channel dimension to be last, which is the default for machine learning in Julia.
+For saving the "processed" image we can use the [HDF5](https://juliaio.github.io/HDF5.jl/stable/) package, which is a
+standard format like Arrow but for arrays instead of tables.
+```julia-repl
+julia> filename = tempname() * ".hdf5"
+"/tmp/jl_cnipopsX8Z.hdf5"
+
+julia> h5open(filename, "w") do f
+           f["image", compress=true] = permutedims(float(channelview(img)), [2, 3, 1])
+       end;
+
+julia> h5read(filename, "image") |> size
+(512, 512, 3)
+```
+
 ## Custom Datasets and Iterating over Data
 
 The [MLUtils.jl](https://juliaml.github.io/MLUtils.jl/stable/) package contains utility functions for creating your
