@@ -210,6 +210,35 @@ julia&gt; convert2image(df_test, <span class="hljs-number">1</span>:nrImgs)</cod
  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0     0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0</code></pre>
 <p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext> </mtext></mrow><annotation encoding="application/x-tex">~</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0em;"></span><span class="mspace nobreak"> </span></span></span></span> </div> </div>
 <p>When using different algorithms, we always have to keep in mind in which format and shape our data is stored. Different algorithms have different requirements. Sometimes observations have to be stored row wise &#40;each observation in a separate row&#41;, sometimes they have to be stored column wise. Some algorithms require a <code>Matrix</code> and others a <code>DataFrame</code>.</p>
+<h2 id="images"><a href="#images" class="header-anchor">Images</a></h2>
+<p>In the previous part we used <code>MLDatasets</code> in order to load a dataset consisting of images. Now you might want to prepare your custom dataset consisting of raw image files. You can load most images using <a href="https://juliaio.github.io/FileIO.jl/stable/">FileIO.jl</a> with <a href="https://github.com/JuliaIO/ImageIO.jl">ImageIO.jl</a>.</p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> <span class="hljs-keyword">using</span> FileIO, ImageIO, Downloads
+</span>
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> tmpfile = Downloads.download(<span class="hljs-string">&quot;https://upload.wikimedia.org/wikipedia/en/7/7d/Lenna_%28test_image%29.png&quot;</span>);
+</span>
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> img = FileIO.load(tmpfile);
+</span>
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> typeof(img)
+</span>Matrix{RGB{N0f8}} (alias for Array{RGB{Normed{UInt8, 8}}, 2})
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> img[<span class="hljs-number">1</span>,<span class="hljs-number">1</span>]
+</span>RGB{N0f8}(0.886,0.537,0.49)</code></pre>
+<p>Here we see that the image does not consist of floating point numbers, since RGB images usually only carry 256 distinct values in each channel. Using <code>ImageCore</code> from <a href="https://juliaimages.org/stable/">juliaimages</a> we can however easily convert it </p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> channelview(img) |&gt; size
+</span>(3, 512, 512)
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> float(channelview(img)) |&gt; typeof
+</span>Array{Float32, 3}</code></pre>
+<p>Thus we get our usual <code>Array&#123;Float32, 3&#125;</code> and with <code>permutedims&#40;float&#40;channelview&#40;img&#41;&#41;, &#91;2, 3, 1&#93;&#41;</code> we can e.g. swap the color channel dimension to be last, which is the default for machine learning in Julia. For saving the &quot;processed&quot; image we can use the <a href="https://juliaio.github.io/HDF5.jl/stable/">HDF5</a> package, which is a standard format like Arrow but for arrays instead of tables.</p>
+<pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> filename = tempname() * <span class="hljs-string">&quot;.hdf5&quot;</span>
+</span>&quot;/tmp/jl_cnipopsX8Z.hdf5&quot;
+
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> h5open(filename, <span class="hljs-string">&quot;w&quot;</span>) <span class="hljs-keyword">do</span> f
+           f[<span class="hljs-string">&quot;image&quot;</span>, compress=<span class="hljs-literal">true</span>] = permutedims(float(channelview(img)), [<span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">1</span>])
+       <span class="hljs-keyword">end</span>;
+</span>
+<span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> h5read(filename, <span class="hljs-string">&quot;image&quot;</span>) |&gt; size
+</span>(512, 512, 3)</code></pre>
 <h2 id="custom_datasets_and_iterating_over_data"><a href="#custom_datasets_and_iterating_over_data" class="header-anchor">Custom Datasets and Iterating over Data</a></h2>
 <p>The <a href="https://juliaml.github.io/MLUtils.jl/stable/">MLUtils.jl</a> package contains utility functions for creating your own custom dataset &#40;that can also be larger than your memory&#41; and to iterate over a subset &#40;minibatches&#41; of your data. For example in order to iterate over the MNIST dataset we can use <code>MLUtils.eachobs</code>, which returns an iterator that one uses with a <code>for</code> loop. We can also use <code>first</code> in order to get the first iteration in order to check what we will be iterating over</p>
 <pre><code class="julia-repl hljs"><span class="hljs-meta prompt_">julia&gt;</span><span class="language-julia"> first(eachobs(df_train; batchsize=<span class="hljs-number">256</span>)) |&gt; typeof
@@ -243,7 +272,7 @@ MLUtils.numobs(data::FakeData) = data.n
 MLUtils.getobs(data::FakeData, idx::<span class="hljs-built_in">AbstractVector</span>{&lt;:<span class="hljs-built_in">Integer</span>} = randn(<span class="hljs-number">3</span>, <span class="hljs-number">4</span>, length(idx))</code></pre>
 <p></div> </div>
 <div class="page-foot">
-    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: February 02, 2023.
+    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: February 03, 2023.
     Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
 </div>
 </div><!-- CONTENT ENDS HERE -->
