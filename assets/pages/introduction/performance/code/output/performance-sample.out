@@ -1,9 +1,9 @@
 Test Summary: | Pass  Total  Time
-test set      |    3      3  1.1s
+test set      |    3      3  1.0s
 
 Using 1 threads
 
-  3.086 ms (60002 allocations: 4.73 MiB)
-  1.628 ms (40000 allocations: 3.05 MiB)
-  56.300 μs (0 allocations: 0 bytes)
-  64.800 μs (7 allocations: 656 bytes)
+  2.907 ms (60002 allocations: 4.73 MiB)
+  1.642 ms (40000 allocations: 3.05 MiB)
+  60.002 μs (0 allocations: 0 bytes)
+  65.302 μs (7 allocations: 656 bytes)
