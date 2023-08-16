@@ -1,3 +1,8 @@
+## Citing
+[Citation information](CITATION.cff)
+
+[![DOI](https://zenodo.org/badge/525418521.svg)](https://zenodo.org/badge/latestdoi/525418521)
+
 # Development
 We use [Franklin.jl](https://franklinjl.org) to generate the lecture material. To do so, simply activate the environment, use Franklin and run the local server:
 ```
