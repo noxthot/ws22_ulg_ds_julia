@@ -16,17 +16,5 @@
             "name": "Stephan Antholzer"
         }
     ], 
-    "access_right": "open", 
-    "related_identifiers": [
-        {
-            "scheme": "url", 
-            "identifier": "https://github.com/noxthot/ws22_ulg_ds_julia/tree/1.1", 
-            "relation": "isSupplementTo"
-        }, 
-        {
-            "scheme": "doi", 
-            "identifier": "10.5281/zenodo.8251678", 
-            "relation": "isVersionOf"
-        }
-    ]
+    "access_right": "open"
 }
