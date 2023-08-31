@@ -1,11 +1,26 @@
 @def title = "WS23 Julia ULG"
 @def tags = ["syntax", "code"]
 
-# Getting started with Julia
+# Preface
 
-Julia is a free and open source scientific programming language with a vast ecosystem of libraries that aim towards scientific computing. Visit [julialang.org](https://julialang.org) for the download, documentation, learning materials and much more. Julia manages to allow the best of two worlds, high-level interpreter and low-level compiler language. It offers the high performance of compiled languages like C or Fortran by still bringing in the simplicity of dynamic languages like Python or R. Julia recently entered its teens and for this occasion a blog post was published with the title [Why We Use Julia, 10 Years Later](https://julialang.org/blog/2022/02/10years/) as a follow up to the [Why We Created Julia](https://julialang.org/blog/2012/02/why-we-created-julia/). Both entries are a good read and give you an insight into the language and its creators.
+This workshop was originally designed to cover a few modules in the first semester of the [University Continuing Education Programme Data Science – From Mathematical Foundations to Applications](https://www.uibk.ac.at/mathematik/studium/masterstudium-ulg-data-science/) and intended for roughly 20 hour workshop-style in-class instructions. 
 
-In this lecture we are going to take a look at Julia by starting with the basics and working our way up to advanced topics like data science and multiprocessor programming.
+## Citation
+In case you want to refer to this lecture material, use the following BibTex snippet:
+```bibtex
+@misc{gregor_ehrensperger_2023_8251750,
+  author       = {Gregor Ehrensperger and
+                  Johannes Sappl and
+                  Stephan Antholzer},
+  title        = {WS22/23 ULG Data Science - Julia},
+  month        = aug,
+  year         = 2023,
+  publisher    = {Zenodo},
+  version      = {1.2},
+  doi          = {10.5281/zenodo.8251750},
+  url          = {https://doi.org/10.5281/zenodo.8251750}
+}
+```
 
 ## Acknowledgments
 
@@ -15,6 +30,12 @@ Parts of the following lecture material were taken from the on-site Julia worksh
 - The foundation of the section [Introduction](pages/introduction) is taken from [Introduction - Introduction to Scientific Coding with Julia](https://noxthot.github.io/ss22_julia_workshop/pages/introduction/) and [Measuring Performance - Introduction to Scientific Coding with Julia](https://noxthot.github.io/ss22_julia_workshop/pages/hpc/performance/).
 - Parts of [Data Management](pages/data_management) are taken from [Data Science - Introduction to Scientific Coding with Julia](https://noxthot.github.io/ss22_julia_workshop/pages/datascience/).
 - Parts of [Reporting](pages/reporting) are taken from [Pluto Notebook - Introduction to Scientific Coding with Julia](https://noxthot.github.io/ss22_julia_workshop/pages/introduction/pluto/).
+
+# Getting started with Julia
+
+Julia is a free and open source scientific programming language with a vast ecosystem of libraries that aim towards scientific computing. Visit [julialang.org](https://julialang.org) for the download, documentation, learning materials and much more. Julia manages to allow the best of two worlds, high-level interpreter and low-level compiler language. It offers the high performance of compiled languages like C or Fortran by still bringing in the simplicity of dynamic languages like Python or R. Julia recently entered its teens and for this occasion a blog post was published with the title [Why We Use Julia, 10 Years Later](https://julialang.org/blog/2022/02/10years/) as a follow up to the [Why We Created Julia](https://julialang.org/blog/2012/02/why-we-created-julia/). Both entries are a good read and give you an insight into the language and its creators.
+
+In this lecture we are going to take a look at Julia by starting with the basics and working our way up to advanced topics like data science and multiprocessor programming.
 
 ## Some general words on the organisation of this lecture
 
