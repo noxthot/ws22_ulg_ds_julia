@@ -116,9 +116,22 @@
 
 
 <!-- Content appended here (in class franklin-content) -->
-<div class="franklin-content"><h1 id="getting_started_with_julia"><a href="#getting_started_with_julia" class="header-anchor">Getting started with Julia</a></h1>
-<p>Julia is a free and open source scientific programming language with a vast ecosystem of libraries that aim towards scientific computing. Visit <a href="https://julialang.org">julialang.org</a> for the download, documentation, learning materials and much more. Julia manages to allow the best of two worlds, high-level interpreter and low-level compiler language. It offers the high performance of compiled languages like C or Fortran by still bringing in the simplicity of dynamic languages like Python or R. Julia recently entered its teens and for this occasion a blog post was published with the title <a href="https://julialang.org/blog/2022/02/10years/">Why We Use Julia, 10 Years Later</a> as a follow up to the <a href="https://julialang.org/blog/2012/02/why-we-created-julia/">Why We Created Julia</a>. Both entries are a good read and give you an insight into the language and its creators.</p>
-<p>In this lecture we are going to take a look at Julia by starting with the basics and working our way up to advanced topics like data science and multiprocessor programming.</p>
+<div class="franklin-content"><h1 id="preface"><a href="#preface" class="header-anchor">Preface</a></h1>
+<p>This workshop was originally designed to cover a few modules in the first semester of the <a href="https://www.uibk.ac.at/mathematik/studium/masterstudium-ulg-data-science/">University Continuing Education Programme Data Science – From Mathematical Foundations to Applications</a> and intended for roughly 20 hour workshop-style in-class instructions. </p>
+<h2 id="citation"><a href="#citation" class="header-anchor">Citation</a></h2>
+<p>In case you want to refer to this lecture material, use the following BibTex snippet:</p>
+<pre><code class="language-bibtex">@misc&#123;gregor_ehrensperger_2023_8251750,
+  author       &#61; &#123;Gregor Ehrensperger and
+                  Johannes Sappl and
+                  Stephan Antholzer&#125;,
+  title        &#61; &#123;WS22/23 ULG Data Science - Julia&#125;,
+  month        &#61; aug,
+  year         &#61; 2023,
+  publisher    &#61; &#123;Zenodo&#125;,
+  version      &#61; &#123;1.2&#125;,
+  doi          &#61; &#123;10.5281/zenodo.8251750&#125;,
+  url          &#61; &#123;https://doi.org/10.5281/zenodo.8251750&#125;
+&#125;</code></pre>
 <h2 id="acknowledgments"><a href="#acknowledgments" class="header-anchor">Acknowledgments</a></h2>
 <p>Parts of the following lecture material were taken from the on-site Julia workshop <a href="https://noxthot.github.io/ss22_julia_workshop/">Introduction to Scientific Coding with Julia</a> which was written by <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://lfuonline.uibk.ac.at/public/people.vcard?id&#61;59131">Peter Kandolf</a>, and <a href="https://lfuonline.uibk.ac.at/public/people.vcard?id&#61;415344">Jonas Kusch</a> and held in Obergurgl in July &#39;22:</p>
 <ul>
@@ -131,6 +144,9 @@
 <li><p>Parts of <a href="pages/reporting">Reporting</a> are taken from <a href="https://noxthot.github.io/ss22_julia_workshop/pages/introduction/pluto/">Pluto Notebook - Introduction to Scientific Coding with Julia</a>.</p>
 </li>
 </ul>
+<h1 id="getting_started_with_julia"><a href="#getting_started_with_julia" class="header-anchor">Getting started with Julia</a></h1>
+<p>Julia is a free and open source scientific programming language with a vast ecosystem of libraries that aim towards scientific computing. Visit <a href="https://julialang.org">julialang.org</a> for the download, documentation, learning materials and much more. Julia manages to allow the best of two worlds, high-level interpreter and low-level compiler language. It offers the high performance of compiled languages like C or Fortran by still bringing in the simplicity of dynamic languages like Python or R. Julia recently entered its teens and for this occasion a blog post was published with the title <a href="https://julialang.org/blog/2022/02/10years/">Why We Use Julia, 10 Years Later</a> as a follow up to the <a href="https://julialang.org/blog/2012/02/why-we-created-julia/">Why We Created Julia</a>. Both entries are a good read and give you an insight into the language and its creators.</p>
+<p>In this lecture we are going to take a look at Julia by starting with the basics and working our way up to advanced topics like data science and multiprocessor programming.</p>
 <h2 id="some_general_words_on_the_organisation_of_this_lecture"><a href="#some_general_words_on_the_organisation_of_this_lecture" class="header-anchor">Some general words on the organisation of this lecture</a></h2>
 <p>For this lecture you neither have to know details about Julia nor be a programming expert. We will introduce new programming and Julia concepts along the way with demonstrative examples. For this purpose you will find code blocks that you can copy if necessary &#40;top right corner <code>copy</code>&#41;. Furthermore, if we think something is very important we will highlight it with a box:</p>
 <div class="important">Pay extra attention to the content here.</div>
@@ -153,9 +169,9 @@
 <h4 id="additional_information_for_linux"><a href="#additional_information_for_linux" class="header-anchor">Additional information for Linux:</a></h4>
 <p>Some distributions allow for Julia to be installed via the package manager or software center. Note that very often this is an old version so this method is not recommended.</p>
 <p>A very convenient way to manage your Julia installation is <a href="https://github.com/JuliaLang/juliaup">juliaup</a>. To install this tool, simply call the following command from your terminal:</p>
-<pre><code class="bash hljs">curl -fsSL https://install.julialang.org | sh</code></pre>
+<pre><code class="language-bash">curl -fsSL https://install.julialang.org | sh</code></pre>
 <p>Once installed, simply reopen your terminal and call <code>juliaup add 1.8.4</code> to add the very version used for this course. In case you installed Julia just for this course, you could then set</p>
-<pre><code class="bash hljs">juliaup default 1.8.4</code></pre>
+<pre><code class="language-bash">juliaup default 1.8.4</code></pre>
 <p>to pin your default version to <code>1.8.4</code> whenever you start <code>julia</code>. Alternatively you can launch this specific version by calling <code>julia &#43;1.8.4</code>.</p>
 <h3 id="visual_studio_code"><a href="#visual_studio_code" class="header-anchor">Visual Studio Code</a></h3>
 <p>Installing Visual Studio Code is optional since one can use any editor for programming in Julia but Visual Studio Code &#40;&#43;plugin&#41; is the most common &quot;Julia IDE&quot;. For example <a href="https://github.com/JuliaEditorSupport">JuliaEditorSupport</a> has plugins for some alternative editors.</p>
@@ -180,7 +196,7 @@
 <p>With these short basics and <a href="https://www.julia-vscode.org">https://www.julia-vscode.org</a> you are good to go for the lecture. You can also find a list of <a href="https://www.julia-vscode.org/docs/dev/userguide/keybindings/">keybindings</a> once you are more familiar with the IDE and never want to get your hands off the keyboard.</p>
 <p>In VS Code you can always type <code>CTRL &#43; SHIFT &#43; P</code> to get access to the prompt and execute commands within VS Code.</p>
 <div class="page-foot">
-    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: August 16, 2023.
+    <a href="http://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a> - <a href="https://www.uibk.ac.at/mathematik/personal/antholzer/">Stephan Antholzer</a>, <a href="https://ehrensperger.dev/">Gregor Ehrensperger</a>, <a href="https://igs.uibk.ac.at/igs_html/members/IGSMember_Sappl.html">Johannes Sappl</a>. Last modified: August 31, 2023.
     Website built with <a href="https://github.com/tlienart/Franklin.jl">Franklin.jl</a> and the <a href="https://julialang.org">Julia programming language</a>.
 </div>
 </div><!-- CONTENT ENDS HERE -->
@@ -189,8 +205,8 @@
     </div> <!-- end of class page-wrap-->
     
     
-      
-
+      <script src="/ws22_ulg_ds_julia/libs/highlight/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();hljs.configure({tabReplace: '    '});</script>
 
       <script>
     (function(){
